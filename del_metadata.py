@@ -21,7 +21,7 @@ If mask option is unspecified, metadata in the output file will appear
 empty (Unknown Author), (no date), including comments in the margin which 
 will have no author and no timestamps. If mask option is specified, then 
 timestamps in the comments will be faked through randomization: the first
-will be the current datetime, and remaining comments will be assigned 
+will be the current OS datetime, and remaining comments will be assigned 
 timestamps with an incremental component drawn from a uniform distribution
 so that consecutive comments appear as if anywhere between 1 to 2 minutes apart.      
 
