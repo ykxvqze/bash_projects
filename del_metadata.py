@@ -2,7 +2,7 @@
 '''
 Delete docx (Word) file metadata
 
-Usage: python3 del_metadata.py -m [file_basename].docx
+Usage: ./del_metadata.py -m [file_basename].docx
 
 ARGS:
 		-m: mask option; if specified, timestamps in comments will be faked (with randomization), else erased. 

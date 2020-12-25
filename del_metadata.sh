@@ -2,7 +2,7 @@
 : '
 Delete docx (Word) file metadata
 
-Usage: ./del_metadata [file_basename].docx 
+Usage: ./del_metadata.sh [file_basename].docx 
 
 ARGS:
 		filename (with docx): Word document , i.e. [file_basename].docx  
