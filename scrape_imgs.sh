@@ -3,7 +3,7 @@
 Download all cartoon images from (inaccessible) xkcd.com directory; 
 (can be adapted to similar situations)
 
-Usage: ./scrap_xkcd.sh	path_to_directory 
+Usage: ./scrape_xkcd.sh	path_to_directory 
 		
 		if unspecified, path_to_directory will be default: ~/Downloads/xkcd_imgs/
 	   
