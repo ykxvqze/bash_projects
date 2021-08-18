@@ -169,7 +169,7 @@ function append_account() {
     read -p 'Enter SMTP address (e.g. smtp.gmail.com or smtp-mail.outlook.com): ' smtp_address
     echo 'Saving info in file ~/.mailrc'
 
-    cat >> ~/.mailrc << EOF # change filename at end
+    cat >> ~/.mailrc << EOF
 account $1 {
     set inbox=imaps://$imap_account
     set imap-use-starttls
