@@ -1,6 +1,6 @@
 # Mini Projects
 
-## Setup s-nail (send/receive email via CLI)
+## Set up s-nail (send/receive email via CLI)
 
 <a class="external reference" href="https://github.com/thln2ejz/Scripting_Bash/blob/master/snail_setup.sh">snail_setup.sh</a>: bash script for installing and configuring s-nail. The script allows interactively adding/removing IMAP/SMTP configurations for email accounts. Email can then be fetched and send (in ASCII format) via CLI with the s-nail command as shown in the script (under Examples). External CSS stylesheets, images (and web beacons), and other links can be viewed as plaintext and will not be fetched as when email is viewed via browser or web client.
 
