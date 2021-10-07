@@ -43,7 +43,7 @@ Ciphertext C cannot be broken without knowledge of the key K because the randomn
 
 Assume Bob wants to send the short message below to Alice consisting of 9 characters, i.e. 72 bits.
 
-Message from Bob........ 'I am Bob.' <br>
+Msg from Bob............ 'I am Bob.' <br>
 P (binary).............. 01001001 00100000 01100001 01101101 00100000 01000010 01101111 01100010 00101110 <br>
 K (OTP)................. 00110100 11010011 10011100 11010000 11110000 00111100 00101110 01110001 00101111 <br>
 C (binary).............. 01111101 11110011 11111101 10111101 11010000 01111110 01000001 00010011 00000001 <br>
