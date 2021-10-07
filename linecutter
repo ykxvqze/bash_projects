@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+: '
+Create line breaks in a document at a limit of 72 characters.
+
+Usage:  ./linecutter file
+
+ARGS:
+        file: an ASCII text file
+
+OUTPUT:
+        file: the original file is overwritten to the current directory;
+              create a copy first if you wish to keep the original file.
+
+DESCRIPTION:
+
+A newline character is added to every line of the document right after
+the 72nd character if that line happens to extend beyond. Note that any
+space character extending beyond the 72nd position will end up as the
+first character in the next line, and will be deleted by the script.
+Internals of the method are described below:
+
+1. Append a marker string to the file so that line-by-line processing
+stops when the marker is reached, allowing the script to end.
+2. Starting with the first line of the document, the 73rd character is
+identified and saved as variable eol_char.
+3. If eol_char is a space character, then a newline is appended after
+the 72nd character and the result is saved inplace (i.e. overwritten).
+We want lines to include nothing after the 72nd character (not even a
+space character). The original space character at position 73 will now
+end up as the first character of the next line, and so the script will
+delete the first occurence of a space in that next line [trailing space
+characters appear highlighted in different color in nano text editor, so
+it is visually better to _not_ have any space after the line cuts].
+4. Else if eol_char is a null-string, continue iterating lines.
+5. Else, grep the location of the rightmost space character preceding
+eol_char, append a newline just before that space, save the result in
+file, and then delete the first space character of the next line.
+6. The above steps are repeated line-by-line until the marker is reached.
+7. The last line of the document (containing the marker) is then removed.
+
+Why 72 characters? Because it ensures readability on most screens, and
+Geany editor has a screen split at 72 characters. Note: linecutter will
+not do anything special to lines that originally contain indentations.
+
+J.A., xrzfyvqk_k1jw@pm.me
+'
+
+USAGE="Usage: $0 [file]"
+
+if [ "$#" == "0" ]; then
+    echo "$USAGE"
+    exit 1
+fi
+
+n_char=72
+file="$1"
+
+marker='!EOF'
+echo "$marker" >> "$file"
+
+i=1
+while [ "$(head -n $i "$file" | tail -1)" != "$marker" ]; do
+    eol_char=$(head -n $i "$file" | tail -1 | cut -c $((n_char+1))-$((n_char+1)))
+    baseline=$(head -n $i "$file" | tail -1 | cut -c -$n_char)
+    if [ "$eol_char" == ' ' ]; then
+        sed -i "$i s/.\{$n_char\}/&\n/" "$file"
+        sed -i "$((i+1)) s/\s//" "$file"
+    elif [ "$eol_char" == '' ]; then
+        let i+=1
+        continue
+    else
+        col_number=$(grep -b -o '\s' <<< "$baseline" | tail -1 | cut -d ':' -f 1)
+        if [ "$col_number" ]; then
+           sed -i "$i s/.\{$col_number\}/&\n/" "$file"
+           sed -i "$((i+1)) s/\s//" "$file"
+        fi
+    fi
+    let i+=1
+done
+
+sed -i '$d' "$file"
