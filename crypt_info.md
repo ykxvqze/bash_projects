@@ -45,8 +45,8 @@ Assume Bob wants to send the short message below to Alice consisting of 9 charac
 
 Message from Bob: 'I am Bob.' <br>
 P (binary)....... 01001001 00100000 01100001 01101101 00100000 01000010 01101111 01100010 00101110 <br>
-K (OTP).......... 00110100 11010011 10011100 11010000 11110000 00111100 00101110 01110001 00101111  # <---- OTP used by Bob & Alice <br>
-C (binary)....... 01111101 11110011 11111101 10111101 11010000 01111110 01000001 00010011 00000001  # <---- result of XOR <br>
+K (OTP).......... 00110100 11010011 10011100 11010000 11110000 00111100 00101110 01110001 00101111 <br>
+C (binary)....... 01111101 11110011 11111101 10111101 11010000 01111110 01000001 00010011 00000001 <br>
 
 To recover Bob's message, Alice decrypts C using the shared OTP (K) again via a XOR operation, that is Alice does: C XOR K to obtain P.
 
