@@ -17,7 +17,7 @@
 
 ## Linecutter tool
 
-<a class="external reference" href="https://github.com/thln2ejz/Scripting_Bash/blob/master/linecutter">linecutter</a>: Insert line breaks in a text file at a limit of 72 characters without cutting words and without allowing a space character to start the next line (i.e. the space character is deleted).
+<a class="external reference" href="https://github.com/thln2ejz/Scripting_Bash/blob/master/linecutter">linecutter</a>: Insert line breaks in a text file at a limit of 72 characters but without breaking the last word.
 
 ## Scrape image files from xkcd site
 

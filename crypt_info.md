@@ -52,7 +52,7 @@ C (binary)       | 01111101 11110011 11111101 10111101 11010000 01111110 0100000
 To recover Bob's message, Alice decrypts C using the shared OTP (K) again via a XOR operation, that is Alice does: C XOR K to obtain P.
 
 Bob does: C = P XOR K <br>
-Alice does: P = C XOR K 
+Alice does: P = C XOR K
 
 The OTP shared only by Alice and Bob can be a long random sequence of bits that each have stored on a USB or DVD capable of holding gigabytes of data. Everytime a message is sent in either direction, Bob and Alice cross out from the OTP the number of bits used for encryption/decryption (which is equal to the number of bits in the exchanged message). The individual OTPs used in any message should never be used twice (as the name implies) for the following reason:
 
