@@ -23,10 +23,6 @@
 
 <a class="external reference" href="https://github.com/thln2ejz/Scripting_Bash/blob/master/scrape_imgs.sh">scrape_img.sh</a>: download cartoon images from an (inaccessible) xkcd directory.
 
-## Random web traffic generator
-
-<a class="external reference" href="https://github.com/thln2ejz/Scripting_Bash/blob/master/traffic_gen.sh">traffic_gen.sh</a>: generates random web traffic (obfuscation).
-
 ## Android cleanup
 
 <a class="external reference" href="https://github.com/thln2ejz/Scripting_Bash/blob/master/android_cleanup.sh">android_cleanup.sh</a>: android debloating script to uninstall and replace bloatware with open source apps.
