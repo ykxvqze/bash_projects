@@ -22,7 +22,7 @@ Here is a proposed method for linking two datasets maintained by two different s
 2. Both send an identifying column (e.g. citizen names) and corresponding tokens _but_ no other information to a 3rd party/bot (a program or cloud application).
 3. The 3rd party (bot) runs a simple program to detect matching names and assigns these entries link_IDs.
 4. The 3rd party (bot) sends back to each database maintainer separately the tokens and corresponding links_IDs that have been added.
-5. Database maintainers strip all identifying information from their own datasets (eg original IDs, citizen names, social security numbers, etc.) replacing these with just a link_ID column.
+5. Database maintainers strip all identifying information from their own datasets (e.g. original IDs, citizen names, social security numbers, etc.) replacing these with just a link_ID column.
 6. Database maintainers send their now modified datasets to the researchers who will work on the combined data.
 
 This way, neither the database maintainers, nor 3rd party (e.g. bot), nor researchers can identify any linked entry.
