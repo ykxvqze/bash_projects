@@ -18,13 +18,12 @@ How can the two datasets be merged without revealing any citizen's identity in a
 
 Here is a proposed method for linking two datasets maintained by two different sources while safely guarding data privacy:
 
-1. Database-A maintainer assigns IDs/tokens to each entry in his/her database.
-2. Independently, Database-B maintainer assigns IDs/tokens to each entry in his/her database. 
-3. Both send an identifying column (e.g. citizen names) and corresponding tokens _but_ no other information to a 3rd party/bot (a program or cloud application).
-4. The 3rd party (bot) runs a simple program to detect matching names and assigns these entries link_IDs.
-5. The 3rd party (bot) sends back to each database maintainer separately the tokens and corresponding links_IDs that have been added.
-6. Database maintainers strip all identifying information from their own datasets (eg original IDs, citizen names, social security numbers, etc.) replacing these with just a link_ID column.
-7. Database maintainers send their now modified datasets to the researchers who will work on the combined data.
+1. Database-A maintainer assigns IDs/tokens to each entry in his/her database. Independently, Database-B maintainer assigns IDs/tokens to each entry in his/her database. 
+2. Both send an identifying column (e.g. citizen names) and corresponding tokens _but_ no other information to a 3rd party/bot (a program or cloud application).
+3. The 3rd party (bot) runs a simple program to detect matching names and assigns these entries link_IDs.
+4. The 3rd party (bot) sends back to each database maintainer separately the tokens and corresponding links_IDs that have been added.
+5. Database maintainers strip all identifying information from their own datasets (eg original IDs, citizen names, social security numbers, etc.) replacing these with just a link_ID column.
+6. Database maintainers send their now modified datasets to the researchers who will work on the combined data.
 
 This way, neither the database maintainers, nor 3rd party (e.g. bot), nor researchers can identify any linked entry.
 
@@ -39,8 +38,6 @@ ID (tokenized) | Name          | Annual Income | Evaded Tax | etc.
 ACF            | John Doe      | 67800         | N          | ...   
 XVW            | Rebecca Smith | 143400        | Y          | ...   
 
-#### Step-2
-
 Dataset-B:
 
 ID (tokenized) | Name       | Diagnosis  | Type      | Date of Diagnosis | etc.  
@@ -48,7 +45,7 @@ ID (tokenized) | Name       | Diagnosis  | Type      | Date of Diagnosis | etc.
 312Q           | Bruce Lee  | broken rib | R5        | ...               | ...   
 019K           | John Doe   | diabetes   | type-2    | ...               | ...   
 
-#### Step-3:
+#### Step-2:
 
 3rd-party (bot) receives the following upload from Database-A maintainer:
 
@@ -64,7 +61,7 @@ ID      | Name
 312Q    | Bruce Lee     
 019K    | John Doe      
 
-#### Step-4 and Step-5:
+#### Step-3 and Step-4:
 
 3rd-party (bot) creates link_IDs for matching entries (based on 'Name') and sends each table to its respective database maintainer separately:
 
@@ -78,7 +75,7 @@ ID      | link_ID
 312Q    | HBSNOQLDG     
 019K    | LMVNJPQRT     
 
-#### Step-6:
+#### Step-5:
 
 Database-A maintainer modifies his/her dataset by replacing IDs with link_IDs and removing other identifying info (e.g. 'Name'):
 
@@ -94,7 +91,7 @@ link_ID   | Diagnosis  | Type      | Date of Diagnosis | etc.
 HBSNOQLDG | broken rib | R5        | ...               | ...   
 LMVNJPQRT | diabetes   | type-2    | ...               | ...   
 
-#### Step-7:
+#### Step-6:
 
 Now, the database maintainers can send their modified datasets to all the researchers.
 
