@@ -29,4 +29,4 @@
 
 ## Privacy-preserving method for merging datasets
 
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/database_merger">database_merger.md</a>: A proposed method for merging datasets that contain sensitive information from two different parties without revealing any identifying information to either party. The task can be accomplished via a third party, e.g. a bot, without the bot receiving any identifying information either.
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/database_merger.md">database_merger.md</a>: A proposed method for merging datasets that contain sensitive information from two different parties without revealing any identifying information to either party. The task can be accomplished via a third party, e.g. a bot, without the bot receiving any identifying information either.
