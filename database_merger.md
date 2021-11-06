@@ -5,10 +5,10 @@ A proposed method for merging datasets that contain sensitive information from t
 ### Problem description
 
 * Researchers at a governmental unit are working on a large national dataset, dataset-A, relating to citizen income and taxes.
-* Researchers at a university hospital in the same country are working on a large nation-wide dataset, dataset-B, relating to electronic medical records of patients.
+* Researchers at a university hospital are working on a large nation-wide dataset-B relating to electronic medical records of patients.
 * Both datasets contain sensitive information and columns such as citizen names, IDs, social security numbers, etc.
-* Database-A maintainer at the governmental unit has tokenized all identifying information before researchers there started working on dataset-A.
-* Database-B maintainer at the university hospital has tokenized all identifying information in dataset-B before researchers there started working on it.
+* Database-A maintainer at the governmental unit has tokenized all identifying info before researchers there started working on dataset-A.
+* Database-B maintainer at the university hospital has tokenized all identifying info in dataset-B before researchers there started working on it.
 * Merging both datasets can provide new insight for both the governmental unit and the university (or for some other research group).
 
 How can the two datasets be merged without revealing any citizen's identity in any of the entries? That is, neither researchers nor database maintainers should receive any new identifying information beyond what they have.
