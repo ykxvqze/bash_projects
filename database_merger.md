@@ -6,7 +6,7 @@ A proposed method for merging datasets that contain sensitive information from t
 
 * Two independent organizations (a governmental unit and a university) in a country are working on their own separate projects.
 * Researchers at the governmental unit are analyzing a large national dataset, dataset-A, relating to citizen income and taxes.
-* Researchers at a university hospital are analyzing a large nation-wide dataset-B relating to electronic medical records of patients.
+* Researchers at the university hospital are analyzing a large nation-wide dataset-B relating to electronic medical records of patients.
 * Both datasets contain sensitive information and columns such as citizen names, IDs, social security numbers, etc.
 * Database-A maintainer at the governmental unit is responsible for preserving the privacy of any information that can identify individuals before it is handed to governmental researchers working on dataset-A.
 * Database-B maintainer at the university is responsible for preserving the privacy of any information that can identify patients before it is handed to university researchers working on dataset-B.
@@ -25,7 +25,7 @@ Here is a proposed method for linking two datasets maintained by two different s
 5. Database maintainers strip all identifying information from their own datasets (e.g. original IDs, citizen names, social security numbers, etc.) replacing these with just a link_ID column.
 6. Database maintainers send their now modified datasets to the researchers who will work on the combined data.
 
-This way, neither the database maintainers, nor 3rd party (e.g. bot), nor researchers can identify any linked entry.
+This way, neither the database maintainers, nor 3rd party (bot), nor researchers can identify any linked entry.
 
 ### Example 
 

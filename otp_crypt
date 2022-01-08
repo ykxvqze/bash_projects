@@ -8,12 +8,12 @@ OPTIONS:
          N/A
 
 OUTPUT:
-         N/A (stdout will be the demo output, see Example).
+         N/A (stdout will be the demo output, see: Example).
 
 DESCRIPTION:
 
 * Function ascii_to_binary() requires a plaintext input (e.g. "I am Bob.")
-as input and converts it into a binary string containing no spaces.
+and will convert the input into a binary string containing no spaces.
 * Function binary_to_ascii() requires a binary string input (without spaces)
 and converts it to plaintext (by parsing and transforming every 8 bits
 into a character).
@@ -23,7 +23,7 @@ length, l, by randomly shuffling the sequence of integers [1,...,l] and
 then applying modulo 2 on each, effectively transforming even numbers to 0
 and odd numbers to 1.
 * Function xor() requires two binary string inputs and computes their XOR
-bitwise, i.e. if bits are matching, the result is 0, otherwise 1.
+(bitwise), i.e. if bits are matching, the result is 0, otherwise 1.
 * Function main() runs a demo of the encryption/decryption procedure.
 
 EXAMPLE:
@@ -31,7 +31,7 @@ EXAMPLE:
 An example is demonstrated in main(). Running the script will show the
 output. The plaintext sample used is: "I am Bob.". This is converted into
 a binary string, an OTP is generated of the same length, the two binary
-strings are then XORed, and the result is transformed into ciphertext (ASCII).
+strings are then XORed, and the result can be transformed into ciphertext (ASCII).
 
 Sample output:
 
@@ -46,7 +46,7 @@ J.A., xrzfyvqk_k1jw@pm.me
 '
 
 function ascii_to_binary() {
-    echo -n $* | xxd -b | cut -d ' ' -f 2-7 | tr '\n' ' ' | tr -d ' '
+    echo -n "$@" | xxd -b | cut -d ' ' -f 2-7 | tr '\n' ' ' | tr -d ' '
 }
 
 function binary_to_ascii(){
@@ -60,7 +60,7 @@ function xor() {
     string1=$(echo $1 | tr -d ' ')
     string2=$(echo $2 | tr -d ' ')
 
-    if [ ${#string1} -ne ${#string2} ]; then
+    if [ "${#string1}" -ne "${#string2}" ]; then
         echo 'strings are not of equal length!'
         return 1
     else

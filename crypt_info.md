@@ -20,14 +20,14 @@ Alice and Bob can now proceed to communicate:
 
 * Alice shares her public key E_A with Bob or even publishes it on her website; however, Alice keeps her private key D_A secret.
 * Bob also publishes his public key, E_B, and keeps his private key D_B secret.
-* Alice wants to send a plaintext message P to Bob.
+* Alice wants to send a plaintext message, P, to Bob.
 * Alice signs (with her private key D_A) a hashed version of P, MD(P), where MD is a message digest (e.g. SHA-1/2). Result: D_A(MD(P)).
-* Alice sends D_A(MD(P)) along with plaintext P after encrypting the whole thing with Bob's public key, E_B. Result: E_B(D_A(MD(P)), P).
+* Alice sends D_A(MD(P)) along with plaintext P after encrypting the whole thing with Bob's public key (E_B). Result: E_B(D_A(MD(P)), P).
 * Bob receives E_B(D_A(MD(P)), P) and uses his private key, D_B, to decrypt it yielding: D_A(MD(P)) and P.
 * Bob reads plaintext P stating it's from Alice and that Alice used SHA-1 as MD, but Bob is still not sure it is from Alice, so to authenticate, Bob uses Alice's public key, E_A, over D_A(MD(P)) yielding MD(P).
-* Bob compares this found result (the MD(P) hash) to the one obtained by applying MD himself over the plaintext P that he read earlier. If the two hashes match, then he can be sure the Alice was truly the sender since any intruder intercepting Alice's messages can modify P but will not be able to sign MD(P) using Alice's private key (D_A) as only Alice knows her private key.
+* Bob compares this found result (the MD(P) hash) to the one obtained by applying MD himself over the plaintext P that he read earlier. If the two hashes match, then he can be sure that Alice was truly the sender since any intruder intercepting Alice's messages can modify P but will not be able to sign MD(P) using Alice's private key (D_A), as only Alice knows her private key.
 
-The only problem with this is that Alice and Bob are assuming that the other person's public key is authentic. While the above setup is secure against passive intruders, it is still vulnerable to an _active_ man-in-the-middle attack whereby the intruder can intercept and modify communications back and forth between Alice and Bob, in this case spoofing their public keys or the websites holding these, and then pretending to be Bob when communicating with Alice and vice versa. To prevent such a scenario, a trusted central authority that approves certificates for public keys would be required, i.e. a trusted infra described as PKI (Public Key Infrastructure). PKI consists of many root certification authorities (CAs) distributed across the globe. These approve regional authorities (RAs) which in turn approve other smaller and smaller CAs in a hierarchy where any certificate can be traced back to a top-level CA. This is known as a 'chain of trust' or certification path, and a certified entity can publish this to prove its identity to others.
+The only problem with this is that Alice and Bob are assuming that the other person's public key is authentic. While the above setup is secure against passive intruders, it is still vulnerable to an _active_ man-in-the-middle (MITM) attack whereby the intruder can intercept and modify communications back and forth between Alice and Bob, in this case spoofing their public keys or the websites holding these, and then pretending to be Bob when communicating with Alice and vice versa. To prevent such a scenario, a trusted central authority that approves certificates for public keys would be required, i.e. a trusted infra described as PKI (Public Key Infrastructure). PKI consists of many root certification authorities (CAs) distributed across the globe. These approve regional authorities (RAs) which in turn approve other smaller and smaller CAs in a hierarchy where any certificate can be traced back to a top-level CA. This is known as a 'chain of trust' or certification path, and a certified entity can publish this to prove its identity to others.
 
 ## OTP encryption
 
@@ -35,11 +35,11 @@ One-time pad encryption is a symmetric-key algorithm, i.e. the same key is used 
 
 To construct a one-time pad as a binary key:
 
-1. Plaintext P is converted from ASCII to a bit string of 0s and 1s.
+1. Plaintext P is converted from ASCII to a binary string of 0s and 1s.
 2. A one-time pad (i.e. key K) is generated consisting of a _random_ bit sequence of 0s and 1s (as long in length as P).
-3. The XOR is computed bitwise between P and K giving ciphertext: C = P XOR K.
+3. The XOR operation is computed bitwise between P and K giving ciphertext: C = P XOR K.
 
-Ciphertext C cannot be broken without knowledge of the key K because the randomness in the key means there is no useful information that can be extracted.
+Ciphertext C cannot be broken without knowledge of the key, K, because the randomness in the key means there is no useful information that can be extracted.
 
 Assume Bob wants to send the short message below to Alice consisting of 9 characters, i.e. 72 bits.
 
@@ -49,11 +49,11 @@ P (binary)       | 01001001 00100000 01100001 01101101 00100000 01000010 0110111
 K (OTP)          | 00110100 11010011 10011100 11010000 11110000 00111100 00101110 01110001 00101111
 C (binary)       | 01111101 11110011 11111101 10111101 11010000 01111110 01000001 00010011 00000001
 
-To recover Bob's message, Alice decrypts C using the shared OTP (K) again via a XOR operation, that is Alice does: C XOR K to obtain P.
+To recover Bob's message, Alice decrypts C using the shared OTP (K), again via a XOR operation, that is Alice does: C XOR K to obtain P.
 
 Bob does: C = P XOR K <br>
 Alice does: P = C XOR K
 
-The OTP shared only by Alice and Bob can be a long random sequence of bits that each have stored on a USB or DVD capable of holding gigabytes of data. Everytime a message is sent in either direction, Bob and Alice cross out from the OTP the number of bits used for encryption/decryption (which is equal to the number of bits in the exchanged message). The individual OTPs used in any message should never be used twice (as the name implies) for the following reason:
+The OTP shared only by Alice and Bob can be a long random sequence of bits that each of Bob and Alice have stored on a USB or DVD capable of holding Gigabytes of data. Everytime a message is sent in either direction, Bob and Alice cross out a number of bits from the OTP (which is equal to the number of bits in the exchanged message). The individual OTPs used in any message should never be used twice (as the name implies) for the following reason:
 
 If P is encrypted with an OTP (K) yielding C1 = P XOR K, and then later a second message Q is encrypted with the _same_ key, yielding C2 = Q XOR K, an eavesdropper who intercepts both C1 and C2 can simply XOR them together to obtain P XOR Q (i.e. eliminating the key K), and then has a good chance of deducing both P and Q.

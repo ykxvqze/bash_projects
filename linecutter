@@ -8,8 +8,8 @@ ARGS:
         file: an ASCII text file
 
 OUTPUT:
-        file: the original file is overwritten to the current directory;
-              create a copy first if you wish to keep the original file.
+        file: the original file is overwritten in the current directory;
+              (create a copy first if you wish to keep the original file).
 
 DESCRIPTION:
 
@@ -20,14 +20,17 @@ described below:
 
 1. Append a marker string to the file so that line-by-line processing
 stops when the marker is reached, allowing the script to end.
+
 2. Starting with the first line of the document, if the length of the
 line is greater than 72 characters, then the maximum-length pattern
 consisting of at most 72 characters followed by whitespace will be
-replaced by the 72 characters plus a newline appended. The file has now
-increased by 1 line, and the result is saved in-place within the file.
-3. The line counter is incremented, and the previous condition is
-checked again for the next line. This is repeated line-by-line until
-the end-of-file marker is reached.
+replaced by those same characters, plus a newline appended. The file has
+now increased by 1 line, and the result is saved _in-place_ within the file.
+
+3. A line counter is incremented, and the previous condition is checked
+again for the next line. This is repeated line-by-line until the end-of-file
+marker is reached.
+
 4. The last line of the document (containing the marker) is then removed.
 
 Why 72 characters? Because it ensures readability on most screens, and
@@ -36,7 +39,7 @@ not do anything special to lines that originally contain indentations.
 
 EXAMPLE:
 
-Below is some sample text of the input file, and the resulting output.
+Below is some sample text of an input file, and the resulting output.
 
 Input:
 
@@ -60,7 +63,7 @@ J.A., xrzfyvqk_k1jw@pm.me
 
 USAGE="Usage: $0 [file]"
 
-if [ "$#" == "0" ]; then
+if [ "$#" -eq 0 ]; then
     echo "$USAGE"
     exit 1
 fi
