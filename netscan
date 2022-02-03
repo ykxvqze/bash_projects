@@ -16,7 +16,7 @@ DESCRIPTION:
 The script checks for nmap and arp-scan tools and installs them if
 missing (it assumes a Debian-based OS). It then extracts the name of the
 default network interface and its local IPv4 and MAC address. The script
-will use the default interface unless it is provided as argument by the
+will use the default interface unless one is provided as argument by the
 user. Then nmap is executed over the local IP network range via ping-scan
 mode (i.e. no port scanning or OS info detection is used). Additionally,
 arp-scan is executed following nmap. Both scans are repeated within a
@@ -89,14 +89,14 @@ for i in `seq 1 $n_repeat`; do
     sudo arp-scan --interface "$iface" "$ips" 2> /dev/null | grep -E '^[0-9]{1,3}\.' | tr -s ' ' | cut -f 1,2 >> file.arp
 done
 
-ip_extras=$( comm -13 <(cut -f 1 file.arp | sort -u)  <(cat file.nmap | sort -u) )  # IP addresses detected by nmap but not arp-scan
+# IP addresses detected by nmap but not arp-scan
+ip_extras=$( comm -13 <(cut -f 1 file.arp | sort -u)  <(cat file.nmap | sort -u) )
 
 for i in $ip_extras; do
     if [ "$i" == "${ips%/*}" ]; then
         echo -e "$i\t$mac" >> file.arp
     else
-        { grep -E "$i\s" <(sudo arp | tr -s ' ' | sed '1d' | cut -d ' ' -f 1,3 | tr ' ' '\t') || echo -e "$i\tMAC_not_available"; } \
-        >> file.arp
+        grep -E "$i\s" <(sudo arp | tr -s ' ' | sed '1d' | cut -d ' ' -f 1,3 | tr ' ' '\t') || echo -e "$i\tMAC_not_available" >> file.arp
     fi
 done
 
@@ -106,7 +106,7 @@ echo -e "IP address range:\t $ips"
 echo '----------------------------------------'
 echo 'Devices on LAN:'
 echo -e 'IP_address\tMAC_address'
-cat file.arp | sort -u -k 1
+cat file.arp | sort -u -k 1 
 
 rm file.nmap file.arp
 cd "$cwd"
