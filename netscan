@@ -1,0 +1,112 @@
+#!/usr/bin/env bash
+: '
+Scan LAN to discover IP and MAC addresses of all devices connected to the local area network.
+
+Usage:  ./netscan [iface]
+
+ARGS:
+        iface (optional): the name of a network interface. If unspecified,
+                          the default interface will be detected and used.
+
+OUTPUT:
+        A listing of IP and MAC addresses of all network devices in tabular format (via stdout)
+
+DESCRIPTION:
+
+The script checks for nmap and arp-scan tools and installs them if
+missing (it assumes a Debian-based OS). It then extracts the name of the
+default network interface and its local IPv4 and MAC address. The script
+will use the default interface unless it is provided as argument by the
+user. Then nmap is executed over the local IP network range via ping-scan
+mode (i.e. no port scanning or OS info detection is used). Additionally,
+arp-scan is executed following nmap. Both scans are repeated within a
+loop resulting in 4 scans in total; the reason for repeating the scans
+is that some devices may be missed if only a single trial is attempted or
+if only 1 tool is used). The aggregated results in each type of scan are
+sorted and made unique. An arp-scan returns both IP and MAC addresses,
+whereas nmap will be detecting only IP addresses. If it happens that
+there are IP addresses that have been detected by nmap but not by arp-scan,
+then those are appended to the final result. In such cases, the
+corresponding MAC addresses of these devices are fetched from the local
+ARP cache/table which would have been logging entries as the system was
+pinging other devices during the nmap and arp-scan procedures. Finally,
+the result is displayed in tabular format. Note: all devices (including
+routers) will be included in the result, as well as the system executing
+the script (i.e. localhost).
+
+ADDITIONAL NOTES:
+
+If you are on a home LAN and you control the gateway router, you can
+check its ARP or DHCP table by accessing the router menu via browser. The
+entries for the DHCP leases given to various devices will reveal their
+IP and MAC addresses (some leases may be expired). The ARP table will
+also show all devices the router has communicated with. Listings will be
+similar to the result you get from running this script (except that you
+do not need to control or check the gateway itself - you only need to be
+connected to the network as any other device).
+
+The library scapy in Python provides similar functionality as this
+script, but it would be an overkill to use Python or to install a large
+library if network scanning is your only aim. Using Bash provides a
+native solution that is more efficient and suitable for system-level
+tasks in general.
+
+Demonstration:
+
+./netscan
+
+Output:
+
+Network interface:   wlp3s0
+IP address range:    192.168.1.3/24
+------------------------------------
+Devices on LAN:
+IP_address      MAC_address
+192.168.1.1     XX:XX:XX:XX:XX:XX
+192.168.1.3     XX:XX:XX:XX:XX:XX
+192.168.1.4     XX:XX:XX:XX:XX:XX
+192.168.1.6     XX:XX:XX:XX:XX:XX
+192.168.1.7     XX:XX:XX:XX:XX:XX
+192.168.1.9     XX:XX:XX:XX:XX:XX
+
+J.A., xrzfyvqk_k1jw@pm.me
+'
+
+cwd=$(pwd)
+cd /tmp
+echo -n '' | tee file.nmap file.arp
+
+[ $(which nmap) ] || sudo apt-get install nmap
+[ $(sudo which arp-scan) ] || sudo apt-get install arp-scan
+
+[ -n "$1" ] && iface="$1" || iface=$(ip route show default | cut -d ' ' -f 5)
+mac=$(ip link show "$iface" | grep 'ether' | awk '{print $2}')
+ips=$(ip -o -4 address show "$iface" | tr -s ' ' | cut -d ' ' -f 4)  # IPv4 address of interface
+
+n_repeat=2
+for i in `seq 1 $n_repeat`; do
+    nmap -e "$iface" -sn "$ips" | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}$' >> file.nmap
+    sudo arp-scan --interface "$iface" "$ips" 2> /dev/null | grep -E '^[0-9]{1,3}\.' | tr -s ' ' | cut -f 1,2 >> file.arp
+done
+
+ip_extras=$( comm -13 <(cut -f 1 file.arp | sort -u)  <(cat file.nmap | sort -u) )  # IP addresses detected by nmap but not arp-scan
+
+for i in $ip_extras; do
+    if [ "$i" == "${ips%/*}" ]; then
+        echo -e "$i\t$mac" >> file.arp
+    else
+        { grep -E "$i\s" <(sudo arp | tr -s ' ' | sed '1d' | cut -d ' ' -f 1,3 | tr ' ' '\t') || echo -e "$i\tMAC_not_available"; } \
+        >> file.arp
+    fi
+done
+
+echo ''
+echo -e "Network interface:\t $iface"
+echo -e "IP address range:\t $ips"
+echo '----------------------------------------'
+echo 'Devices on LAN:'
+echo -e 'IP_address\tMAC_address'
+cat file.arp | sort -u -k 1
+
+rm file.nmap file.arp
+cd "$cwd"
