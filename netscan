@@ -74,22 +74,22 @@ J.A., xrzfyvqk_k1jw@pm.me
 
 cwd=$(pwd)
 cd /tmp
-echo -n '' | tee file.nmap file.arp
 
 [ $(which nmap) ] || sudo apt-get install nmap
-[ $(sudo which arp-scan) ] || sudo apt-get install arp-scan
+[ $(which arp-scan) ] || sudo apt-get install arp-scan
 
 [ -n "$1" ] && iface="$1" || iface=$(ip route show default | cut -d ' ' -f 5)
 mac=$(ip link show "$iface" | grep 'ether' | awk '{print $2}')
 ips=$(ip -o -4 address show "$iface" | tr -s ' ' | cut -d ' ' -f 4)  # IPv4 address of interface
 
+echo -n '' | tee file.nmap file.arp
 n_repeat=2
 for i in `seq 1 $n_repeat`; do
     nmap -e "$iface" -sn "$ips" | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}$' >> file.nmap
     sudo arp-scan --interface "$iface" "$ips" 2> /dev/null | grep -E '^[0-9]{1,3}\.' | tr -s ' ' | cut -f 1,2 >> file.arp
 done
 
-# IP addresses detected by nmap but not arp-scan
+# IP addresses detected by nmap but not by arp-scan
 ip_extras=$( comm -13 <(cut -f 1 file.arp | sort -u)  <(cat file.nmap | sort -u) )
 
 for i in $ip_extras; do
