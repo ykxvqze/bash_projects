@@ -19,6 +19,13 @@
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/linecutter">linecutter</a>: Insert line breaks in a text file at a limit of 72 characters but without breaking the last word.
 
+## Network scanner
+
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/netscan">netscan</a>: A reliable method for discovering other devices connected to the local area network. The script is based on nmap and arp-scan. IP and MAC addresses are extracted and summarized in table format. The system's local ARP* cache is also used to fill in missing MAC addresses that correspond to IP addresses which may have been detected by nmap but not by arp-scan.
+
+*Address Resolution Protocol (ARP) is a protocol for requesting information about an IP address; the response will be the MAC address of
+the device that has the requested IP address. Hence, ARP allows mapping an IP address to the link layer (MAC) address. The devices should be within the same LAN, e.g. a host can broadcast a packet via Ethernet requesting info on IP address 192.168.1.7. ARP is also used when a device must discover the MAC address of the gateway router to be able to connect to the Internet for the first time.
+
 ## Scrape image files from xkcd site
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/scrape_imgs.sh">scrape_img.sh</a>: download cartoon images from an (inaccessible) xkcd directory.
