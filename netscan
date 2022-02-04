@@ -22,17 +22,16 @@ mode (i.e. no port scanning or OS info detection is used). Additionally,
 arp-scan is executed following nmap. Both scans are repeated within a
 loop resulting in 4 scans in total; the reason for repeating the scans
 is that some devices may be missed if only a single trial is attempted or
-if only 1 tool is used). The aggregated results in each type of scan are
+if only 1 tool is used. The aggregated results in each type of scan are
 sorted and made unique. An arp-scan returns both IP and MAC addresses,
-whereas nmap will be detecting only IP addresses. If it happens that
-there are IP addresses that have been detected by nmap but not by arp-scan,
-then those are appended to the final result. In such cases, the
-corresponding MAC addresses of these devices are fetched from the local
-ARP cache/table which would have been logging entries as the system was
-pinging other devices during the nmap and arp-scan procedures. Finally,
-the result is displayed in tabular format. Note: all devices (including
-routers) will be included in the result, as well as the system executing
-the script (i.e. localhost).
+whereas nmap will be detecting only IP addresses. Any IP addresses that
+may have been detected by nmap but not by arp-scan are appended to the
+final result. In such cases, the corresponding MAC addresses are fetched
+from the local ARP cache/table which would have logged entries as the
+system was pinging other devices during the nmap and arp-scan procedures.
+Finally, the result is displayed in tabular format. Note: all devices
+(including routers) will be included in the result, as well as the system
+executing the script (i.e. localhost).
 
 ADDITIONAL NOTES:
 
