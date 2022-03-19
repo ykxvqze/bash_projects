@@ -1,5 +1,3 @@
-# Mini Projects
-
 ## Set up s-nail (send/receive email via CLI)
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/snail_setup.sh">snail_setup.sh</a>: bash script for installing and configuring s-nail. The script allows interactively adding/removing IMAP/SMTP configurations for mail accounts. Mail can then be fetched and sent (in ASCII format) via CLI with the s-nail command as shown in the script (under 'Examples'). External CSS stylesheets, images (and web beacons), and other links can be viewed as plaintext and will not be fetched as when mail is viewed via browser or web client.
@@ -25,10 +23,11 @@
 
 *Address Resolution Protocol (ARP) is a protocol for requesting information about an IP address; the response will be the MAC address of
 the device that has the requested IP address. Hence, ARP allows mapping an IP address to the link layer (MAC) address. ARP is also used when a device must discover the MAC address of the gateway (router) to be able to connect to the Internet for the first time.
-
+<!--
 ## Scrape image files from xkcd site
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/scrape_imgs.sh">scrape_img.sh</a>: download cartoon images from an (inaccessible) xkcd directory.
+-->
 
 ## Android cleanup
 
