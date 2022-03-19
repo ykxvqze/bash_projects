@@ -15,7 +15,7 @@
 
 ## Linecutter tool
 
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/linecutter">linecutter</a>: Insert line breaks in a text file at a limit of 72 characters but without breaking the last word.
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/linecutter.sh">linecutter.sh</a>: Insert line breaks in a text file at a limit of 72 characters but without breaking the last word.
 
 ## Network scanner
 
