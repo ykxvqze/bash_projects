@@ -1,0 +1,118 @@
+#!/usr/bin/env bash
+: '
+Create line breaks in a document at a limit of 72 characters without breaking any words.
+
+Usage:  ./linecutter.sh <filename(s)>
+        ./linecutter.sh [ -k | --keep ] <filename(s)>
+
+ARGS:
+        input file(s): ASCII text file(s) in current directory
+
+OUTPUT:
+        file(s): *If -k or --keep switch is _unspecified_, original files
+                  will be overwritten (in the current directory).
+                 *Otherwise, the result will be saved in a new file named
+                  <filename_formatted> for each input filename. Original
+                  files remain intact in this case.
+
+DESCRIPTION:
+
+If a line happens to extend beyond 72 characters, a newline character is
+added at a position that is lower but closest to the 72nd character in
+such a way as not to break any words. Internals of the method are
+described below:
+
+1. Append a marker string to the file so that line-by-line processing
+stops when the marker is reached, allowing the script to end.
+
+2. Starting with the first line of the document, if the length of the
+line is greater than 72 characters, then the maximum-length pattern
+consisting of at most 72 characters followed by whitespace will be
+replaced by those same characters, plus a newline appended. The file has
+now increased by 1 line, and the result is saved _in-place_ within the file.
+
+3. A line counter is incremented, and the previous condition is checked
+again for the next line. This is repeated line-by-line until the end-of-file
+marker is reached.
+
+4. The last line of the document (containing the marker) is then removed.
+
+Why 72 characters? Because it ensures readability on most screens
+(including vertically half-split ones). Note: linecutter will not do
+anything special to lines that originally contain indentations.
+
+EXAMPLE:
+
+Below is some sample text of an input file, and the resulting output.
+
+Input:
+
+Lorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim
+veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. Quis aute iure
+reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in
+culpa qui officia deserunt mollit anim id est laborum. 
+
+Output:
+
+Lorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod
+tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim
+veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam,
+nisi ut aliquid ex ea commodi consequatur. Quis aute iure reprehenderit
+in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui
+officia deserunt mollit anim id est laborum.
+
+J.A., xrzfyvqk_k1jw@pm.me
+'
+
+print_usage() {
+    clear
+    echo -e "linecutter: cut lines at 72 characters without breaking words.
+    Usage: ./${0##*/}
+    [ <filename(s)> ]              Specify input file(s) (mandatory) - overwrite mode
+    [ -k | --keep <filename(s)> ]  Specify input file(s) (mandatory) - keep original file(s) intact
+    [ -h | --help ]                Print usage and exit\n"
+}
+
+cut_lines(){
+    local file="$1"
+    echo "$marker" >> "$file"
+    i=1
+    while [ "`head -n $i "$file" | tail -1`" != "$marker" ]; do
+        if [ $(sed -n "$i p" "$file" | wc -c) -gt 72 ]; then
+            sed -i "$i s/^\(.\{0,72\}\)\s/\1\n/" "$file"
+        fi
+        let i++
+    done
+    sed -i '$d' "$file"
+}
+
+main(){
+    if [ "$#" -eq 0 ]; then
+        print_usage
+        exit 1
+    fi
+
+    # parse and collect filenames in an array
+    args=()
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            -h | --help ) print_usage                ; exit 0 ;;
+            -k | --keep ) keep=1                     ; shift  ;;
+            -*          ) echo "Option unknown: $1"  ; exit 1 ;;
+             *          ) args+=("$1")               ; shift  ;;
+        esac
+    done
+
+    marker='!EOF'
+    for i in ${args[*]}; do
+        if [ "$keep" == 1 ]; then
+            cp "$i" "${i}_formatted"
+            cut_lines "${i}_formatted"
+        else
+            cut_lines "$i"
+        fi
+    done
+}
+
+main "$@"
