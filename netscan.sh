@@ -2,7 +2,7 @@
 : '
 Scan LAN to discover IP and MAC addresses of all devices on the network.
 
-USAGE:  ./netscan [-I <interface>]
+USAGE:  ./netscan.sh [-I <interface>]
 
 OPTIONS:
         -h             Print usage
@@ -58,9 +58,14 @@ more efficient and suitable for system-level tasks.
 
 Demonstration:
 
-./netscan
+./netscan.sh
 
 Output:
+
+running nmap scan: round 1 of 2...
+running arp scan: round 1 of 2...
+running nmap scan: round 2 of 2...
+running arp scan: round 2 of 2...
 
 Network Interface:   wlp3s0
 IP Address Range:    192.168.1.3/24
@@ -98,7 +103,7 @@ print_usage() {
     echo -e "netscan: detect devices connected to your network.
     Usage: ./${0##*/}
     [ -I <interface> ]  Specify network interface (otherwise default assumed)
-    [ -h ]              Print usage message and exit\n"
+    [ -h ]              Print usage and exit\n"
 }
 
 get_default_iface(){
@@ -133,8 +138,9 @@ main(){
     # parse input
     while getopts 'I:h' option; do
         case $option in
-            h) print_usage;         exit 0 ;;
-            I) iface="$OPTARG"             ;;
+            h) print_usage;  exit 0 ;;
+            I) iface="$OPTARG"      ;;
+            *) print_usage;  exit 0 ;;
         esac
     done
 
@@ -164,7 +170,10 @@ main(){
 
     n_repeat=2
     for i in `seq 1 "$n_repeat"`; do
+        echo "running nmap scan: round ${i} of ${n_repeat}..."
         run_nmap "$iface" "$IPs" >> ${file_nmap}
+
+        echo "running arp scan: round ${i} of ${n_repeat}..."
         run_arpscan "$iface" "$IPs" >> ${file_arp}
     done
 
