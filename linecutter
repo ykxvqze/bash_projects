@@ -61,7 +61,7 @@ officia deserunt mollit anim id est laborum.
 J.A., xrzfyvqk_k1jw@pm.me
 '
 
-USAGE="Usage: $0 [file]"
+USAGE="Usage: ./${0##*/} <filename>"
 
 if [ "$#" -eq 0 ]; then
     echo "$USAGE"
