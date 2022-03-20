@@ -2,8 +2,7 @@
 : '
 Create line breaks in a document at a limit of 72 characters without breaking any words.
 
-Usage:  ./linecutter.sh <filename(s)>
-        ./linecutter.sh [ -k | --keep ] <filename(s)>
+Usage:  ./linecutter.sh [ -k | --keep ] <filename(s)>
 
 ARGS:
         input file(s): ASCII text file(s) in current directory
@@ -43,7 +42,7 @@ anything special to lines that originally contain indentations.
 
 EXAMPLE:
 
-Below is some sample text of an input file, and the resulting output.
+Below is some sample text of an input file and the resulting output.
 
 Input:
 
@@ -68,18 +67,20 @@ J.A., xrzfyvqk_k1jw@pm.me
 print_usage() {
     clear
     echo -e "linecutter: cut lines at 72 characters without breaking words.
-    Usage: ./${0##*/}
-    [ <filename(s)> ]              Specify input file(s) (mandatory) - overwrite mode
-    [ -k | --keep <filename(s)> ]  Specify input file(s) (mandatory) - keep original file(s) intact
-    [ -h | --help ]                Print usage and exit\n"
+    Usage:
+    ./${0##*/} <filename(s)>                  Specify input file(s) (mandatory) - overwrite mode
+    ./${0##*/} [ -k | --keep ] <filename(s)>  Specify input file(s) (mandatory) - keep original file(s) intact
+    ./${0##*/} [ -h | --help ]                Print usage and exit\n"
 }
 
 cut_lines(){
     local file="$1"
+    marker='!EOF'
     echo "$marker" >> "$file"
+
     i=1
     while [ "`head -n $i "$file" | tail -1`" != "$marker" ]; do
-        if [ $(sed -n "$i p" "$file" | wc -c) -gt 72 ]; then
+        if [ `sed -n "$i p" "$file" | wc -c` -gt 72 ]; then
             sed -i "$i s/^\(.\{0,72\}\)\s/\1\n/" "$file"
         fi
         let i++
@@ -104,7 +105,6 @@ main(){
         esac
     done
 
-    marker='!EOF'
     for i in ${args[*]}; do
         if [ "$keep" == 1 ]; then
             cp "$i" "${i}_formatted"
