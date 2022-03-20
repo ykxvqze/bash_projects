@@ -43,6 +43,7 @@ J.A., xrzfyvqk_k1jw@pm.me
 '
 
 set -Eeo pipefail
+trap "echo $LINENO" ERR
 
 print_usage() {
     echo -e "del_metadata: delete author and timestamp metadata from .docx (Word) files.
@@ -75,9 +76,6 @@ main() {
         esac
     done
 
-    dir_temp=`mktemp -d /tmp/tempdir.XXXX`
-    trap "rm -rf ${dir_temp}" SIGINT SIGTERM EXIT
-
     while (( "$#" )); do
         file="$1"
         abs_path=`get_abspath "$file"`
@@ -97,7 +95,7 @@ main() {
         file_renamed=${abs_path%.docx}.zip
         cp "${file}" "${file_renamed}"
 
-        unzip -l "$file_renamed"
+        dir_temp=`mktemp -d /tmp/tempdir.XXXX`
         unzip "$file_renamed" "word/document.xml" -d "$dir_temp"
         unzip "$file_renamed" "word/comments.xml" -d "$dir_temp"
 
@@ -105,14 +103,14 @@ main() {
         cd "$dir_temp"
 
         data=$(cat word/document.xml |
-               sed -e 's/w:author="[^"]*"/w:author=""/g; \
+               sed -e 's/w:author="[^"]*"/w:author=""/g;
                        s/w:date="[^"]*"/w:date=""/g')
         echo "$data" > word/document.xml
         zip --update "$file_renamed" "word/document.xml"
       
         if [ -f word/comments.xml ]; then
             data=$(cat word/comments.xml |
-                   sed -e 's/w:author="[^"]*"/w:author=""/g; \
+                   sed -e 's/w:author="[^"]*"/w:author=""/g;
                            s/w:date="[^"]*"/w:date=""/g')
             echo "$data" > word/comments.xml
             zip --update "$file_renamed" "word/comments.xml"
@@ -120,6 +118,7 @@ main() {
 
         cd "$cwd"
         mv "$file_renamed" "${file_renamed%.zip}_formatted.docx"
+        rm -rf "$dir_temp"
 
         shift
     done
