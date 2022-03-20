@@ -19,7 +19,7 @@ and converts it to plaintext (by parsing and transforming every 8 bits
 into a character).
 * Function generate_otp() requires a binary string input as returned by
 ascii_to_binary() and generates a _random_ binary string of the same
-length, l, by randomly shuffling the sequence of integers [1,...,l] and
+length, L, by randomly shuffling the sequence of integers [1,...,L] and
 then applying modulo 2 on each, effectively transforming even numbers to 0
 and odd numbers to 1.
 * Function xor() requires two binary string inputs and computes their XOR
