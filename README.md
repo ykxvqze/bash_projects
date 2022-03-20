@@ -4,7 +4,7 @@
 
 ## One-time pad encryption
 
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/otp_crypt">otp_crypt</a>: Implementation of a one-time pad encryption/decryption method: includes utility functions and a demo.
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/otp_crypt.sh">otp_crypt.sh</a>: Implementation of a one-time pad encryption/decryption method: includes utility functions and a demo.
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/crypt_info.md">crypt_info.md</a>: A summary on public-key encryption and OTP symmetric key-encryption.
 
 ## Delete metadata
