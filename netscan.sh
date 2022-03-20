@@ -99,7 +99,6 @@ fi
 
 # functions
 print_usage() {
-    clear
     echo -e "netscan: detect devices connected to your network.
     Usage: ./${0##*/}
     [ -I <interface> ]  Specify network interface (otherwise default assumed)
@@ -140,7 +139,7 @@ main(){
         case $option in
             h) print_usage;  exit 0 ;;
             I) iface="$OPTARG"      ;;
-            *) print_usage;  exit 0 ;;
+            *) print_usage;  exit 1 ;;
         esac
     done
 
