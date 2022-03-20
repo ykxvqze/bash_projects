@@ -1,60 +1,118 @@
 #!/usr/bin/env bash
 : '
-Delete docx (Word) file metadata
+Delete .docx (Word) file metadata
 
-Usage:  ./del_metadata.sh file1.docx file2.docx file3.docx ... fileN.docx
+USAGE:  ./del_metadata.sh <file1.docx> <file2.docx> ... <fileN.docx>
+
+OPTIONS:
+       -h     Print usage
 
 ARGS:
-        filenames: Word documents of form [basename].docx  
+        filename(s): Word document(s) with filename format: <basename>.docx
+                     Filenames may include paths, e.g. /dir/subdir/file1.docx
+                     Multiple filenames should be delimited by space and
+                     a filename should not begin with a dash -
 
 OUTPUT:
-
-        files ([basename]_cleared.docx) with metadata removed, in current directory
+        files (<basename>_formatted.docx) with metadata removed in same
+        directory as original (input) files.
 
 DESCRIPTION:
 
 Delete metadata (author name and date/timestamps) from a docx (Word)
-document, which is basically a zip file of XML documents. 
-The script modifies document.xml and comments.xml (if latter is present). 
-Metadata in the output file will appear empty i.e. (no author), (no date), 
-including comments in the margin which will also have no author and no timestamps.
+document (which is basically a zip file of XML documents). The script
+modifies `document.xml` and `comments.xml` (if latter is present).
+Metadata in the output file will appear empty i.e. (no author), (no date),
+including any comments in the margin which will now appear with no author
+and no timestamps.
+
+Note: the script automatically checks for the .docx extension at the end
+of a filename or path and will not format a file if it lacks the extension.
 
 J.A., xrzfyvqk_k1jw@pm.me
 '
 
-USAGE="Usage: $0 file1.docx file2.docx file3.docx ... fileN.docx"
+set -Eeo pipefail
 
-if [ "$#" -eq 0 ]; then
-    echo "$USAGE"
-    exit 1
-fi
+print_usage() {
+    echo -e "del_metadata: delete author and timestamp metadata from .docx (Word) files.
+    Usage:
+    ./${0##*/} <filename(s).docx>  At least one filename must be supplied
+    ./${0##*/} [ -h ]              Print usage and exit\n"
+}
 
-while (( "$#" )); do
-    filepath="$1"
-    cp "$filepath" "${filepath%.docx}.zip"
-    filepath=${filepath%.docx}.zip
+get_abspath(){
+    local file="$1"
+    dname=`dirname "$file"`
+    bname=`basename "$file"`
+    abspath_dir=`cd "$dname" && pwd || exit 1`
+    abspath="${abspath_dir}/${bname}"
+    echo "$abspath"
+}
 
-    unzip -l "$filepath"  # list only
-    unzip "$filepath" "word/document.xml" -d /tmp 
-    unzip "$filepath" "word/comments.xml" -d /tmp 
-
-    cwd=$(pwd)
-    cd /tmp
-
-    data=$(cat word/document.xml | sed -e 's/w:author=\"[^"]*\"/w:author=""/g' -e 's/w:date=\"[^"]*\"/w:date=""/g')
-    echo "$data" > word/document.xml
-  
-    if [ -f word/comments.xml ]; then
-        data=$(cat word/comments.xml | sed -e 's/w:author=\"[^"]*\"/w:author=""/g' -e 's/w:date=\"[^"]*\"/w:date=""/g')
-        echo "$data" > word/comments.xml
+main() {
+    if [ "$#" -eq 0 ]; then
+        print_usage
+        exit 1
     fi
 
-    zip --update "$cwd/$filepath" "word/document.xml"
-    zip --update "$cwd/$filepath" "word/comments.xml"
+    # catch help option and incorrect flags
+    while getopts 'h' option; do
+        case $option in
+            h) print_usage;  exit 0 ;;
+            *) echo -e 'Incorrect usage! See below:\n'; 
+               print_usage;  exit 1 ;;
+        esac
+    done
 
-    rm -rf ./word
-    cd "$cwd"
-    mv "$filepath" "${filepath%.zip}_cleared.docx"
+    dir_temp=`mktemp -d /tmp/tempdir.XXXX`
+    trap "rm -rf ${dir_temp}" SIGINT SIGTERM EXIT
 
-    shift
-done
+    while (( "$#" )); do
+        file="$1"
+        abs_path=`get_abspath "$file"`
+        dpath=`dirname $abs_path`
+        bname=`basename $abs_path`
+
+        if [ ! -f "$abs_path" ]; then
+            echo "File $abs_path does not exist. Exiting...";
+            exit 1
+        fi
+
+        if [ "${bname##*.}" != 'docx' ]; then
+            echo 'File does not have a .docx extension. Exiting...'
+            exit 1
+        fi
+
+        file_renamed=${abs_path%.docx}.zip
+        cp "${file}" "${file_renamed}"
+
+        unzip -l "$file_renamed"
+        unzip "$file_renamed" "word/document.xml" -d "$dir_temp"
+        unzip "$file_renamed" "word/comments.xml" -d "$dir_temp"
+
+        cwd=`pwd`
+        cd "$dir_temp"
+
+        data=$(cat word/document.xml |
+               sed -e 's/w:author="[^"]*"/w:author=""/g; \
+                       s/w:date="[^"]*"/w:date=""/g')
+        echo "$data" > word/document.xml
+        zip --update "$file_renamed" "word/document.xml"
+      
+        if [ -f word/comments.xml ]; then
+            data=$(cat word/comments.xml |
+                   sed -e 's/w:author="[^"]*"/w:author=""/g; \
+                           s/w:date="[^"]*"/w:date=""/g')
+            echo "$data" > word/comments.xml
+            zip --update "$file_renamed" "word/comments.xml"
+        fi
+
+        cd "$cwd"
+        mv "$file_renamed" "${file_renamed%.zip}_formatted.docx"
+
+        shift
+    done
+}
+
+main "$@"
