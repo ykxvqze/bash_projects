@@ -2,7 +2,7 @@
 : '
 Create line breaks in a document at a limit of 72 characters without breaking any words.
 
-Usage:  ./linecutter.sh [ -k | --keep ] <filename(s)>
+USAGE:  ./linecutter.sh [ -k | --keep ] <filename(s)>
 
 ARGS:
         input file(s): ASCII text file(s) in current directory

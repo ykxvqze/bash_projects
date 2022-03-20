@@ -9,7 +9,7 @@
 
 ## Delete metadata
 
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/del_metadata.sh">del_metadata.sh</a>: bash script for deleting metadata (author name; date timestamps) from a docx (Word) document. Metadata in the output file will appear empty (no author), (no date), including comments in the margin which will have no author and no timestamps.
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/del_metadata.sh">del_metadata.sh</a>: bash script for deleting metadata (author name; date timestamps) from a docx (Word) document. Metadata in the output file will appear empty (no author), (no date), including comments in the margin which will now appear with no author and no timestamps.
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/del_metadata.py">del_metadata.py</a>: python script that does the same as above, however with an additional (mask) option for modifying timestamps of comments using numpy. If the mask option is specified, then timestamps of comments in the margin will be changed through randomization where timestamps are assigned with an incremental component drawn from a uniform distribution.
 

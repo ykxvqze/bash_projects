@@ -2,7 +2,7 @@
 : ' 
 Functions and a demo for encrypting/decrypting via a one-time pad (OTP).
 
-Usage: ./otp_crypt.sh [ -h ]
+USAGE: ./otp_crypt.sh [ -h ]
 
 OPTIONS:
        -h     Print usage
