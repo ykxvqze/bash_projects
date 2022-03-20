@@ -29,6 +29,16 @@ and no timestamps.
 Note: the script automatically checks for the .docx extension at the end
 of a filename or path and will not format a file if it lacks the extension.
 
+Note: do the below _before_ running this script on any *.docx file.
+Open the .docx file (in libreoffice) and `Save As` a .docx file again (not
+`Save`) to obtain a libreoffice-based version, then `Close` the files.
+Open the new file and `Save` it. The `Save As` step is mandatory; other
+attempts may corrupt the original .docx file (such as opening and saving
+the original in libreoffice prior script execution). `Save As` leaves the
+original file intact. Now you may run ./del_metadata on the new file.
+The resulting formatted file will be readable in both libreoffice and
+Word and will be stripped of metadata.
+
 J.A., xrzfyvqk_k1jw@pm.me
 '
 
