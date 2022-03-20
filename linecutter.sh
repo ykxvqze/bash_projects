@@ -65,7 +65,6 @@ J.A., xrzfyvqk_k1jw@pm.me
 '
 
 print_usage() {
-    clear
     echo -e "linecutter: cut lines at 72 characters without breaking words.
     Usage:
     ./${0##*/} <filename(s)>                  Specify input file(s) (mandatory) - overwrite mode
