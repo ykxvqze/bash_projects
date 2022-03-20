@@ -1,28 +1,27 @@
-## Set up s-nail (send/receive email via CLI)
+## Set up s-nail (send/receive mail via CLI)
 
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/snail_setup.sh">snail_setup.sh</a>: bash script for installing and configuring s-nail. The script allows interactively adding/removing IMAP/SMTP configurations for mail accounts. Mail can then be fetched and sent (in ASCII format) via CLI with the s-nail command as shown in the script (under 'Examples'). External CSS stylesheets, images (and web beacons), and other links can be viewed as plaintext and will not be fetched as when mail is viewed via browser or web client.
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/snail_setup.sh">snail_setup.sh</a>: Bash script for installing and configuring s-nail. The script allows interactively adding/removing IMAP/SMTP configurations for mail accounts. Mail can then be fetched and sent (in ASCII format) via CLI with the `s-nail` as demonstrated in the script. MIME attachments can be copied to separate files and then decoded (base64 decoding) before being viewed with an appropriate application depending on file type.
 
 ## One-time pad encryption
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/otp_crypt.sh">otp_crypt.sh</a>: Implementation of a one-time pad encryption/decryption method: includes utility functions and a demo.
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/crypt_info.md">crypt_info.md</a>: A summary on public-key encryption and OTP symmetric key-encryption.
 
+## Network scanner
+
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/netscan.sh">netscan.sh</a>: A reliable method for discovering other devices connected to your network. The script is based on `nmap` and `arp-scan`. IP and MAC addresses are extracted and summarized in tabular format. The system's local ARP cache is also used to fill in missing MAC addresses that correspond to IP addresses which may have been detected by nmap but not by arp-scan.
+
+>> Address Resolution Protocol (ARP) is a protocol for requesting information about an IP address; the response will be the MAC address of the network interface that has the requested IP address. An example is when a device must discover the MAC address of the gateway (router). ARP allows mapping an IP address to the link layer (MAC) address.
+
 ## Delete metadata
 
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/del_metadata.sh">del_metadata.sh</a>: bash script for deleting metadata (author name; date timestamps) from a docx (Word) document. Metadata in the output file will appear empty (no author), (no date), including comments in the margin which will now appear with no author and no timestamps.
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/del_metadata.sh">del_metadata.sh</a>: Bash script for deleting metadata (author name; date timestamps) from a docx (Word) document. Metadata in the output file will appear empty (no author), (no date), including comments in the margin which will now appear with no author and no timestamps.
 
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/del_metadata.py">del_metadata.py</a>: python script that does the same as above, however with an additional (mask) option for modifying timestamps of comments using numpy. If the mask option is specified, then timestamps of comments in the margin will be changed through randomization where timestamps are assigned with an incremental component drawn from a uniform distribution.
-
+<!--a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/del_metadata.py">del_metadata.py</a>: Python script that does the same as above, however with an additional (mask) option for modifying timestamps of comments using numpy. If the mask option is specified, then timestamps of comments in the margin will be changed through randomization where timestamps are assigned with an incremental component drawn from a uniform distribution.
+-->
 ## Linecutter tool
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/linecutter.sh">linecutter.sh</a>: Insert line breaks in a text file at a limit of 72 characters but without breaking the last word.
-
-## Network scanner
-
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/netscan.sh">netscan.sh</a>: A reliable method for discovering other devices connected to the local area network. The script is based on nmap and arp-scan. IP and MAC addresses are extracted and summarized in table format. The system's local ARP* cache is also used to fill in missing MAC addresses that correspond to IP addresses which may have been detected by nmap but not by arp-scan.
-
-*Address Resolution Protocol (ARP) is a protocol for requesting information about an IP address; the response will be the MAC address of
-the device that has the requested IP address. Hence, ARP allows mapping an IP address to the link layer (MAC) address. ARP is also used when a device must discover the MAC address of the gateway (router) to be able to connect to the Internet for the first time.
 <!--
 ## Scrape image files from xkcd site
 
@@ -31,7 +30,7 @@ the device that has the requested IP address. Hence, ARP allows mapping an IP ad
 
 ## Android cleanup
 
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/android_cleanup.sh">android_cleanup.sh</a>: android debloating script to uninstall and replace bloatware with open source apps.
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/android_cleanup.sh">android_cleanup.sh</a>: script to uninstall and replace android bloatware with open source apps.
 
 ## Privacy-preserving method for merging datasets
 
