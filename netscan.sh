@@ -21,35 +21,36 @@ The script checks for nmap and arp-scan tools and installs them if
 missing (it assumes a Debian-based OS). It then extracts the name of the
 default network interface and its local IPv4 and MAC address. The script
 will use the default interface unless one is provided by the user via
-the -I switch. The IP address range to scan is derived from the netmask.
-Then nmap is executed over the local IP network range via ping-scan mode
-(i.e. no port scanning or OS detection). Additionally, arp-scan is
-executed following nmap. Both scans are repeated within a loop resulting
-in 4 scans in total; the reason for repeating the scans is that a scan
-may miss some devices if only one trial is attempted or if only 1 tool
-is used. The aggregated results of the scans are sorted sorted and made
-unique. An arp-scan returns both IP and MAC addresses, whereas nmap will
-be detecting only IP addresses. Any IP addresses that may have been
-detected by nmap but not by arp-scan are appended to the final result.
-In such cases, the corresponding MAC addresses are fetched from the
-local ARP cache/table which would have logged relevant entries as the
-system was pinging other devices during the nmap and arp-scan
-procedures. Finally, an entry for localhost IP and MAC address is
-appended (i.e. those of the system running the script) and the result is
-displayed in tabular format. Note: all devices on the LAN (including
-routers) will show in the table, except those whose iptables are set not
-to respond to ICMPs or pings.
+the -I switch (and is a valid interface, otherwise the script will
+revert to default interface). The IP address range to scan is derived
+from the netmask. Then nmap is executed over the local IP network range
+via ping-scan mode (i.e. no port scanning or OS detection).
+Additionally, arp-scan is executed following nmap. Both scans are
+repeated within a loop resulting in 4 scans in total; the reason for
+repeating the scans is that a scan may miss some devices if only one
+trial is attempted or if only 1 tool is used. The aggregated results of
+the scans are sorted sorted and made unique. An arp-scan returns both IP
+and MAC addresses, whereas nmap will be detecting only IP addresses. Any
+IP addresses that may have been detected by nmap but not by arp-scan are
+appended to the final result. In such cases, the corresponding MAC
+addresses are fetched from the local ARP cache/table which would have
+logged relevant entries as the system was pinging other devices during
+the nmap and arp-scan procedures. Finally, an entry for localhost IP and
+MAC address is appended (i.e. those of the system running the script)
+and the result is displayed in tabular format. Note: all devices on the
+LAN (including routers) will show in the table, except those whose
+iptables are set not to respond to ICMPs or pings.
 
 ADDITIONAL NOTES:
 
 If you are on a home LAN and you control the gateway router, you can
-check its ARP or DHCP table by accessing the router menu via browser. The
-entries for the DHCP leases given to various devices will reveal their
-IP and MAC addresses (note: some leases may be expired). The ARP table will
-also show all devices the router has communicated with. Listings will be
-similar to the result you get from running this script (except that you
-do not need to control or check the gateway itself - you only need to be
-connected to the network as any other device).
+check its ARP or DHCP table by accessing the router menu via browser.
+The entries for the DHCP leases given to various devices will reveal
+their IP and MAC addresses (note: some leases may be expired). The ARP
+table will also show all devices the router has communicated with.
+Listings will be similar to the result you get from running this script
+(except that you do not need to control or check the gateway itself -
+you only need to be connected to the network as any other device).
 
 The library scapy in Python provides similar functionality as this
 script, but it would be an overkill to use Python or to install a full
@@ -82,8 +83,6 @@ IP_address      MAC_address
 J.A., xrzfyvqk_k1jw@pm.me
 '
 
-set -Eeo pipefail
-
 print_usage() {
     echo -e "netscan: detect devices connected to your network.
     Usage: ./${0##*/}
@@ -92,20 +91,27 @@ print_usage() {
 }
 
 get_default_iface(){
-    echo `sudo ip route show default |
-          cut -d ' ' -f 5`
+    sudo ip route show default |
+    cut -d ' ' -f 5
+}
+
+get_all_ifaces(){
+    sudo ip link |
+    grep -E '^[0-9]:' |
+    cut -d ':' -f 2   |
+    grep -Ev 'lo$'
 }
 
 get_mac(){
-    echo `sudo ip link show "$1" |
-          grep 'ether'           |
-          awk '{print $2}'`
+    sudo ip link show "$1" |
+    grep 'ether'           |
+    awk '{print $2}'
 }
 
 get_ips(){
-    echo `sudo ip -o -4 address show "$1" |
-          tr -s ' '                       |
-          cut -d ' ' -f 4`
+    sudo ip -o -4 address show "$1" |
+    tr -s ' '                       |
+    cut -d ' ' -f 4
 }
 
 run_nmap(){
@@ -120,6 +126,15 @@ run_arpscan(){
 }
 
 main(){
+    # parse input
+    while getopts 'I:h' option; do
+        case $option in
+            h) print_usage;  exit 0 ;;
+            I) iface="$OPTARG"      ;;
+            *) print_usage;  exit 1 ;;
+        esac
+    done
+
     sudo echo > /dev/null
     if [ $? -ne 0 ]; then
         exit
@@ -132,15 +147,6 @@ main(){
     if [ -z "`sudo which arp-scan`" ]; then
         sudo apt-get install arp-scan
     fi
-
-    # parse input
-    while getopts 'I:h' option; do
-        case $option in
-            h) print_usage;  exit 0 ;;
-            I) iface="$OPTARG"      ;;
-            *) print_usage;  exit 1 ;;
-        esac
-    done
 
     # temporary files
     file_nmap=`mktemp /tmp/file_nmap.XXXXXX`
@@ -159,7 +165,9 @@ main(){
     trap "echo $LINENO" ERR
 
     iface_default=`get_default_iface`
-    if [ -z "$iface" ]; then
+    ifaces_list=`get_all_ifaces`
+    if [ -z "$iface" -o -z "$(grep "$iface" <<< "$ifaces_list")" ]; then
+        echo "Supplied network interface does not exist. Reverting to default $iface_default"
         iface="${iface_default}"
     fi
 
