@@ -84,20 +84,6 @@ J.A., xrzfyvqk_k1jw@pm.me
 
 set -Eeo pipefail
 
-sudo echo > /dev/null
-if [ $? -ne 0 ]; then
-    exit
-fi
-
-if [ -z "`sudo which nmap`" ]; then
-    sudo apt-get install nmap
-fi
-
-if [ -z "`sudo which arp-scan`" ]; then
-    sudo apt-get install arp-scan
-fi
-
-# functions
 print_usage() {
     echo -e "netscan: detect devices connected to your network.
     Usage: ./${0##*/}
@@ -134,6 +120,19 @@ run_arpscan(){
 }
 
 main(){
+    sudo echo > /dev/null
+    if [ $? -ne 0 ]; then
+        exit
+    fi
+
+    if [ -z "`sudo which nmap`" ]; then
+        sudo apt-get install nmap
+    fi
+
+    if [ -z "`sudo which arp-scan`" ]; then
+        sudo apt-get install arp-scan
+    fi
+
     # parse input
     while getopts 'I:h' option; do
         case $option in

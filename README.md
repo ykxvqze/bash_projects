@@ -1,3 +1,9 @@
+## Network scanner
+
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/netscan.sh">netscan.sh</a>: A reliable method for discovering other devices connected to your network. The script is based on `nmap` and `arp-scan`. IP and MAC addresses are extracted and summarized in tabular format. The system's local ARP cache is also used to fill in missing MAC addresses that correspond to IP addresses which may have been detected by nmap but not by arp-scan.
+
+> Address Resolution Protocol (ARP) is a protocol for requesting information about an IP address; the response will be the MAC address of the network interface that has the requested IP address. An example is when a device must discover the MAC address of the gateway (router). ARP allows mapping an IP address to the link layer (MAC) address.
+
 ## Set up s-nail (send/receive mail via CLI)
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/snail_setup.sh">snail_setup.sh</a>: Bash script for installing and configuring s-nail. The script allows interactively adding/removing IMAP/SMTP configurations for mail accounts. Mail can then be fetched and sent (in ASCII format) via CLI with `s-nail` as demonstrated in the script. MIME attachments can be copied to separate files and then decoded (base64 decoding) before being viewed with an appropriate application depending on file type.
@@ -6,12 +12,6 @@
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/otp_crypt.sh">otp_crypt.sh</a>: Implementation of a one-time pad encryption/decryption method: includes utility functions and a demo.
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/crypt_info.md">crypt_info.md</a>: A summary on public-key encryption and OTP symmetric-key encryption.
-
-## Network scanner
-
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/netscan.sh">netscan.sh</a>: A reliable method for discovering other devices connected to your network. The script is based on `nmap` and `arp-scan`. IP and MAC addresses are extracted and summarized in tabular format. The system's local ARP cache is also used to fill in missing MAC addresses that correspond to IP addresses which may have been detected by nmap but not by arp-scan.
-
-> Address Resolution Protocol (ARP) is a protocol for requesting information about an IP address; the response will be the MAC address of the network interface that has the requested IP address. An example is when a device must discover the MAC address of the gateway (router). ARP allows mapping an IP address to the link layer (MAC) address.
 
 ## Delete metadata
 

@@ -5,7 +5,7 @@ Functions and a demo for encrypting/decrypting via a one-time pad (OTP).
 USAGE: ./otp_crypt.sh [ -h ]
 
 OPTIONS:
-       -h     Print usage
+      [ -h ]  Print usage
 
 OUTPUT:
               Demo output in stdout (see: EXAMPLE).
