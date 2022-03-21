@@ -43,17 +43,11 @@ J.A., xrzfyvqk_k1jw@pm.me
 
 trap 'echo error on line: $LINENO' ERR
 
-function print_usage() {
+print_usage() {
     echo -e "scrape_xkcd: fetch cartoon images from the xkcd site iteratively.
     Usage:
     ./${0##*/}             Execute script and fetch images into ./xkcd directory
     ./${0##*/} [ -h ]      Print usage and exit\n"
-}
-
-delete_index_file() {
-    if [ -f ./xkcd/index.html ]; then
-        rm ./xkcd/index.html
-    fi
 }
 
 while getopts 'h' option; do
@@ -81,7 +75,10 @@ else
 fi
 
 while : ; do
-    delete_index_file
+    if [ -f ./xkcd/index.html ]; then
+        rm ./xkcd/index.html
+    fi
+
     echo "webpage counter: $i"
     wget -q -P './xkcd' "https://xkcd.com/$i/index.html"
 
