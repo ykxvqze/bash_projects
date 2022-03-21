@@ -161,8 +161,8 @@ main(){
     PID_FILE="/tmp/${0##*/}.pid"
     echo $$ > "${PID_FILE}"
 
-    trap "rm ${PID_FILE} ${file_nmap} ${file_arp}" SIGINT SIGTERM EXIT
-    trap "echo $LINENO" ERR
+    trap 'rm ${PID_FILE} ${file_nmap} ${file_arp}' SIGINT SIGTERM EXIT
+    trap 'echo $LINENO' ERR
 
     iface_default=`get_default_iface`
     ifaces_list=`get_all_ifaces`

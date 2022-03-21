@@ -42,8 +42,7 @@ Word and will be stripped of metadata.
 J.A., xrzfyvqk_k1jw@pm.me
 '
 
-set -Eeo pipefail
-trap "echo $LINENO" ERR
+trap 'echo $LINENO' ERR
 
 print_usage() {
     echo -e "del_metadata: delete author and timestamp metadata from .docx (Word) files.
