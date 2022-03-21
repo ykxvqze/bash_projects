@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 : '
-Scrape cartoon images iteratively from the xkcd site. Continue from last fetch upon script re-runs.
+Scrape cartoon images iteratively from the xkcd site. Continue from last fetch upon script re-run.
 
 USAGE:  ./scrape_xkcd.sh [ -h ] 
 
@@ -41,11 +41,19 @@ it will fetch only new cartoon images adding them to ./xkcd/
 J.A., xrzfyvqk_k1jw@pm.me
 '
 
+trap 'echo error on line: $LINENO' ERR
+
 function print_usage() {
     echo -e "scrape_xkcd: fetch cartoon images from the xkcd site iteratively.
     Usage:
     ./${0##*/}             Execute script and fetch images into ./xkcd directory
     ./${0##*/} [ -h ]      Print usage and exit\n"
+}
+
+delete_index_file() {
+    if [ -f ./xkcd/index.html ]; then
+        rm ./xkcd/index.html
+    fi
 }
 
 while getopts 'h' option; do
@@ -72,8 +80,8 @@ else
     echo 1 > ./xkcd/log_site_counter
 fi
 
-i=`cat ./xkcd/log_site_counter`
 while : ; do
+    delete_index_file
     echo "webpage counter: $i"
     wget -q -P './xkcd' "https://xkcd.com/$i/index.html"
 
@@ -87,7 +95,6 @@ while : ; do
                   sed 's/"//g'`
     echo "Fetching $url_of_image..."
     wget -q -P './xkcd' "$url_of_image"
-    rm ./xkcd/index.html
     let i++
     echo "$i" > ./xkcd/log_site_counter
 done
