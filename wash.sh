@@ -2,52 +2,71 @@
 : '
 Clear Firefox data, bookmarks, cookies, cache, and other files
 
-Usage:  ./wash.sh
+USAGE:  ./wash.sh [ -h ]
 
-ARGS:
-        None: N/A
+OPTIONS:
+        [ -h ]         Print usage
 
 OUTPUT:
-
-        None: N/A
+        N/A
 
 DESCRIPTION:
 
-A script that can be placed as a cron job for browser data and other files cleanup. The script iterates 
-over all firefox profiles, recursively clearing specific private files within all subdirectories of 
-~/.mozilla/firefox. These include filenames containing the patterns: 
-cookies, places, history, webappsstore, and bookmarks; examples: cookies.sqlite, places.sqlite, 
-formhistory.sqlite, webappsstore.sqlite. Also, all files within the directories */datareporting and 
-*/bookmarkbackups are cleared and then removed. All files within ~/.cache/mozilla/firefox are also cleared 
-except those in */settings, */startupCache, and */safebrowsing. Finally, all files in ~/.cache/thumbnails 
-are cleared and removed, in addition to those in ~/Documents/temp (supposedly containing files which can be 
-disposed of when needed by uncommenting the section).
+A script that can be set as cron job for browser and other cache cleanup.
+It iterates over existent firefox profiles and recursively clears cache
+and other files within target directories. Patterns sought include:
+`cookies`, `places`, `history`, `webappsstore`, and `bookmarks`,
+`datareporting`, `bookmarkbackups`. Also system thumbnail cache located
+in ~/.cache/thumbnails is cleared and removed.
 
 J.A., xrzfyvqk_k1jw@pm.me
 '
 
-# firefox browser
+trap 'echo error on line: $LINENO' ERR
+
+print_usage() {
+    echo -e "wash: clear Firefox cache, cookies, and other files.
+    Usage: ./${0##*/}
+    [ -h ]              Print usage and exit\n"
+}
+
+while getopts 'h' option; do
+    case $option in
+        h) print_usage;  exit 0 ;;
+        *) echo -e 'Incorrect usage! See below:\n'; 
+           print_usage;  exit 1 ;;
+    esac
+done
+
+# firefox
 cd ~/.cache/mozilla/firefox/
-find . -type f ! -path "./*/settings/*" ! -path "./*/startupCache/*" ! -path "./*/safebrowsing/*" -exec bash -c '>"{}"' \; 
+find . -type f ! -path "./*/settings/*"     \
+               ! -path "./*/startupCache/*" \
+               ! -path "./*/safebrowsing/*" \
+                 -exec bash -c '>"{}"'      \; 
 
 cd ~/.mozilla/firefox/
-find . -type f -name "cookies*" -exec bash -c '>"{}"' \;
-find . -type f -name "places*" -exec bash -c '>"{}"' \;
-find . -type f -name "*history*" -exec bash -c '>"{}"' \;
-find . -type f -name "webappsstore*" -exec bash -c '>"{}"' \;
-find . -type f -name "bookmarks*" -exec bash -c '>"{}"' \; 
+find . -type f -name "cookies*"      \
+            -o -name "places*"       \
+            -o -name "*history*"     \
+            -o -name "webappsstore*" \
+            -o -name "bookmarks*"    \
+               -exec bash -c '>"{}"' \; 
 
-find . -type f -path "./*/datareporting/*" -exec bash -c '>"{}"; rm "{}"' \;
-find . -type f -path "./*/bookmarkbackups/*" -exec bash -c '>"{}"; rm "{}"' \;
+find . -type f -path "./*/datareporting/*"    \
+            -o -path "./*/bookmarkbackups/*"  \
+               -exec bash -c '>"{}"; rm "{}"' \;
 
-# other cache
+# other
 cd ~/.cache/thumbnails
 find . -type f -exec bash -c '>"{}"; rm "{}"' \; 
 
-#cd ~/.cache/thunderbird/
-#find . -type f -exec bash -c '>"{}"; rm "{}"' \;
+<< 'EOF'
+cd ~/.cache/thunderbird/
+find . -type f -exec bash -c '>"{}"; rm "{}"' \;
 
-# temp folder
-#cd ~/Documents/temp
-#find . -type f -exec bash -c '>"{}"; rm "{}"' \; 
-#rm -rf ~/Documents/temp
+# custom temp folder
+cd ~/Documents/temp
+find . -type f -exec bash -c '>"{}"; rm "{}"' \; 
+rm -rf ~/Documents/temp
+EOF

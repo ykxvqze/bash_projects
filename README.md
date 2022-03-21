@@ -30,7 +30,7 @@
 
 ## Android cleanup
 
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/android_cleanup.sh">android_cleanup.sh</a>: script to uninstall and replace android bloatware with open source apps.
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/android_cleanup.sh">android_cleanup.sh</a>: script to brute-force uninstall and/or replace extraneous android apps (i.e. bloatware) with open source apps and disallowing automatic reactivation. The list of packages to uninstall can be modified prior script execution.
 
 ## Privacy-preserving method for merging datasets
 

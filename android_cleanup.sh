@@ -1,28 +1,50 @@
 #!/usr/bin/env bash
 : '
-Android cleanup script
+Android cleanup: uninstall extraneous apps and/or replace with open-source ones.
 
-Usage:  ./android_cleanup.sh
+USAGE:  ./android_cleanup.sh [ -h ]
         
-        Note: phone should be connected by USB and debugging mode enabled under Developer options.
-              ./packages_to_remove.txt file should list apps to remove (1 per line); modify as needed.
+                Phone must be connected by USB and debugging mode enabled
+                (`Developer` options). File ./packages_to_remove.txt
+                should list apps to remove (1 per line) and can be modified
+                as needed. Packages to install can be modified within the
+                the script by removing or adding URLs of open source apps
+                to install (e.g. from `f-droid.org`).
 
-ARGS:
-        None: N/A
-        
-Output:
-        None: N/A
+OPTIONS:
+        [ -h ]  Print usage
+
+OUTPUT:
+        N/A
 
 DESCRIPTION:
 
-A script for debloating android Huawei device (e.g. nova 2 Plus) using adb shell.
-The script removes a list of pre-installed apps from Google, Huawei, Facebook, and other junk.
-The list can be found in file packages_to_remove.txt and can be modified.
-Basic apps like contacts, dialer, filemanger, notes, musicplayer, etc. are replaced by 
-open-source _simplemobiletools_ available on F-Droid. Change these if you prefer other apps.
+A script for uninstalling apps on an android device via adb shell (and
+disallowing automatic reactivation). The script removes a list of
+pre-installed apps from Google, Huawei, Facebook, and other junk without
+breaking the system. Additionally, basic apps like contacts, dialer,
+keyboard, filemanger, gallery, browser, notes, etc. are replaced by
+open-source ones (`simplemobiletools` available on F-Droid). Change
+these if you prefer other apps (or update their versions/URLs).
 
 J.A., xrzfyvqk_k1jw@pm.me
 '
+
+trap 'echo error on line: $LINENO' ERR
+
+print_usage() {
+    echo -e "android_cleanup:  uninstall extraneous apps and/or replace with open-source ones.
+    Usage: ./${0##*/}
+    [ -h ]              Print usage and exit\n"
+}
+
+while getopts 'h' option; do
+    case $option in
+        h) print_usage;  exit 0 ;;
+        *) echo -e 'Incorrect usage! See below:\n'; 
+           print_usage;  exit 1 ;;
+    esac
+done
 
 cat > package_urls.txt << EOF
 https://f-droid.org/repo/rkr.simplekeyboard.inputmethod_84.apk
@@ -52,4 +74,4 @@ done
 rm packages_to_add.txt package_urls.txt
 rm -rf /tmp/app_downloads/
 
-echo 'Done cleaning!'
+echo 'Done cleaning.'

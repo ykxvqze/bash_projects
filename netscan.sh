@@ -2,14 +2,14 @@
 : '
 Scan LAN to discover IP and MAC addresses of all devices on the network.
 
-USAGE:  ./netscan.sh [-I <interface>]
+USAGE:  ./netscan.sh [-I <interface>] [ -h ]
 
 OPTIONS:
-        -h             Print usage
-        -I <interface> An optional switch to specify a network interface.
-                       If unspecified, the default interface is used.
-                       Note that the IP range to scan is automatically
-                       deduced from the netmask. 
+       [ -h ]              Print usage
+       [ -I <interface> ]  An optional switch to specify a network interface.
+                           If unspecified, the default interface is used.
+                           Note that the IP range to scan is automatically
+                           deduced from the netmask. 
 
 OUTPUT:
         A listing of IP and MAC addresses of all network devices in
@@ -162,7 +162,7 @@ main(){
     echo $$ > "${PID_FILE}"
 
     trap 'rm ${PID_FILE} ${file_nmap} ${file_arp}' SIGINT SIGTERM EXIT
-    trap 'echo $LINENO' ERR
+    trap 'echo error on line: $LINENO' ERR
 
     iface_default=`get_default_iface`
     ifaces_list=`get_all_ifaces`
