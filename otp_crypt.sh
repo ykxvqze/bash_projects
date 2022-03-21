@@ -50,7 +50,7 @@ set -Eeo pipefail
 function print_usage() {
     echo -e "otp_crypt: demo and utility functions for one-time pad encryption/decryption.
     Usage:
-    ./${0##*/}             Show demo
+    ./${0##*/}             Execute demo
     ./${0##*/} [ -h ]      Print usage and exit\n"
 }
 

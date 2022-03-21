@@ -19,14 +19,13 @@
 
 <!--a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/del_metadata.py">del_metadata.py</a>: Python script that does the same as above, however with an additional (mask) option for modifying timestamps of comments using numpy. If the mask option is specified, then timestamps of comments in the margin will be changed through randomization where timestamps are assigned with an incremental component drawn from a uniform distribution.
 -->
+## Scrape image files from xkcd site
+
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/scrape_xkcd.sh">scrape_xkcd.sh</a>: scrape cartoon images from an (inaccessible) xkcd directory. The script keeps a log of the last page scraped (from its previous execution if any) and will start fetching images from where it left off (i.e. adding only new images to a designated directory).
+
 ## Linecutter tool
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/linecutter.sh">linecutter.sh</a>: Insert line breaks in a text file at a limit of 72 characters but without breaking the last word.
-<!--
-## Scrape image files from xkcd site
-
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/scrape_imgs.sh">scrape_img.sh</a>: download cartoon images from an (inaccessible) xkcd directory.
--->
 
 ## Android cleanup
 
