@@ -96,7 +96,7 @@ get_default_iface(){
 }
 
 get_all_ifaces(){
-    sudo ip link |
+    sudo ip link      |
     grep -E '^[0-9]:' |
     cut -d ':' -f 2   |
     grep -Ev 'lo$'
