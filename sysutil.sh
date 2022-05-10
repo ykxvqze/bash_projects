@@ -8,19 +8,19 @@ OPTIONS:
         [ -h ]    Print usage and exit
 
 EXAMPLES:
-         . ./sysutils.sh
+         . ./sysutil.sh
          battery_status  # battery percentage charge remaining
-         userlog         # list users currently logged in
+         userinfo        # list users currently logged in
 	 ports_open      # list TCP ports open on localhost
 '
 
 usage() {
     echo -e "sysutil.sh: utility functions for daily sysops.
     Usage:
-    . ./sysutil.sh           Source the script, then...
-    userlog                  Call some utility function
-
     . ./sysutil.sh [ -h ]    Print usage and exit\n"
+
+    . ./sysutil.sh           Source the script, then...
+    userinfo                 Call some utility function
 }
 
 log_message() {
@@ -82,4 +82,3 @@ sysinfo() {
      - MemFree   : `free -m | grep '^Mem:'  | tr -s ' ' | cut -d ' ' -f 4` mB
      - SwapTotal : `free -m | grep '^Swap:' | tr -s ' ' | cut -d ' ' -f 2` mB "
 }
-
