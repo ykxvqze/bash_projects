@@ -27,6 +27,10 @@
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/linecutter.sh">linecutter.sh</a>: Insert line breaks in a text file at a limit of 72 characters but without breaking the last word.
 
+## Sysops utility functions
+
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/sysutil.sh">sysutil.sh</a>: Utility functions set up for daily sysops. The script should be sourced (note: it is a growing script: more functions will be written and added with time ...).
+
 ## Android cleanup
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/android_cleanup.sh">android_cleanup.sh</a>: script to brute-force uninstall and/or replace extraneous android apps (i.e. bloatware) with open source apps and disallowing automatic reactivation. The list of packages to uninstall can be modified prior script execution.
