@@ -82,3 +82,22 @@ sysinfo() {
      - MemFree   : `free -m | grep '^Mem:'  | tr -s ' ' | cut -d ' ' -f 4` mB
      - SwapTotal : `free -m | grep '^Swap:' | tr -s ' ' | cut -d ' ' -f 2` mB "
 }
+
+config_files() {
+    files=('/etc/group' '/etc/hosts' '/etc/crontab' '/etc/sysctl.conf' '/etc/ssh/ssh_config'
+	   '/etc/ssh/sshd_config' '/etc/resolv.conf' '/etc/syslog.conf' '/etc/samba/smb.conf'
+	   '/etc/ldap/ldap.conf' '/etc/fstab' '/etc/fuse.conf' '/etc/host.conf' '/etc/ld.so.conf'
+           '/etc/logrotate.conf' '/etc/netconfig')
+
+    echo 'The following configuration files exist:'
+    cnt=0
+    for i in ${files[*]}; do
+        [ -f $i ] && echo $i
+	((cnt++))
+    done
+
+    if [ $cnt -eq 0 ]; then
+        echo 'No configuration files found.'
+    fi
+}
+
