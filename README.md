@@ -33,15 +33,15 @@
 ```
 . ./sysutil.sh                    # Source the script; internal functions include:
     |
-    |--- battery_status           # Show battery percentage charge remaining
-    |--- userinfo                 # List users currently logged in
-    |--- ports_open               # List TCP ports open on localhost
-    |--- sysinfo                  # List user/superuser, OS info, RAM, local/global IP address
-    |--- config_files             # Check for existence of important configuration files
-    |--- log_rotate <file>        # Split file if > 100mB into smaller ones, gzip them as <file>.<i>.gz
+    |--- battery_status           # Show battery percentage charge remaining;
+    |--- userinfo                 # List users currently logged in;
+    |--- ports_open               # List TCP ports open on localhost;
+    |--- sysinfo                  # List user/superuser, OS info, RAM, local/global IP address;
+    |--- config_files             # Check for existence of important configuration files;
+    |--- log_rotate <file>        # Split file if > 100mB into smaller ones, gzip them and store;
     |--- mysql_backup             # Backup all mysql databases into ~/backup/mysql/ and optionally
-                                  # use switch -r for sending the backup to remote server over rsync
-                                  # (backups older than 1 week are automatically deleted)
+                                  # use switch -r for sending the backup to remote server via rsync
+                                  # (backups older than 1 week are automatically deleted);
 ```
 
 ## Android cleanup
