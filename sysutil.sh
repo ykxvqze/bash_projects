@@ -109,7 +109,7 @@ log_rotate() {
     logfile="$1"
     filesize_max='10M'
     rm "$logfile".* 2> /dev/null
-    split -b "$filesize_max" "$logfile" "${logfile}."  # ordered alphabetically: logfile.a...
+    split -b "$filesize_max" "$logfile" "${logfile}."  # ordered alphabetically: ${logfile}.a...
 
     i=1
     for file_ in `ls "$logfile".*`; do
