@@ -38,9 +38,11 @@
     |--- ports_open               # List TCP ports open on localhost
     |--- sysinfo                  # List user/superuser, OS info, RAM, local/global IP address
     |--- config_files             # Check for existence of important configuration files
-    |--- log_rotate <file>        # Split file if > 100mB into smaller ones (<= 100mB), gzip them and store as <file>.<i>.gz
-    |--- mysql_backup             # Backup all mysql databases into ~/backup/mysql/ and optionally use switch -r for sending the
-                                  # backup to remote server over rsync (backups older than 1 week are automatically deleted).```
+    |--- log_rotate <file>        # Split file if > 100mB into smaller ones, gzip them as <file>.<i>.gz
+    |--- mysql_backup             # Backup all mysql databases into ~/backup/mysql/ and optionally
+                                  # use switch -r for sending the backup to remote server over rsync
+                                  # (backups older than 1 week are automatically deleted)
+```
 
 ## Android cleanup
 
