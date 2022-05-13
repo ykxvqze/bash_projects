@@ -34,7 +34,7 @@
 . ./sysutil.sh                    # Source the script; internal functions include:
     |
     |--- battery_status           # Show battery percentage charge remaining;
-    |--- userinfo                 # List users currently logged in;
+    |--- userinfo                 # List users currently logged in, number of sessions, etc.;
     |--- ports_open               # List TCP ports open on localhost;
     |--- sysinfo                  # List user/superuser, OS info, RAM, local/global IP address;
     |--- config_files             # Check for existence of important configuration files;
