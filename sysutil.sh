@@ -9,18 +9,22 @@ OPTIONS:
 
 EXAMPLES:
          . ./sysutil.sh
-         battery_status  # battery percentage charge remaining
-         userinfo        # list users currently logged in
-	 ports_open      # list TCP ports open on localhost
+         battery_status      # battery percentage charge remaining
+         userinfo            # call some utility function
 '
 
 usage() {
     echo -e "sysutil.sh: utility functions for daily sysops.
     Usage:
-    . ./sysutil.sh [ -h ]    Print usage and exit\n"
 
-    . ./sysutil.sh           Source the script, then...
-    userinfo                 Call some utility function
+    . ./sysutil.sh           # source the script, then...
+    battery_status           # battery percentage charge remaining
+    userinfo                 # list users currently logged in
+    ports_open               # list TCP ports open on localhost
+    sysinfo                  # list user/superuser, OS info, RAM, local/global IP address
+    config_files             # check for existence of important configuration files
+    log_rotate               # split <file> if > 100mB into smaller ones (<= 100mB),
+                             # gzip them and store these as <file>.<i>.gz\n"
 }
 
 log_message() {
@@ -60,10 +64,10 @@ ports_open() {
 sysinfo() {
     superuser=`grep ':x:0:' /etc/passwd | cut -d ':' -f 1`
     local_ip=`ip -o -4 address  |
-	      tr -s ' '         |
-	      grep -v 'lo inet' |
-	      cut -d ' ' -f 4   |
-	      sed 's/\/.*//'`
+              tr -s ' '         |
+              grep -v 'lo inet' |
+              cut -d ' ' -f 4   |
+              sed 's/\/.*//'`
     global_ip=`wget -O - -q 'http://icanhazip.com'`
 
     echo "
@@ -76,7 +80,7 @@ sysinfo() {
     Arch         : `uname -m`
     IP (local)   : ${local_ip}
     IP (global)  : ${global_ip}
-    Ports open   : `ports_open`  
+    Ports open   : `ports_open`
     RAM
      - MemTotal  : `free -m | grep '^Mem:'  | tr -s ' ' | cut -d ' ' -f 2` mB
      - MemFree   : `free -m | grep '^Mem:'  | tr -s ' ' | cut -d ' ' -f 4` mB
@@ -85,15 +89,15 @@ sysinfo() {
 
 config_files() {
     files=('/etc/group' '/etc/hosts' '/etc/crontab' '/etc/sysctl.conf' '/etc/ssh/ssh_config'
-	   '/etc/ssh/sshd_config' '/etc/resolv.conf' '/etc/syslog.conf' '/etc/samba/smb.conf'
-	   '/etc/ldap/ldap.conf' '/etc/fstab' '/etc/fuse.conf' '/etc/host.conf' '/etc/ld.so.conf'
+           '/etc/ssh/sshd_config' '/etc/resolv.conf' '/etc/syslog.conf' '/etc/samba/smb.conf'
+           '/etc/ldap/ldap.conf' '/etc/fstab' '/etc/fuse.conf' '/etc/host.conf' '/etc/ld.so.conf'
            '/etc/logrotate.conf' '/etc/netconfig')
 
     echo 'The following configuration files exist:'
     cnt=0
     for i in ${files[*]}; do
         [ -f $i ] && echo $i
-	((cnt++))
+        ((cnt++))
     done
 
     if [ $cnt -eq 0 ]; then
@@ -101,3 +105,16 @@ config_files() {
     fi
 }
 
+log_rotate() {
+    logfile="$1"
+    filesize_max='10M'
+    rm "$logfile".* 2> /dev/null
+    split -b "$filesize_max" "$logfile" "${logfile}."  # ordered alphabetically: logfile.a...
+
+    i=1
+    for file_ in `ls "$logfile".*`; do
+        cat "$file_" | gzip > "${logfile}".$i.gz
+        rm "$file_"
+        let i++
+    done
+}
