@@ -30,8 +30,8 @@
 ## Sysops utility functions
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/sysutil.sh">sysutil.sh</a>: Utility functions set up for daily sysops. The script should be sourced (note: it is a growing script; more functions will be written and added with time ...).
-
->```. ./sysutil.sh                    # Source the script; internal functions include:
+```
+>   . ./sysutil.sh                    # Source the script; internal functions include:
         |
         |--- battery_status           # Show battery percentage charge remaining
         |--- userinfo                 # List users currently logged in
