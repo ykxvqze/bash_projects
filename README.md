@@ -31,16 +31,16 @@
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/sysutil.sh">sysutil.sh</a>: Utility functions set up for daily sysops. The script should be sourced (note: it is a growing script; more functions will be written and added with time ...).
 ```
->   . ./sysutil.sh                    # Source the script; internal functions include:
-        |
-        |--- battery_status           # Show battery percentage charge remaining
-        |--- userinfo                 # List users currently logged in
-        |--- ports_open               # List TCP ports open on localhost
-        |--- sysinfo                  # List user/superuser, OS info, RAM, local/global IP address
-        |--- config_files             # Check for existence of important configuration files
-        |--- log_rotate <file>        # Split file if > 100mB into smaller ones (<= 100mB), gzip them and store as <file>.<i>.gz
-        |--- mysql_backup             # Backup all mysql databases into ~/backup/mysql/ and optionally use switch -r for sending the
-                                      # backup to remote server over rsync (backups older than 1 week are automatically deleted).```
+. ./sysutil.sh                    # Source the script; internal functions include:
+    |
+    |--- battery_status           # Show battery percentage charge remaining
+    |--- userinfo                 # List users currently logged in
+    |--- ports_open               # List TCP ports open on localhost
+    |--- sysinfo                  # List user/superuser, OS info, RAM, local/global IP address
+    |--- config_files             # Check for existence of important configuration files
+    |--- log_rotate <file>        # Split file if > 100mB into smaller ones (<= 100mB), gzip them and store as <file>.<i>.gz
+    |--- mysql_backup             # Backup all mysql databases into ~/backup/mysql/ and optionally use switch -r for sending the
+                                  # backup to remote server over rsync (backups older than 1 week are automatically deleted).```
 
 ## Android cleanup
 
