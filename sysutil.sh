@@ -23,8 +23,8 @@ usage() {
     ports_open               # list TCP ports open on localhost
     sysinfo                  # list user/superuser, OS info, RAM, local/global IP address
     config_files             # check for existence of important configuration files
-    log_rotate               # split <file> if > 100mB into smaller ones (<= 100mB),
-                             # gzip them and store these as <file>.<i>.gz\n"
+    log_rotate <file>        # split file if > 100mB into smaller ones (<= 100mB), gzip
+                             # them and store as <file>.<i>.gz\n"
 }
 
 log_message() {
