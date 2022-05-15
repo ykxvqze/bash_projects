@@ -25,7 +25,7 @@ usage(){
     config_files             # Check for existence of important configuration files
     log_rotate <file>        # Split file if > 100mB into smaller ones (<= 100mB), gzip
                              # them and store as <file>.<i>.gz
-    mysql_backup             # Backup all mysql databases into ~/backup/mysql/ and optionally
+    mysql_backup [ -r ]      # Backup all mysql databases into ~/backup/mysql/ and optionally
                              # use switch -r for sending the backup to remote server over rsync;
                              # (backups older than 1 week are automatically deleted afterwards).\n"
 }
@@ -91,11 +91,11 @@ sysinfo(){
 }
 
 config_files(){
-    files=('/etc/group' '/etc/hosts' '/etc/crontab' '/etc/sysctl.conf' '/etc/ssh/ssh_config'
-           '/etc/ssh/sshd_config' '/etc/resolv.conf' '/etc/syslog.conf' '/etc/samba/smb.conf'
-           '/etc/ldap/ldap.conf' '/etc/fstab' '/etc/fuse.conf' '/etc/host.conf' '/etc/ld.so.conf'
-           '/etc/logrotate.conf' '/etc/netconfig')
-
+    files=('/etc/group' '/etc/hosts' '/etc/login.defs' '/etc/crontab' '/etc/sysctl.conf'
+           '/etc/ssh/ssh_config' '/etc/ssh/sshd_config' '/etc/resolv.conf' '/etc/syslog.conf'
+           '/etc/samba/smb.conf' '/etc/ldap/ldap.conf' '/etc/fstab' '/etc/fuse.conf'
+           '/etc/host.conf' '/etc/ld.so.conf' '/etc/logrotate.conf' '/etc/netconfig')
+    echo ''
     echo 'The following configuration files exist:'
     cnt=0
     for i in ${files[*]}; do
@@ -130,7 +130,7 @@ mysql_backup(){
     path_to_backup="$HOME/backup/mysql/"
     n_to_keep='7'  # number of mysql backups (days) to keep
 
-    # rsync to another server (instead of AWS)
+    # rsync to another server
     remote_host='remote.server'
     remote_user='user'
     remote_dir='/mysql_backup/'

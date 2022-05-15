@@ -39,9 +39,46 @@
     |--- sysinfo                  # List user/superuser, OS info, RAM, local/global IP address;
     |--- config_files             # Check for existence of important configuration files;
     |--- log_rotate <file>        # Split file if > 100mB into smaller ones, gzip them and store;
-    |--- mysql_backup             # Backup all mysql databases into ~/backup/mysql/ and optionally
+    |--- mysql_backup [ -r ]      # Backup all mysql databases into ~/backup/mysql/ and optionally
                                   # use switch -r for sending the backup to remote server via rsync
                                   # (backups older than 1 week are automatically deleted);
+```
+
+## Security auditing/hardening
+
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/scansec.sh">scansec.sh</a>: an interactive script for server security auditing and hardening. Note: option -a activates an audit-only mode (i.e. no hardening actions are executed). The main functions of `scansec.sh` (along with areas audited) are listed below.
+
+```
+scansec.sh
+|--- check_umask()
+|    |--- default umask for users = 077
+|    |--- default umask for root = 077
+|--- check_login_settings()
+|    |--- Maximum number of days till password change = 90
+|    |--- Number of days till account locking for user inactivity = 30
+|    |--- Lockout time upon 5 unsuccessful login attempts = 10 minutes
+|    |--- Delay time between separate logins  = 10 seconds
+|    |--- Disallow non-local logins to privileged accounts = ON
+|--- check_sysfiles()
+|    |--- check user/group ownership and permissions for /etc/passwd and /etc/passwd-
+|    |--- check user/group ownership and permissions for /etc/shadow and /etc/shadow-
+|    |--- check user/group ownership and permissions for /etc/group and /etc/group-
+|    |--- check user/group ownership and permissions for /etc/gshadow and /etc/gshadow-
+|    |--- check user/group ownership and permissions for /etc/security/opasswd
+|--- check_services()
+|    |--- CUPS print server
+|    |--- rpcbind (NFS)
+|----check_sshd()
+|    |--- Port 22 (change to another port; security by obscurity)
+|    |--- LogLevel INFO
+|    |--- IgnoreRhosts yes
+|    |--- HostbasedAuthentication no
+|    |--- PermitRootLogin no
+|    |--- PermitEmptyPasswords no
+|    |--- PermitUserEnvironment no
+|    |--- #X11Forwarding yes (i.e. disable it)
+|--- check_networks()
+     |--- Ipv4 forwarding = disabled
 ```
 
 ## Android cleanup
