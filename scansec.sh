@@ -103,7 +103,7 @@ check_umask(){
     if [ ! "$audit_only" -a ${val} -ne '077' ]; then
         echo -e "${orange}[?] Set default umask for users to: 077 (y/n)"; read -s -n 1 x
         if [ ${x,,} == y ]; then
-            sed -E 's/(^UMASK\s+)[0-9]+/\1077/' /etc/login.defs | grep '^UMASK'
+            sed -iE 's/(^UMASK\s+)[0-9]+/\1077/' /etc/login.defs | grep '^UMASK'
             echo 'OK'
         fi
     fi
@@ -119,7 +119,7 @@ check_umask(){
     if [ ! "$audit_only" -a ${val} != '077' ]; then
         echo -e "${orange}[?] Set default umask for root to: 077 (y/n)"; read -s -n 1 x
         if [ ${x,,} == y ]; then
-            sudo sed -E 's/(^# umask\s+)[0-9]+/\1077/' /root/.bashrc | grep '^# umask'
+            sudo sed -iE 's/(^# umask\s+)[0-9]+/\1077/' /root/.bashrc | grep '^# umask'
             echo 'OK'
         fi
     fi
@@ -153,7 +153,7 @@ check_login_settings(){
     if [ ! "$audit_only" -a ${val} -ne '90' ]; then
         echo -e "${orange}[?] Set maximum number of days till password change to: 90 (y/n)"; read -s -n 1 x
         if [ ${x,,} == y ]; then
-            sed -E 's/(^PASS_MAX_DAYS\s+)[0-9]+/\190/' /etc/login.defs | grep -E 'PASS_MAX_DAYS\s+[0-9]+'
+            sed -iE 's/(^PASS_MAX_DAYS\s+)[0-9]+/\190/' /etc/login.defs | grep -E 'PASS_MAX_DAYS\s+[0-9]+'
             echo 'OK'
         fi
     fi
@@ -191,7 +191,7 @@ check_login_settings(){
     if [ ! "$audit_only" -a ${val} -ne '0' ]; then
         echo -e "${orange}[?] Set lockout time upon 5 unsuccessful login attempts to: 10 minutes (y/n)"; read -s -n 1 x
         if [ ${x,,} == y ]; then
-            sed -E '/session\s+optional\s+pam_keyinit.so\s+force\s+revoke/a\auth required pam_tally2\.so onerr=fail audit silent deny=5 unlock_time=600' /etc/pam.d/login | grep 'unlock_time='
+            sed -iE '/session\s+optional\s+pam_keyinit.so\s+force\s+revoke/a\auth required pam_tally2\.so onerr=fail audit silent deny=5 unlock_time=600' /etc/pam.d/login | grep 'unlock_time='
             echo 'OK'
         fi
     fi
@@ -208,7 +208,7 @@ check_login_settings(){
     if [ ! "$audit_only" -a ${val} -ne '10000000' ]; then
         echo -e "${orange}[?] Set delay time between separate logins to: 10 seconds (y/n)"; read -s -n 1 x
         if [ ${x,,} == y ]; then
-            sed -E "s/(delay=)[0-9]+/\110000000/" /etc/pam.d/login | grep 'delay='
+            sed -iE "s/(delay=)[0-9]+/\110000000/" /etc/pam.d/login | grep 'delay='
             echo 'OK'
         fi
     fi
@@ -226,7 +226,7 @@ check_login_settings(){
     if [ ! "$audit_only" -a ${val} -ne 0 ]; then
         echo -e "${orange}[?] Set a disallow on non-local logins to privileged accounts (y/n)"; read -s -n 1 x
         if [ ${x,,} == y ]; then
-            sed -E '/^#-:wheel:ALL EXCEPT LOCAL.*/s/#//' /etc/security/access.conf | grep '.*EXCEPT LOCAL'
+            sed -iE '/^#-:wheel:ALL EXCEPT LOCAL.*/s/#//' /etc/security/access.conf | grep '.*EXCEPT LOCAL'
             echo 'OK'
         fi
     fi
@@ -435,7 +435,7 @@ check_sshd(){
     if [ ! "$audit_only" -a $is_port_default -eq 0 ]; then
         echo -e "${orange}[?] Change SSH port from default (22) to 57381 (y/n)"; read -s -n 1 x
         if [ ${x,,} == y ]; then
-            sed -E 's/^#Port 22/Port 57381/' /etc/ssh/sshd_config | grep 'Port 57381'
+            sed -iE 's/^#Port 22/Port 57381/' /etc/ssh/sshd_config | grep 'Port 57381'
             echo 'OK'
         fi
     fi
@@ -453,7 +453,7 @@ check_sshd(){
     if [ ! "$audit_only" -a $is_loglevel_info -ne 0 ]; then
         echo -e "${orange}[?] Set SSH LogLevel to INFO (y/n)"; read -s -n 1 x
         if [ ${x,,} == y ]; then
-            sed -E '/LogLevel INFO/s/^#//' /etc/ssh/sshd_config | grep 'LogLevel INFO'
+            sed -iE '/LogLevel INFO/s/^#//' /etc/ssh/sshd_config | grep 'LogLevel INFO'
             echo 'OK'
         fi
     fi
@@ -471,7 +471,7 @@ check_sshd(){
     if [ ! "$audit_only" -a $is_ignore_rhosts -ne 0 ]; then
         echo -e "${orange}[?] Enable IgnoreRhosts (y/n)"; read -s -n 1 x
         if [ ${x,,} == y ]; then
-            sed -E '/IgnoreRhosts.*/s/^#//' /etc/ssh/sshd_config | grep 'IgnoreRhosts'
+            sed -iE '/IgnoreRhosts.*/s/^#//' /etc/ssh/sshd_config | grep 'IgnoreRhosts'
             echo 'OK'
         fi
     fi
@@ -489,7 +489,7 @@ check_sshd(){
     if [ ! "$audit_only" -a $is_hostauth_off -ne 0 ]; then
         echo -e "${orange}[?] Disable HostbasedAuthentication (y/n)"; read -s -n 1 x
         if [ ${x,,} == y ]; then
-            sed -E '/HostbasedAuthentication.*no/s/^#//' /etc/ssh/sshd_config | grep 'HostbasedAuthentication no'
+            sed -iE '/HostbasedAuthentication.*no/s/^#//' /etc/ssh/sshd_config | grep 'HostbasedAuthentication no'
             echo 'OK'
         fi
     fi
@@ -507,7 +507,7 @@ check_sshd(){
     if [ ! "$audit_only" -a $is_rootlogin_off -ne 0 ]; then
         echo -e "${orange}[?] Disable PermitRootLogin (y/n)"; read -s -n 1 x
         if [ ${x,,} == y ]; then
-            sed -E 's/#PermitRootLogin\s+prohibit-password/PermitRootLogin no/' /etc/ssh/sshd_config | grep 'PermitRootLogin no'
+            sed -iE 's/#PermitRootLogin\s+prohibit-password/PermitRootLogin no/' /etc/ssh/sshd_config | grep 'PermitRootLogin no'
             echo 'OK'
         fi
     fi
@@ -525,7 +525,7 @@ check_sshd(){
     if [ ! "$audit_only" -a $is_emptypasswd_off -ne 0 ]; then
         echo -e "${orange}[?] Disable PermitEmptyPasswords (y/n)"; read -s -n 1 x
         if [ ${x,,} == y ]; then
-            sed -E '/PermitEmptyPasswords.*no/s/^#//' /etc/ssh/sshd_config | grep 'PermitEmptyPasswords no'
+            sed -iE '/PermitEmptyPasswords.*no/s/^#//' /etc/ssh/sshd_config | grep 'PermitEmptyPasswords no'
             echo 'OK'
         fi
     fi
@@ -543,7 +543,7 @@ check_sshd(){
     if [ ! "$audit_only" -a $is_userenv_off -ne 0 ]; then
         echo -e "${orange}[?] Disable PermitUserEnvironment (y/n)"; read -s -n 1 x
         if [ ${x,,} == y ]; then
-            sed -E '/PermitUserEnvironment.*no/s/^#//' /etc/ssh/sshd_config | grep 'PermitUserEnvironment no'
+            sed -iE '/PermitUserEnvironment.*no/s/^#//' /etc/ssh/sshd_config | grep 'PermitUserEnvironment no'
             echo 'OK'
         fi
     fi
@@ -561,7 +561,7 @@ check_sshd(){
     if [ ! "$audit_only" -a $is_x11_off -ne 0 ]; then
         echo -e "${orange}[?] Disable X11Forwarding (y/n)"; read -s -n 1 x
         if [ ${x,,} == y ]; then
-            sed -E 's/X11Forwarding.*yes/#X11Forwarding yes/' /etc/ssh/sshd_config | grep 'X11Forwarding yes'
+            sed -iE 's/X11Forwarding.*yes/#X11Forwarding yes/' /etc/ssh/sshd_config | grep 'X11Forwarding yes'
             echo 'OK'
         fi
     fi
@@ -600,7 +600,7 @@ check_networks(){
     if [ ! "$audit_only" -a $is_ip_forward -ne 0 ]; then
         echo -e "${orange}[?] Disable IPv4 forwarding (y/n)"; read -s -n 1 x
         if [ ${x,,} == y ]; then
-            sed -E 's/^#net\.ipv4\.ip_forward=1/net.ipv4.ip_forward=0/' /etc/sysctl.conf | grep 'ip_forward'
+            sed -iE 's/^#net\.ipv4\.ip_forward=1/net.ipv4.ip_forward=0/' /etc/sysctl.conf | grep 'ip_forward'
             #sysctl -w net.ipv4.ip_forward=0
             echo 'OK'
         fi
