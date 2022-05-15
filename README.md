@@ -46,7 +46,7 @@
 
 ## Security auditing/hardening
 
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/scansec.sh">scansec.sh</a>: an interactive script for server security auditing and hardening. Note: option -a activates an audit-only mode (i.e. no hardening actions are executed). The main functions of `scansec.sh` (along with areas audited) are listed below.
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/scansec.sh">scansec.sh</a>: interactive script for server security auditing and hardening. Note: option -a activates an audit-only mode (i.e. no hardening actions are executed). The main functions of `scansec.sh` (along with areas audited) are listed below.
 
 ```
 scansec.sh
