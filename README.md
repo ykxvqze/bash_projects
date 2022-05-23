@@ -83,7 +83,7 @@ scansec.sh
 
 ## Android cleanup
 
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/android_cleanup.sh">android_cleanup.sh</a>: script to brute-force uninstall and/or replace extraneous android apps (i.e. bloatware) with open source apps and disallowing automatic reactivation. The list of packages to uninstall can be modified prior script execution.
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/android_cleanup.sh">android_cleanup.sh</a>: script to brute-force uninstalling extraneous android apps (disallowing automatic reactivation) and replacing several preinstalled ones with open source apps. The list of packages to uninstall can be modified prior script execution.
 
 ## Privacy-preserving method for merging datasets
 

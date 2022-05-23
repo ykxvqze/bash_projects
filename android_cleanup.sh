@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 : '
-Android cleanup: uninstall extraneous apps and/or replace with open-source ones.
+Uninstall extraneous apps in Android and replace with open-source ones.
 
 USAGE:  ./android_cleanup.sh [ -h ]
         
-                Phone must be connected by USB and debugging mode enabled
+                Phone must be connected by USB with debugging mode enabled
                 (`Developer` options). File ./packages_to_remove.txt
                 should list apps to remove (1 per line) and can be modified
                 as needed. Packages to install can be modified within the
                 the script by removing or adding URLs of open source apps
-                to install (e.g. from `f-droid.org`).
+                to install as replacement (e.g. from `f-droid.org`).
 
 OPTIONS:
         [ -h ]  Print usage
@@ -19,13 +19,13 @@ OUTPUT:
 
 DESCRIPTION:
 
-A script for uninstalling apps on an android device via adb shell (and
-disallowing automatic reactivation). The script removes a list of
-pre-installed apps from Google, Huawei, Facebook, and other junk without
-breaking the system. Additionally, basic apps like contacts, dialer,
-keyboard, filemanger, gallery, browser, notes, etc. are replaced by
-open-source ones (`simplemobiletools` available on F-Droid). Change
-these if you prefer other apps (or update their versions/URLs).
+A script for uninstalling apps on an Android device via adb shell ( 
+disallowing automatic reactivation). The script removes a list of 
+pre-installed apps from Google, Huawei, Facebook, etc. without breaking 
+the system. Additionally, basic apps like contacts, dialer, keyboard, 
+filemanger, gallery, browser, notes, etc. are replaced by open-source 
+ones (`simplemobiletools` available on F-Droid); change these if you 
+prefer other apps (or update current versions/URLs).
 
 J.A., xrzfyvqk_k1jw@pm.me
 '
@@ -33,7 +33,7 @@ J.A., xrzfyvqk_k1jw@pm.me
 trap 'echo error on line: $LINENO' ERR
 
 print_usage() {
-    echo -e "android_cleanup:  uninstall extraneous apps and/or replace with open-source ones.
+    echo -e "android_cleanup:  uninstall extraneous apps and replace with open-source ones.
     Usage: ./${0##*/}
     [ -h ]              Print usage and exit\n"
 }
