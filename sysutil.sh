@@ -1,3 +1,4 @@
+
 #!/usr/bin/env bash
 : '
 Sysops utility functions.
@@ -28,6 +29,8 @@ usage(){
     mysql_backup [ -r ]      # Backup all mysql databases into ~/backup/mysql/ and optionally
                              # use switch -r for sending the backup to remote server over rsync;
                              # (backups older than 1 week are automatically deleted afterwards).\n"
+    debugmode [ -s | -u ]    # Set an informative PS4 prompt and enable xtrace mode with option -s;
+                             # reset PS4 to default prompt (+) and disable xtrace mode via option -u
 }
 
 log_message(){
@@ -174,3 +177,21 @@ mysql_backup(){
         sudo rsync --del -vaze "ssh -p $rsync_port" $path_to_backup $remote_user@$remote_host:$remote_dir
     fi
 }
+
+debugmode(){
+    # PS1 is default (normal) prompt
+    # PS2 is displayed when a command extends beyond 1 line as more keystrokes are awaited
+    # PS3 is displayed when the 'select' command is used
+    # PS4 is displayed when in debug mode (+)
+
+    # USAGE:
+    #   debugmode -s  # set a new PS4 prompt and enable xtrace mode
+    #   debugmode -u  # unset back to default PS4 prompt (+) and disable xtrace mode
+    case "$1" in
+        -s) export PS4="+<${BASH_SOURCE[0]}>:<${FUNCNAME[0]}>:<${LINENO}> "
+  	    set -o xtrace ;;
+	-u) export PS4='+'
+            set +o xtrace ;;
+    esac
+}
+

@@ -40,8 +40,10 @@
     |--- config_files             # Check for existence of important configuration files;
     |--- log_rotate <file>        # Split file if > 100mB into smaller ones, gzip them and store;
     |--- mysql_backup [ -r ]      # Backup all mysql databases into ~/backup/mysql/ and optionally
-                                  # use switch -r for sending the backup to remote server via rsync
-                                  # (backups older than 1 week are automatically deleted);
+    |                             # use switch -r for sending the backup to remote server via rsync
+    |                             # (backups older than 1 week are automatically deleted);
+    |--- debugmode [ -s | -u ]    # Set an informative PS4 prompt and enable xtrace mode with option -s;
+                                  # reset PS4 to default prompt (+) and disable xtrace mode via option -u
 ```
 
 ## Security auditing/hardening
