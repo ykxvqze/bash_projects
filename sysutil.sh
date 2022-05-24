@@ -28,9 +28,9 @@ usage(){
                              # them and store as <file>.<i>.gz
     mysql_backup [ -r ]      # Backup all mysql databases into ~/backup/mysql/ and optionally
                              # use switch -r for sending the backup to remote server over rsync;
-                             # (backups older than 1 week are automatically deleted afterwards).\n"
-    debugmode [ -s | -u ]    # Set an informative PS4 prompt and enable xtrace mode with option -s;
-                             # reset PS4 to default prompt (+) and disable xtrace mode via option -u
+                             # (backups older than 1 week are automatically deleted afterwards).
+    debugmode [ -s | -u ]    # Set an informative PS4 prompt and enable xtrace mode via -s;
+                             # reset PS4 to default prompt (+) and disable xtrace mode via -u\n"
 }
 
 log_message(){
