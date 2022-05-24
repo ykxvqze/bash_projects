@@ -3,7 +3,7 @@
 Uninstall extraneous apps in Android and replace with open-source ones.
 
 USAGE:  ./android_cleanup.sh [ -h ]
-        
+
                 Phone must be connected by USB with debugging mode enabled
                 (`Developer` options). File ./packages_to_remove.txt
                 should list apps to remove (1 per line) and can be modified
@@ -19,18 +19,23 @@ OUTPUT:
 
 DESCRIPTION:
 
-A script for uninstalling apps on an Android device via adb shell ( 
-disallowing automatic reactivation). The script removes a list of 
-pre-installed apps from Google, Huawei, Facebook, etc. without breaking 
-the system. Additionally, basic apps like contacts, dialer, keyboard, 
-filemanger, gallery, browser, notes, etc. are replaced by open-source 
-ones (`simplemobiletools` available on F-Droid); change these if you 
+A script for uninstalling apps on an Android device via adb shell (
+disallowing automatic reactivation). The script removes a list of
+pre-installed apps from Google, Huawei, Facebook, etc. without breaking
+the system. Additionally, basic apps like contacts, dialer, keyboard,
+filemanger, gallery, browser, notes, etc. are replaced by open-source
+ones (`simplemobiletools` available on F-Droid); change these if you
 prefer other apps (or update current versions/URLs).
 
 J.A., xrzfyvqk_k1jw@pm.me
 '
 
 trap 'echo error on line: $LINENO' ERR
+
+if [ -z `which adb` ]; then
+    echo 'adb is not installed. Installing...'
+    sudo apt-get install adb
+fi
 
 print_usage() {
     echo -e "android_cleanup:  uninstall extraneous apps and replace with open-source ones.
@@ -41,7 +46,7 @@ print_usage() {
 while getopts 'h' option; do
     case $option in
         h) print_usage;  exit 0 ;;
-        *) echo -e 'Incorrect usage! See below:\n'; 
+        *) echo -e 'Incorrect usage! See below:\n';
            print_usage;  exit 1 ;;
     esac
 done
