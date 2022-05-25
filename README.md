@@ -36,7 +36,9 @@
     |--- battery_status           # Show battery percentage charge remaining;
     |--- userinfo                 # List users currently logged in, number of sessions, etc.;
     |--- ports_open               # List TCP ports open on localhost;
-    |--- sysinfo                  # List user/superuser, OS info, RAM, local/global IP address;
+    |--- sysinfo                  # List user/superuser, OS info, RAM, WAN/LAN/gateway IP addresses
+    |--- geodata                  # List country, city, and geo-coordinates based on IP address
+    |--- getmac <iface>           # Get MAC address of network interface <iface>
     |--- config_files             # Check for existence of important configuration files;
     |--- log_rotate <file>        # Split file if > 100mB into smaller ones, gzip them and store;
     |--- mysql_backup [ -r ]      # Backup all mysql databases into ~/backup/mysql/ and optionally

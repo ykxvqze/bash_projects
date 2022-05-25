@@ -22,7 +22,9 @@ usage(){
     battery_status           # Show battery percentage charge remaining
     userinfo                 # List users currently logged in
     ports_open               # List TCP ports open on localhost
-    sysinfo                  # List user/superuser, OS info, RAM, local/global IP address
+    sysinfo                  # List user/superuser, OS info, RAM, WAN/LAN/gateway IP addresses
+    geodata                  # List country, city, and geo-coordinates based on IP address
+    getmac <iface>           # Get MAC address of network interface <iface>
     config_files             # Check for existence of important configuration files
     log_rotate <file>        # Split file if > 100mB into smaller ones (<= 100mB), gzip
                              # them and store as <file>.<i>.gz
@@ -69,12 +71,19 @@ ports_open(){
 
 sysinfo(){
     superuser=`grep ':x:0:' /etc/passwd | cut -d ':' -f 1`
-    local_ip=`ip -o -4 address  |
-              tr -s ' '         |
-              grep -v 'lo inet' |
-              cut -d ' ' -f 4   |
-              sed 's/\/.*//'`
-    global_ip=`wget -O - -q 'http://icanhazip.com'`
+
+    ip_public=`wget -q -O - 'ipinfo.io/ip'`
+    
+    ip_private=`ip -o -4 address    |
+                tr -s ' '           |
+                grep -v '127.0.0.1' |
+                cut -d ' ' -f 4     |
+                sed 's/\/.*//'`
+
+    ip_gateway=`ip route            |
+                grep '^default via' |
+                head -1             |
+                cut -d ' ' -f 3`
 
     echo "
     Username     : `whoami`
@@ -84,13 +93,49 @@ sysinfo(){
     OS           : `uname -mrs`
     Kernel       : `uname -r`
     Arch         : `uname -m`
-    IP (local)   : ${local_ip}
-    IP (global)  : ${global_ip}
+    IP (WAN)     : ${ip_public}
+    IP (LAN)     : ${ip_private}
+    IP (gateway) : ${ip_gateway}
     Ports open   : `ports_open`
     RAM
      - MemTotal  : `free -m | grep '^Mem:'  | tr -s ' ' | cut -d ' ' -f 2` mB
      - MemFree   : `free -m | grep '^Mem:'  | tr -s ' ' | cut -d ' ' -f 4` mB
      - SwapTotal : `free -m | grep '^Swap:' | tr -s ' ' | cut -d ' ' -f 2` mB "
+}
+
+geodata(){
+    ip_public=`wget -q -O - ipinfo.io/ip`
+
+    ip_private=`ip -o -4 address    |
+                tr -s ' '           |
+                grep -v '127.0.0.1' |
+                cut -d ' ' -f 4     |
+                sed 's/\/.*//'`
+
+    ip_gateway=`ip route            |
+                grep '^default via' |
+                head -1             |
+                cut -d ' ' -f 3`
+
+    country=`wget -q -O - ipinfo.io/country`
+    city=`wget -q -O - ipinfo.io/city`
+    loc=`wget -q -O - ipinfo.io/loc`
+
+    echo "
+    IP (WAN)       : $ip_public
+    IP (LAN)       : $ip_private
+    IP (gateway)   : $ip_gateway
+    Geo
+     - Country     : $country
+     - City        : $city
+     - Coordinates : $loc "
+}
+
+getmac(){
+    iface="$1"
+    ip link show $iface |
+    grep 'ether'        |
+    awk '{print $2}'
 }
 
 config_files(){
