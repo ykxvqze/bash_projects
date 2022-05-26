@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-: ' 
+: '
 An interactive script for server security auditing/hardening.
 
 USAGE: ./scansec.sh [ [ -h ] | [ -a ] ]
@@ -251,25 +251,25 @@ check_file(){
     access=`stat -c '%a' ${file}`
     echo -e "${blue}${file}:"
     if [ $user_owner == ${user} ]; then
-        status_user_owner="${green}[   OK   ]"
+        status="${green}[   OK   ]"
     else
-        status_user_owner="${red}[ NOT OK ]"
+        status="${red}[ NOT OK ]"
     fi
-    echo -e "${default}[*] Status of user-ownership of file ${file} is ${user_owner} ${status_user_owner}"
+    echo -e "${default}[*] Status of user-ownership of file ${file} is ${user_owner} ${status}"
 
     if [ $group_owner == ${group} ]; then
-        status_group_owner="${green}[   OK   ]"
+        status="${green}[   OK   ]"
     else
-        status_group_owner="${red}[ NOT OK ]"
+        status="${red}[ NOT OK ]"
     fi
-    echo -e "${default}[*] Status of group-ownership of file ${file} is ${group_owner} ${status_group_owner}"
+    echo -e "${default}[*] Status of group-ownership of file ${file} is ${group_owner} ${status}"
 
     if [ $access == ${permissions} ]; then
-        status_access="${green}[   OK   ]"
+        status="${green}[   OK   ]"
     else
-        status_access="${red}[ NOT OK ]"
+        status="${red}[ NOT OK ]"
     fi
-    echo -e "${default}[*] Status of file permissions of ${file} is ${access} ${status_access}"
+    echo -e "${default}[*] Status of file permissions of ${file} is ${access} ${status}"
 
     # hardening
     if [ ! "$audit_only" -a ${user_owner} != ${user} ]; then
@@ -364,7 +364,7 @@ check_services(){
     else
         status="${red}[ NOT OK ]"
     fi
-    echo -e "${default}[*] Status of CUPS service is ${is_active} ${status_user_owner}"
+    echo -e "${default}[*] Status of CUPS service is ${is_active} ${status}"
 
     # hardening
     if [ ! "$audit_only" -a ${is_active} == 'active' ]; then
@@ -383,7 +383,7 @@ check_services(){
     else
         status="${red}[ NOT OK ]"
     fi
-    echo -e "${default}[*] Status of rpcbind service is ${is_active} ${status_user_owner}"
+    echo -e "${default}[*] Status of rpcbind service is ${is_active} ${status}"
 
     # hardening
     if [ ! "$audit_only" -a ${is_active} == 'active' ]; then
