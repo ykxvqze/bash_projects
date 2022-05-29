@@ -73,7 +73,7 @@ sysinfo(){
     superuser=`grep ':x:0:' /etc/passwd | cut -d ':' -f 1`
 
     ip_public=`wget -q -O - 'ipinfo.io/ip'`
-    
+
     ip_private=`ip -o -4 address    |
                 tr -s ' '           |
                 grep -v '127.0.0.1' |
@@ -93,6 +93,7 @@ sysinfo(){
     OS           : `uname -mrs`
     Kernel       : `uname -r`
     Arch         : `uname -m`
+    No. of CPUs  : `cat /proc/cpuinfo | grep -c 'processor'`
     IP (WAN)     : ${ip_public}
     IP (LAN)     : ${ip_private}
     IP (gateway) : ${ip_gateway}
