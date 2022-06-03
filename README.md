@@ -85,6 +85,10 @@ scansec.sh
      |--- Ipv4 forwarding = disabled
 ```
 
+## SSH ban
+
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/sshban.sh">sshban.sh</a>: script for processing /var/log/auth.log to alert via mail and automatically ban IP addresses that have been logged with repeated failed SSH login attempts. The list of offending IP addresses along with the number of failed attempts can be viewed via flag -l. The script should be set up as a cron job for it to be useful.
+
 ## Android cleanup
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/android_cleanup.sh">android_cleanup.sh</a>: script to brute-force uninstalling extraneous android apps (disallowing automatic reactivation) and replacing several preinstalled ones with open source apps. The list of packages to uninstall can be modified prior script execution.

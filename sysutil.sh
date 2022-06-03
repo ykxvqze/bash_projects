@@ -235,9 +235,8 @@ debugmode(){
     #   debugmode -u  # unset back to default PS4 prompt (+) and disable xtrace mode
     case "$1" in
         -s) export PS4="+<${BASH_SOURCE[0]}>:<${FUNCNAME[0]}>:<${LINENO}> "
-  	    set -o xtrace ;;
-	-u) export PS4='+'
+            set -o xtrace ;;
+        -u) export PS4='+'
             set +o xtrace ;;
     esac
 }
-
