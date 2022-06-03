@@ -7,7 +7,7 @@ USAGE: ./sshban.sh [ -h ]
 OPTIONS:
       [ -h ]  Print usage
       [ -l ]  Print logfile (table) containing blacklisted IP addresses
-              along with their frequencies (number of SSH attempts).
+              along with their frequencies (number of failed SSH attempts).
 
 OUTPUT:
       file:   ./ssh_blacklist.txt (containing blacklisted IP addresses) 
@@ -20,12 +20,13 @@ table of unique IP addresses that have attempted to login, along with the
 number of attempts in each case. Based on this table, if an IP address
 appears more than 4 times _and_ it is not already logged in ./ssh_blacklist.txt,
 the following actions are taken:
-1. The IP address is added to ./ssh_blacklist.txt.
-2. The IP address gets banned by creating an iptables entry blocking it as source.
-3. A mail notification of the event is sent out to a preset email address
-(modify variables: sender and recipient as needed).
 
-Note: for it to be useful the script should be set up as a cron job (e.g.
+  1. The IP address is added to ./ssh_blacklist.txt.
+  2. The IP address gets banned by creating an iptables entry blocking it as source.
+  3. A mail notification of the event is sent out to a preset email address
+     (modify variables: sender and recipient as needed).
+
+Note: for it to be useful, the script should be set up as a cron job (e.g.
 executed every 2 minutes).
 
 J.A., xrzfyvqk_k1jw@pm.me
@@ -34,8 +35,8 @@ J.A., xrzfyvqk_k1jw@pm.me
 ssh_blacklist='ssh_blacklist.txt'
 ssh_badlogin='/tmp/ssh_badlogin.txt'
 logfile='/tmp/logfile.txt'
-sender='<user@somewhere>'
-recipient='<user@somewhere>'
+sender='user@somewhere'
+recipient='user@somewhere'
 
 print_usage() {
     echo -e "sshban: 
@@ -68,8 +69,16 @@ is_ip_blacklisted() {
 }
 
 get_log() {
-    sudo cat /var/log/auth.log | grep -i 'sshd.*fail' | grep -ho 'rhost=.*\s' | grep -Eo '[^=]+$' > $ssh_badlogin
-    cat $ssh_badlogin | sort | uniq -c | sort -nr -k 1 | sed -E 's/\s //g'
+    sudo cat /var/log/auth.log |
+    grep -i 'sshd.*fail'       |
+    grep -ho 'rhost=.*\s'      |
+    grep -Eo '[^=]+$' > $ssh_badlogin
+
+    cat $ssh_badlogin |
+    sort              |
+    uniq -c           |
+    sort -nr -k 1     |
+    sed -E 's/\s //g'
 }
 
 main() {
