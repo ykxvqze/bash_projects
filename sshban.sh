@@ -1,4 +1,4 @@
-#! /usr/bin/env bash
+#!/usr/bin/env bash
 : ' 
 Process server authentication logs, send alert and ban repeated failed SSH attempts.
 
