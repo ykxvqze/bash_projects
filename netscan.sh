@@ -9,7 +9,7 @@ OPTIONS:
        [ -I <interface> ]  An optional switch to specify a network interface.
                            If unspecified, the default interface is used.
                            Note that the IP range to scan is automatically
-                           deduced from the netmask. 
+                           deduced from the netmask.
 
 OUTPUT:
         A listing of IP and MAC addresses of all network devices in

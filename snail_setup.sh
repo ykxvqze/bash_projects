@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-: ' 
+: '
 Set up s-nail for sending/receiving mail over SMTP/IMAP via CLI.
 
 USAGE: ./snail_setup.sh [-h] | [-s] | [-l] | [-a <account>] | [-r <account(s)>]
@@ -101,7 +101,7 @@ check_system_deb() {
 check_snail_installed() {
     check_system_deb
     if [ "$?" -eq 0 ]; then
-        dpkg -l | grep 's-nail' &> /dev/null
+        dpkg -l | grep 's-nail' | grep '^ii' &> /dev/null
         return "$?"
     else
         return 1
