@@ -12,19 +12,19 @@ OUTPUT:
 
 DESCRIPTION:
 
-* Function ascii_to_binary() requires a plaintext input (e.g. "I am Bob.")
+- Function ascii_to_binary() requires plaintext input (e.g. "I am Bob.")
 and will convert the input into a binary string containing no spaces.
-* Function binary_to_ascii() requires a binary string input (without spaces)
+- Function binary_to_ascii() requires a binary string input (without spaces)
 and converts it to plaintext (by parsing and transforming every 8 bits
 into a character).
-* Function generate_otp() requires a binary string input as returned by
+- Function generate_otp() requires a binary string input as returned by
 ascii_to_binary() and generates a _random_ binary string of the same
 length, L, by randomly shuffling the sequence of integers [1,...,L] and
 then applying modulo 2 on each, effectively transforming even numbers to 0
 and odd numbers to 1.
-* Function xor() requires two binary string inputs and computes their XOR
+- Function xor() requires two binary string inputs and computes their XOR
 (bitwise), i.e. if bits are matching, the result is 0, otherwise 1.
-* Function main() runs a demo of the encryption/decryption procedure.
+- Function main() runs a demo of the encryption/decryption procedure.
 
 EXAMPLE:
 
@@ -35,26 +35,26 @@ strings are then XORed, and the result can be transformed into ciphertext (ASCII
 
 Sample output:
 
-Plaintext (ASCII)            I am Bob.
-Plaintext (binary)           010010010010000001100001011011010010000001000010011011110110001000101110
-OTP/key                      110111001111110010100100011101011101110110001101011100001000001001100000
-Ciphertext (binary)          100101011101110011000101000110001111110111001111000111111110000001001110
-Decrypted message (binary)   010010010010000001100001011011010010000001000010011011110110001000101110
-Decrypted message (ASCII)    I am Bob.
+Plaintext (ASCII)        I am Bob.  
+Plaintext (binary)       010010010010000001100001011011010010000001000010011011110110001000101110 
+OTP/Key                  101100111101000110011101101110010100101101101011100011001000111100000000              
+Ciphertext (binary)      111110101111000111111100110101000110101100101001111000111110110100101110
+Decrypted msg (binary)   010010010010000001100001011011010010000001000010011011110110001000101110 
+Decrypted msg (ASCII)    I am Bob. 
 
 J.A., xrzfyvqk_k1jw@pm.me
 '
 
 set -Eeo pipefail
 
-function print_usage() {
+print_usage() {
     echo -e "otp_crypt: demo and utility functions for one-time pad encryption/decryption.
     Usage:
     ./${0##*/}             Execute demo
     ./${0##*/} [ -h ]      Print usage and exit\n"
 }
 
-function ascii_to_binary() {
+ascii_to_binary() {
     echo -n "$@"      |
     xxd -b            |
     cut -d ' ' -f 2-7 |
@@ -62,7 +62,7 @@ function ascii_to_binary() {
     tr -d ' '
 }
 
-function binary_to_ascii(){
+binary_to_ascii() {
     string=$(echo $1 | sed 's/.\{8\}/&\ /g')
     for i in $string; do
         echo "obase=16; ibase=2; $i" |
@@ -72,7 +72,7 @@ function binary_to_ascii(){
     done;
 }
 
-function xor() {
+xor() {
     string1=$(echo $1 | tr -d ' ')
     string2=$(echo $2 | tr -d ' ')
 
@@ -86,43 +86,46 @@ function xor() {
     fi
 }
 
-function generate_otp() {
+generate_otp() {
     for i in `shuf -i 1-${#1}`; do
         echo -n $((i % 2))
     done
 }
 
-function main() {
-    # parse
+main() {
+    # Parse
     while getopts 'h' option; do
         case $option in
-            h) print_usage;  exit 0 ;;
-            *) echo -e 'Incorrect usage! See below:\n'; 
-               print_usage;  exit 1 ;;
+            h) print_usage; exit 0         ;;
+            *) echo -e 'Incorrect usage!\n'; 
+               print_usage; exit 1         ;;
         esac
     done
 
-    # demo
-    plaintext='I am Bob.'
-    P=`ascii_to_binary "$plaintext"`
-    key=`generate_otp "$P"`
-    C=`xor "$P" "$key"`
-    ciphertext=`binary_to_ascii "$C"`
+    # Demo
+    plaintext_ascii='I am Bob.'
+    plaintext_binary=`ascii_to_binary "$plaintext_ascii"`
+    key=`generate_otp "$plaintext_binary"`
+    ciphertext_binary=`xor "$plaintext_binary" "$key"`
+    ciphertext_ascii=`binary_to_ascii "$ciphertext_binary"`
+    decrypted_binary=`xor "$ciphertext_binary" "$key"`
+    decrypted_ascii=`binary_to_ascii "$decrypted_binary"`
 
-    decrypted=`xor "$C" "$key"`
-    recovered=`binary_to_ascii "$decrypted"`
+    file_otp=`mktemp /tmp/file_otp.XXXXXX`
 
-    filetmp=`mktemp /tmp/filetmp.XXXXXX`
+    grn='\e[32m'  # green
+    blu='\e[34m'  # blue
+    rst='\e[0m'   # reset
 
-    echo "Plaintext (ASCII): $plaintext" >> "$filetmp"
-    echo "Plaintext (binary): $P" >> "$filetmp"
-    echo "OTP/key: $key" >> "$filetmp"
-    echo "Ciphertext (binary): $C" >> "$filetmp"
-    echo "Decrypted message (binary): $decrypted" >> "$filetmp"
-    echo "Decrypted message (ASCII): $recovered" >> "$filetmp"
+    printf "${blu}Plaintext (ASCII)     : ${grn}%s${rst}\n" "$plaintext_ascii  " >> "$file_otp"
+    printf "${blu}Plaintext (binary)    : ${grn}%s${rst}\n" "$plaintext_binary " >> "$file_otp"
+    printf "${blu}OTP/Key               : ${grn}%s${rst}\n" "$key              " >> "$file_otp"
+    printf "${blu}Ciphertext (binary)   : ${grn}%s${rst}\n" "$ciphertext_binary" >> "$file_otp"
+    printf "${blu}Decrypted msg (binary): ${grn}%s${rst}\n" "$decrypted_binary " >> "$file_otp"
+    printf "${blu}Decrypted msg (ASCII) : ${grn}%s${rst}\n" "$decrypted_ascii  " >> "$file_otp"
 
-    cat "$filetmp" | column -t -s ':'
-    rm "$filetmp"
+    cat "$file_otp" | column -t -s ':'
+    rm "$file_otp"
 }
 
 main "$@"
