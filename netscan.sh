@@ -214,7 +214,7 @@ main(){
     echo -e "${RED}----------------------------------------${DEFAULT}"
     echo 'Devices on LAN:'
     echo -e "${GREEN}IP_address\tMAC_address ${DEFAULT}"
-    cat "${file_arp}" | sort -u -k 1 
+    cat "${file_arp}" | sort -u -k 1
 }
 
 main "$@"

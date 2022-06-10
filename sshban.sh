@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-: ' 
+: '
 Process server authentication logs, send alert and ban repeated failed SSH attempts.
 
 USAGE: ./sshban.sh [ -h ]
@@ -10,7 +10,7 @@ OPTIONS:
               along with their frequencies (number of failed SSH attempts).
 
 OUTPUT:
-      file:   ./ssh_blacklist.txt (containing blacklisted IP addresses) 
+      file:   ./ssh_blacklist.txt (containing blacklisted IP addresses)
 
 DESCRIPTION:
 
@@ -39,7 +39,7 @@ sender='user@somewhere'
 recipient='user@somewhere'
 
 print_usage() {
-    echo -e "sshban: 
+    echo -e "sshban:
     Usage:
     ./${0##*/}             Check /var/log/auth.log, send alert and ban repeated failed SSH attempts
     ./${0##*/} [ -h ]      Print usage and exit\n"
@@ -52,8 +52,8 @@ ban_ip() {
 }
 
 add_to_blacklist() {
-    IP="$1" 
-    echo $IP >> $ssh_blacklist 
+    IP="$1"
+    echo "$IP" >> $ssh_blacklist
 }
 
 notify_mail() {
@@ -65,7 +65,7 @@ notify_mail() {
 
 is_ip_blacklisted() {
     IP="$1"
-    cat $ssh_blacklist | grep "$IP" && return 0 || return 1
+    grep "$IP" $ssh_blacklist && return 0 || return 1
 }
 
 get_log() {
@@ -74,10 +74,9 @@ get_log() {
     grep -ho 'rhost=.*\s'      |
     grep -Eo '[^=]+$' > $ssh_badlogin
 
-    cat $ssh_badlogin |
-    sort              |
-    uniq -c           |
-    sort -nr -k 1     |
+    sort $ssh_badlogin |
+    uniq -c            |
+    sort -nr -k 1      |
     sed -E 's/\s //g'
 }
 
@@ -86,7 +85,7 @@ main() {
         case $option in
             h) print_usage;  exit 0 ;;
             l) get_log              ;;
-            *) echo -e 'Incorrect usage! See below:\n'; 
+            *) echo -e 'Incorrect usage!\n';
                print_usage;  exit 1 ;;
         esac
     done
@@ -97,18 +96,18 @@ main() {
 
     get_log > $logfile
     n_entries=`cat $logfile | wc -l`
-    n_attempts=(`cat $logfile | cut -d ' ' -f 1`)
-    ip_list=(`cat $logfile | cut -d ' ' -f 2`)
+    n_attempts=(`cut -d ' ' -f 1 "$logfile"`)
+    ip_list=(`cut -d ' ' -f 2 "$logfile"`)
 
-    for i in `seq 1 $n_entries`; do
+    for i in `seq 1 "$n_entries"`; do
         index=$((i-1))
         IP=${ip_list[$index]}
-        n=${n_attempts[$index]} 
-        if [ $n -gt 4 ]; then
-            if [ ! `is_ip_blacklisted $IP` ]; then
-                add_to_blacklist $IP
-                ban_ip $IP
-                notify_mail $IP $n
+        n=${n_attempts[$index]}
+        if [ "$n" -gt 4 ]; then
+            if [ ! `is_ip_blacklisted "$IP"` ]; then
+                add_to_blacklist "$IP"
+                ban_ip "$IP"
+                notify_mail "$IP" "$n"
             fi
         fi
     done

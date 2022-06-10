@@ -2,7 +2,7 @@
 : '
 Scrape cartoon images iteratively from the xkcd site. Continue from last fetch upon script re-run.
 
-USAGE:  ./scrape_xkcd.sh [ -h ] 
+USAGE:  ./scrape_xkcd.sh [ -h ]
 
 OPTIONS:
         [ -h ]  Print usage
@@ -53,7 +53,7 @@ print_usage() {
 while getopts 'h' option; do
     case $option in
         h) print_usage;  exit 0 ;;
-        *) echo -e 'Incorrect usage! See below:\n'; 
+        *) echo -e 'Incorrect usage! See below:\n';
            print_usage;  exit 1 ;;
     esac
 done

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-: ' 
+: '
 Functions and a demo for encrypting/decrypting via a one-time pad (OTP).
 
 USAGE: ./otp_crypt.sh [ -h ]
@@ -35,12 +35,12 @@ strings are then XORed, and the result can be transformed into ciphertext (ASCII
 
 Sample output:
 
-Plaintext (ASCII)        I am Bob.  
-Plaintext (binary)       010010010010000001100001011011010010000001000010011011110110001000101110 
-OTP/Key                  101100111101000110011101101110010100101101101011100011001000111100000000              
+Plaintext (ASCII)        I am Bob.
+Plaintext (binary)       010010010010000001100001011011010010000001000010011011110110001000101110
+OTP/Key                  101100111101000110011101101110010100101101101011100011001000111100000000
 Ciphertext (binary)      111110101111000111111100110101000110101100101001111000111110110100101110
-Decrypted msg (binary)   010010010010000001100001011011010010000001000010011011110110001000101110 
-Decrypted msg (ASCII)    I am Bob. 
+Decrypted msg (binary)   010010010010000001100001011011010010000001000010011011110110001000101110
+Decrypted msg (ASCII)    I am Bob.
 
 J.A., xrzfyvqk_k1jw@pm.me
 '
@@ -63,7 +63,7 @@ ascii_to_binary() {
 }
 
 binary_to_ascii() {
-    string=$(echo $1 | sed 's/.\{8\}/&\ /g')
+    string=$(echo "$1" | sed 's/.\{8\}/&\ /g')
     for i in $string; do
         echo "obase=16; ibase=2; $i" |
         bc                           |
@@ -73,8 +73,8 @@ binary_to_ascii() {
 }
 
 xor() {
-    string1=$(echo $1 | tr -d ' ')
-    string2=$(echo $2 | tr -d ' ')
+    string1=$(echo "$1" | tr -d ' ')
+    string2=$(echo "$2" | tr -d ' ')
 
     if [ "${#string1}" -ne "${#string2}" ]; then
         echo 'Strings are not of equal length!'
@@ -124,7 +124,7 @@ main() {
     printf "${blu}Decrypted msg (binary): ${grn}%s${rst}\n" "$decrypted_binary " >> "$file_otp"
     printf "${blu}Decrypted msg (ASCII) : ${grn}%s${rst}\n" "$decrypted_ascii  " >> "$file_otp"
 
-    cat "$file_otp" | column -t -s ':'
+    column -t -s ':' "$file_otp"
     rm "$file_otp"
 }
 
