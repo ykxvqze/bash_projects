@@ -1,18 +1,17 @@
 #!/usr/bin/env bash
 : '
-Create line breaks in a document at a limit of 72 characters without breaking any words.
+Create line breaks at a limit of 72 characters without breaking any word
 
-USAGE:  ./linecutter.sh [ -k | --keep ] <filename(s)>
+USAGE:  ./linecutter.sh [ -r | -rm ] <filename(s)>
 
 ARGS:
-        input file(s): ASCII text file(s) in current directory
+        input file(s): ASCII text file(s)
 
 OUTPUT:
-        file(s): *If -k or --keep switch is _unspecified_, original files
-                  will be overwritten (in the current directory).
-                 *Otherwise, the result will be saved in a new file named
-                  <filename_formatted> for each input filename. Original
-                  files remain intact in this case.
+        file(s): If -r or -rm switch is specified anywhere, original
+                 file(s) will be overwritten. Otherwise, the result(s)
+                 will be saved as new file(s) with prefix __ i.e.
+                 <__filename(s)>, and original files remain intact.
 
 DESCRIPTION:
 
@@ -28,17 +27,17 @@ stops when the marker is reached, allowing the script to end.
 line is greater than 72 characters, then the maximum-length pattern
 consisting of at most 72 characters followed by whitespace will be
 replaced by those same characters, plus a newline appended. The file has
-now increased by 1 line, and the result is saved _in-place_ within the file.
+now increased by 1 line, and the result is saved _in-place_ in the file.
 
-3. A line counter is incremented, and the previous condition is checked
-again for the next line. This is repeated line-by-line until the end-of-file
-marker is reached.
+3. The line counter is incremented, and the previous condition is
+checked again for the next line. This is repeated line-by-line until the
+end-of-file marker is reached.
 
-4. The last line of the document (containing the marker) is then removed.
+4. The last line of the document (containing the marker) is removed.
 
 Why 72 characters? Because it ensures readability on most screens
-(including vertically half-split ones). Note: linecutter will not do
-anything special to lines that originally contain indentations.
+(including half-split ones). Note: linecutter.sh will not do anything
+special to lines that originally contain indentations.
 
 EXAMPLE:
 
@@ -65,18 +64,18 @@ J.A., xrzfyvqk_k1jw@pm.me
 '
 
 print_usage() {
-    echo -e "linecutter: cut lines at 72 characters without breaking words.
+    echo -e "linecutter: cut lines at 72 characters w/o breaking words.
     Usage:
-    ./${0##*/} <filename(s)>                  Specify input file(s) (mandatory) - overwrite mode
-    ./${0##*/} [ -k | --keep ] <filename(s)>  Specify input file(s) (mandatory) - keep original file(s) intact
-    ./${0##*/} [ -h | --help ]                Print usage and exit\n"
+    ./${0##*/} <filename(s)>               keep original file(s) intact
+    ./${0##*/} [ -r | -rm ] <filename(s)>  overwrite original file(s)
+    ./${0##*/} [ -h | --help ]             Print usage and exit\n"
 }
 
 cut_lines(){
     local file="$1"
-    marker='!EOF'
+    local marker='!EOF'
     echo "$marker" >> "$file"
-
+    
     i=1
     while [ "`head -n $i "$file" | tail -1`" != "$marker" ]; do
         if [ `sed -n "$i p" "$file" | wc -c` -gt 72 ]; then
@@ -98,16 +97,16 @@ main(){
     while [ "$#" -gt 0 ]; do
         case "$1" in
             -h | --help ) print_usage                ; exit 0 ;;
-            -k | --keep ) keep=1                     ; shift  ;;
+            -r | -rm    ) keep=1                     ; shift  ;;
             -*          ) echo "Option unknown: $1"  ; exit 1 ;;
              *          ) args+=("$1")               ; shift  ;;
         esac
     done
 
     for i in ${args[*]}; do
-        if [ "$keep" == 1 ]; then
-            cp "$i" "${i}_formatted"
-            cut_lines "${i}_formatted"
+        if [ "$keep" != 1 ]; then
+            cp "$i" `dirname "$i"`/__`basename "$i"`
+            cut_lines `dirname "$i"`/__`basename "$i"`
         else
             cut_lines "$i"
         fi
