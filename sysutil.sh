@@ -10,14 +10,14 @@ OPTIONS:
 EXAMPLES:
          . ./sysutil.sh
          battery_status      # battery percentage charge remaining
-         userinfo            # call some utility function
+         userinfo            # call a utility function
 '
 
 usage(){
     echo -e "sysutil.sh: utility functions for daily sysops.
     Usage:
 
-    . ./sysutil.sh           # Source the script, then...
+    . ./sysutil.sh           # Source the script first to use the utility functions
     battery_status           # Show battery percentage charge remaining
     userinfo                 # List users currently logged in
     ports_open               # List TCP ports open on localhost
@@ -30,7 +30,7 @@ usage(){
     mysql_backup [ -r ]      # Backup all mysql databases into ~/backup/mysql/ and optionally
                              # use switch -r for sending the backup to remote server over rsync;
                              # (backups older than 1 week are automatically deleted afterwards).
-    debugmode [ -s | -u ]    # Set an informative PS4 prompt and enable xtrace mode via -s;
+    debugmode [ -s | -u ]    # Set an informative PS4 (debug) prompt and enable xtrace via -s;
                              # reset PS4 to default prompt (+) and disable xtrace mode via -u\n"
 }
 
@@ -39,10 +39,8 @@ log_message(){
 }
 
 battery_status(){
-    percent_charge=`acpi                  |
-                    cut -d ' ' -f 4       |
-                    grep -oE '[0-9]{1,2}'`
-    log_message "Battery currently at ${percent_charge}%"
+    percent_charge=`acpi | cut -d ' ' -f 4`
+    log_message "Battery currently at ${percent_charge}"
 }
 
 userinfo(){
@@ -51,7 +49,7 @@ userinfo(){
     n_users=`who | cut -d ' ' -f 1 | sort -u | wc -l`
     n_sessions=`w -h | wc -l`
 
-    echo 'Users currently logged in (self = *):'
+    echo "Users currently logged in (self = *):"
     echo "$users_all" | sed "s/$self/& (*)/"
     echo "-------------------------------------"
     echo "Number of users: $n_users"
@@ -86,7 +84,7 @@ sysinfo(){
 
     echo "
     Username     : `whoami`
-    User groups  : `groups $(whoami)`
+    User groups  : `groups $(whoami) | cut -d ':' -f 2- | sed 's/^ //'`
     Superuser    : ${superuser}
     Hostname     : `hostname`
     OS           : `uname -mrs`
@@ -215,7 +213,7 @@ mysql_backup(){
     echo "------------------------------------"
     echo "Backup complete: `date`"
 
-    # rsync backups with another server
+    # rsync backups to another server
     if [ "$1" == '-r' ]; then
         echo "------------------------------------"
         echo "Sending backups to remote server..."
