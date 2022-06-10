@@ -39,6 +39,9 @@ Why 72 characters? Because it ensures readability on most screens
 (including half-split ones). Note: linecutter.sh will not do anything
 special to lines that originally contain indentations.
 
+Note: In Vim, the same can be done internally via:
+:setl tw=72 followed by the key sequence: gg gq G
+
 EXAMPLE:
 
 Below is some sample text of an input file and the resulting output.
@@ -48,7 +51,7 @@ Input:
 Lorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim
 veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. Quis aute iure
 reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in
-culpa qui officia deserunt mollit anim id est laborum. 
+culpa qui officia deserunt mollit anim id est laborum.
 
 Output:
 
