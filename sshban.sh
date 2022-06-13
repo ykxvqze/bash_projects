@@ -16,18 +16,17 @@ DESCRIPTION:
 
 The log file /var/log/auth.log is processed and failed SSH logins are
 logged into a temporary file which is then also processed to create a
-table of unique IP addresses that have attempted to login, along with the
-number of attempts in each case. Based on this table, if an IP address
-appears more than 4 times _and_ it is not already logged in ./ssh_blacklist.txt,
-the following actions are taken:
+table of unique IP addresses that have attempted to log in, along with
+the number of attempts in each case. Based on this table, if an IP
+address appears more than 4 times _and_ it is not already logged in
+./ssh_blacklist.txt, the following actions are taken:
 
   1. The IP address is added to ./ssh_blacklist.txt.
   2. The IP address gets banned by creating an iptables entry blocking it as source.
   3. A mail notification of the event is sent out to a preset email address
      (modify variables: sender and recipient as needed).
 
-Note: for it to be useful, the script should be set up as a cron job (e.g.
-executed every 2 minutes).
+Note: execute script as a cron job.
 
 J.A., xrzfyvqk_k1jw@pm.me
 '
