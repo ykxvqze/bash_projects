@@ -78,12 +78,12 @@ main() {
 
 	cat <<- EOF > /etc/apache2/sites-available/${virtual_host}.conf
 	<VirtualHost *:7000 *:443>
-		ServerAdmin webmaster@localhost
-		DocumentRoot /var/www/html/${virtual_host}
+	ServerAdmin webmaster@localhost
+	DocumentRoot /var/www/html/${virtual_host}
 	</VirtualHost>
 	EOF
 
-    cat <<- EOF >> /etc/apache2/ports.conf
+	cat <<- EOF >> /etc/apache2/ports.conf
 	Listen 7000
 	Listen 443
 	EOF
@@ -110,10 +110,10 @@ main() {
 
 	cat <<- EOF >> /etc/apache2/apache2.conf
 	<Directory /var/www/html>
-		Options Indexes FollowSymLinks
-		AllowOverride Authconfig
-		Order allow,deny
-		allow from all
+	Options Indexes FollowSymLinks
+	AllowOverride Authconfig
+	Order allow,deny
+	allow from all
 	</Directory>
 	EOF
 
