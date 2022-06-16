@@ -43,15 +43,15 @@ virtual_host='websiteA'
 user='user_guest'
 
 print_usage() {
-    echo -e "apache2.sh: demo - installs apache2 and sets up a password-protected website
-    Usage:
-    sudo ./${0##*/}             Execute demo
-    sudo ./${0##*/} [ -h ]      Print usage and exit\n"
+	echo -e "apache2.sh: demo - installs apache2 and sets up a password-protected website
+	Usage:
+	sudo ./${0##*/}             Execute demo
+	sudo ./${0##*/} [ -h ]      Print usage and exit\n"
 }
 
 is_apache_installed(){
-    systemctl status apache2 &> /dev/null
-    return "$?"
+	systemctl status apache2 &> /dev/null
+	return "$?"
 }
 
 main() {
