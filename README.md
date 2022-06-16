@@ -89,6 +89,10 @@ scansec.sh
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/sshban.sh">sshban.sh</a>: script for processing `/var/log/auth.log` and alerting via mail and automatically banning IP addresses that have been logged for repeated, failed SSH login attempts. The list of offending IP addresses along with the number of failed attempts can be viewed via flag -l.
 
+## Apache2 setup
+
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/apache2.sh">apache2.sh</a>: script for installing Apache httpd server and setting up a password-protected virtual host via .htaccess and .htpasswd files.
+
 ## Android cleanup
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/android_cleanup.sh">android_cleanup.sh</a>: script to brute-force uninstalling extraneous android apps (disallowing automatic reactivation) and replacing several preinstalled ones with open source apps. The list of packages to uninstall can be modified prior script execution.
