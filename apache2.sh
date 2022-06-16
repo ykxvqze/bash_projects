@@ -55,26 +55,26 @@ is_apache_installed(){
 }
 
 main() {
-    # Parse
-    while getopts 'h' option; do
-        case $option in
-            h) print_usage; exit 0         ;;
-            *) echo -e 'Incorrect usage!\n'; 
-               print_usage; exit 1         ;;
-        esac
-    done
+	# Parse
+	while getopts 'h' option; do
+	case $option in
+	    h) print_usage; exit 0         ;;
+	    *) echo -e 'Incorrect usage!\n'; 
+	       print_usage; exit 1         ;;
+	esac
+	done
 
-    if [ "$EUID" != 0 ]; then
-        exit 1
-    fi
+	if [ "$EUID" != 0 ]; then
+	exit 1
+	fi
 
-    is_apache_installed
-    if [ "$?" -ne 0 ]; then
-        apt-get install apache2
-    fi
+	is_apache_installed
+	if [ "$?" -ne 0 ]; then
+	apt-get install apache2
+	fi
 
-    mkdir /var/www/html/"${virtual_host}"
-    touch /etc/apache2/sites-available/"${virtual_host}".conf
+	mkdir /var/www/html/"${virtual_host}"
+	touch /etc/apache2/sites-available/"${virtual_host}".conf
 
 	cat <<- EOF > /etc/apache2/sites-available/${virtual_host}.conf
 	<VirtualHost *:7000 *:443>
@@ -96,10 +96,10 @@ main() {
 	</html>
 	EOF
 
-    a2ensite ${virtual_host}
-    systemctl reload apache2
+	a2ensite ${virtual_host}
+	systemctl reload apache2
 
-    htpasswd -c /var/www/html/${virtual_host}/.htpasswd "$user"
+	htpasswd -c /var/www/html/${virtual_host}/.htpasswd "$user"
 
 	cat <<- EOF > /var/www/html/${virtual_host}/.htaccess
 	AuthUserFile /var/www/html/${virtual_host}/.htpasswd
@@ -117,7 +117,7 @@ main() {
 	</Directory>
 	EOF
 
-    systemctl reload apache2
+	systemctl reload apache2
 }
 
 main "$@"
