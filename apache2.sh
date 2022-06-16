@@ -26,8 +26,8 @@ DESCRIPTION:
     (pointing to the .htpasswd file).
   - Reload apache2 server to update configurations.
 
-Once done, one can verify in browser that the site is accessible and that
-a username ("user_guest") and password are required to access the site:
+One can verify in browser that the site is accessible and that a username
+("user_guest") and password are required to access the site:
 
     localhost/${virtual_host}
     localhost:7000
