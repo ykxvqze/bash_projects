@@ -65,12 +65,12 @@ main() {
 	done
 
 	if [ "$EUID" != 0 ]; then
-		exit 1
+	    exit 1
 	fi
 
 	is_apache_installed
 	if [ "$?" -ne 0 ]; then
-		apt-get install apache2
+	    apt-get install apache2
 	fi
 
 	mkdir /var/www/html/"${virtual_host}"
