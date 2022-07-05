@@ -90,7 +90,7 @@ while : ; do
     url_of_image=`grep 'Image URL (for hotlinking/embedding):' ./xkcd/index.html |
                   grep -o '"https://imgs.xkcd.com/comics/[^"]*"'                 |
                   sed 's/"//g'`
-    echo "Fetching $url_of_image..."
+    echo "Fetching $url_of_image ..."
     wget -q -P './xkcd' "$url_of_image"
     let i++
     echo "$i" > ./xkcd/log_site_counter
