@@ -33,17 +33,17 @@ J.A., xrzfyvqk_k1jw@pm.me
 
 trap 'echo error on line: $LINENO' ERR
 
-if [ -z `which adb` ]; then
-    echo 'adb is not installed. Installing...'
-    sudo apt-get install adb
-fi
-
 print_usage() {
     echo -e "android_cleanup:  uninstall and replace extraneous apps with open-source ones.
     Usage:
     ./${0##*/}             Install packages from package_urls.txt and uninstall those listed in packages_to_remove.txt
     ./${0##*/} [ -h ]      Print usage and exit\n"
 }
+
+if [ -z `which adb` ]; then
+    echo 'adb is not installed. Installing...'
+    sudo apt-get install adb
+fi
 
 while getopts 'h' option; do
     case $option in
