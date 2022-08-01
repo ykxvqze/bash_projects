@@ -57,11 +57,11 @@ is_apache_installed(){
 main() {
 	# Parse
 	while getopts 'h' option; do
-	case $option in
-	    h) print_usage; exit 0         ;;
-	    *) echo -e 'Incorrect usage!\n'; 
-	       print_usage; exit 1         ;;
-	esac
+		case $option in
+			h) print_usage; exit 0         ;;
+			*) echo -e 'Incorrect usage!\n'; 
+			   print_usage; exit 1         ;;
+		esac
 	done
 
 	if [ "$EUID" != 0 ]; then
