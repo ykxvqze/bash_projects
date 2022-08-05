@@ -37,18 +37,18 @@ __plt__print_usage(){
     echo -e "cliplot.sh: plot a function in CLI.
     Usage:
 
-    ./cliplot.sh 1 2 3 4 5     # plot the sequence 
+    ./cliplot.sh 1 2 3 4 5     # plot the sequence
     seq 1 5 | xargs ./cliplot  # equivalent\n"
 }
+
+# height of plot
+export height=10
 
 # default list of functions to be overwritten
 __plt__get_min         () { :; }
 __plt__get_max         () { :; }
 __plt__normalize_input () { :; }
 __plt__draw_line       () { :; }
-
-# height of plot
-export height=10
 
 __plt__get_min() {
     local input=(${@})
@@ -88,52 +88,42 @@ __plt__draw_line() {
          height=`tput lines`
     fi
 
-    local input=(${@})
-    local count="${#@}"
+    local    input=(${@})
+    local    count="${#@}"
+    local   values=`__plt__normalize_input ${input[@]}`
+    local  y_label=' y  '
     local x_offset='    '
-    local y_label=' y  '
-    values=`__plt__normalize_input ${input[@]}`
 
     echo ''
 
     # paint the plot from top level
     for y in `seq $((height-1)) -1 0`; do
         # y-axis
-        if [ "$y" -eq $((height/2)) ]; then
-            stdout_write="${y_label}|"
-         else
-            stdout_write="${x_offset}|"
-        fi
+        [ "$y" -eq $((height/2)) ] \
+        && stdout_write="${y_label}|" || stdout_write="${x_offset}|"
 
+        # bars
         for j in ${values}; do
-            if [ `echo "$j > $y" | bc` -eq 1 ]; then
-                stdout_write+=' |'
-            else
-                stdout_write+='  '
-            fi
-         done
-         echo "${stdout_write}"
+            [ `echo "$j > $y" | bc` -eq 1 ] \
+            && stdout_write+=' |' || stdout_write+='  '
+        done
+        printf '%s\n' "${stdout_write}"
     done
 
-    stdout_write="${x_offset} "
-    for i in `seq 1 "$((2 * count))"`; do
-        stdout_write+="-"
-    done
-    echo "${stdout_write}"
-
-    stdout_write="${x_offset}  1"
-    for i in `seq 1 "$((2 * count - 3 ))"`; do
-        stdout_write+=' '
-    done
-    echo "${stdout_write}$count"
+    local stdout_xaxis="${x_offset} "
+    local stdout_xlabel="${x_offset}  1"
+    for i in `seq 1 "$((2 * count))"`     ; do stdout_xaxis+="-" ; done
+    for i in `seq 1 "$((2 * count - 3 ))"`; do stdout_xlabel+=' '; done
+    printf '%s\n' "${stdout_xaxis}"
+    printf '%s\n' "${stdout_xlabel}$count"
 }
 
 main() {
     while getopts 'h' option; do
         case "$option" in
-            h) __plt__print_usage; exit 0         ;;
-            *) echo -e 'Incorrect usage!\n'; 
-               __plt__print_usage; exit 1         ;;
+            h) __plt__print_usage; exit 0  ;;
+            *) echo -e 'Incorrect usage!\n';
+               __plt__print_usage; exit 1  ;;
         esac
     done
 
@@ -147,3 +137,4 @@ main() {
 }
 
 main "$@"
+
