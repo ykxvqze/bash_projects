@@ -116,7 +116,6 @@ __plt__draw_line() {
     done
 
     stdout_write="${x_offset} "
-
     for i in `seq 1 "$((2 * count))"`; do
         stdout_write+="-"
     done
@@ -139,7 +138,6 @@ main() {
     done
 
     __plt__draw_line "$@"
-
     printf '\n'
     printf 'Count   : %s\n' "${#@}"
     printf 'Minimum : %s\n' `__plt__get_min "$@"`
