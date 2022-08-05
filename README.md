@@ -97,6 +97,29 @@ scansec.sh
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/android_cleanup.sh">android_cleanup.sh</a>: script to brute-force uninstalling extraneous android apps (disallowing automatic reactivation) and replacing several preinstalled ones with open source apps. The list of packages to install/uninstall can be modified prior script execution.
 
+## CLI plot
+
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/cliplot.sh">cliplot.sh</a>: tool for plotting a time series (numerical sequence) within the CLI without needing an X11 windows system to view the plot. The plot is 'painted' top-level down in the CLI, line-by-line. The result is a stem plot delineating the function to be plotted. This tool is useful for quick assessment of values such as CPU or memory usage over time, e.g. as displayed via `top` (see Example); basic plot statistics are also displayed.
+
+```bash
+./cliplot.sh 1 4 9 16 25 36 49 64 81 100
+
+    |                   |
+    |                 | |
+    |               | | |
+ y  |               | | |
+    |             | | | |
+    |           | | | | |
+    |       | | | | | | |
+    | | | | | | | | | | |
+     --------------------
+      1                 10
+
+Count   : 10
+Minimum : 1
+Maximum : 100
+```
+
 ## Privacy-preserving method for merging datasets
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/database_merger.md">database_merger.md</a>: A proposed method for merging datasets that contain sensitive information from two different parties without revealing any identifying information to either party. The task can be accomplished via a third party, e.g. a bot, without the bot receiving any identifying information either.
