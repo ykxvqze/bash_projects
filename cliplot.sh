@@ -8,18 +8,17 @@ OPTIONS:
         [ -h ]    Print usage and exit
 
 OUTPUT:
-         A plot of a numerical float sequence (time series) is the CLI
-         without need for a GUI or X11 windows system to show the plot.
-         The plot is normalized to a default figure height of 10 lines,
-         thus the y-axis values are proportional to the actual values
-         plotted. Plotting in CLI can be useful for quick assessment of
-         values such as CPU or memory usage over time (see last example).
-         The count, minimum, and maximum values of the time series are
-         also displayed.
+         A plot of a numerical sequence (time series) in the CLI without
+         need for a GUI or X11 windows system to show the plot. The plot
+         is normalized to a default figure height of 10 lines, thus the
+         y-axis values are proportional to the actual values plotted.
+         Plotting in CLI can be useful for quick assessment of values such
+         as CPU or memory usage over time (see last example). The count,
+         minimum, and maximum values of the time series are also displayed.
 
 DESCRIPTION:
 
-cliplot will 'paint' a plot top-level down in the CLI, line-by-line. The
+cliplot will 'paint' a plot in the CLI, top-level down line-by-line. The
 result is a stem plot delineating the function to be plotted.
 
 EXAMPLES:
