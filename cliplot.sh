@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 << 'EOF'
-CLI plot of positive functions (no X11 windows system required).
+CLI plot of positive functions (no X window system required).
 
 USAGE: ./cliplot.sh [ -h ] | <sequence_of_numerical_values>
 
@@ -9,12 +9,12 @@ OPTIONS:
 
 OUTPUT:
          A plot of a numerical sequence (time series) in the CLI without
-         need for a GUI or X11 windows system to show the plot. The plot
-         is normalized to a default figure height of 10 lines, thus the
-         y-axis values are proportional to the actual values plotted.
-         Plotting in CLI can be useful for quick assessment of values such
-         as CPU or memory usage over time (see last example). The count,
-         minimum, and maximum values of the time series are also displayed.
+         need for a GUI or X window system to show the plot. The plot is
+         normalized to a default figure height of 10 lines, thus the y-axis
+         values are proportional to the actual values plotted. Plotting in
+         CLI can be useful for quick assessment of values such as CPU or
+         memory usage over time (see last example). The count, minimum,
+         and maximum values of the time series are also displayed.
 
 DESCRIPTION:
 
