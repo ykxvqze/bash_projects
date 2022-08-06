@@ -28,6 +28,9 @@ EXAMPLES:
         # run `top` in batch mode 8 times and plot CPU usage for a given PID.
         pid=807
         top -b -n 8 | grep -E "^ *$pid" | awk '{print $9}' | xargs ./cliplot.sh
+
+J.A., xrzfyvqk_k1jw@pm.me
+
 EOF
 
 set -eo pipefail
