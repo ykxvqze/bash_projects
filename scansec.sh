@@ -119,7 +119,7 @@ check_umask(){
     if [ ! "$audit_only" -a ${val} != '077' ]; then
         echo -e "${orange}[?] Set default umask for root to: 077 (y/n)"; read -s -n 1 x
         if [ ${x,,} == y ]; then
-            sudo sed -iE 's/(^# umask\s+)[0-9]+/\1077/' /root/.bashrc | grep '^# umask'
+            sudo sed -iE '/^# umask\s+[0-9]+/a\umask 077' /root/.bashrc | grep '^umask'
             echo 'OK'
         fi
     fi
@@ -134,7 +134,7 @@ check_login_settings(){
 	* Number of days till account locking for user inactivity = 30.
 	* Lockout time upon 5 unsuccessful login attempts = 10 minutes.
 	* Delay time between separate logins  = 10 seconds.
-	* Disallow non-local logins to privileged accounts = ON 
+	* Disallow non-local logins to privileged accounts = ON
 	EOF
 
     define_colors
@@ -179,7 +179,7 @@ check_login_settings(){
     fi
 
     val=`grep -E '.*auth required pam_tally2\.so onerr=fail audit silent deny=5 unlock_time=600.*' /etc/pam.d/login &> /dev/null
-                 echo $?`
+         echo $?`
     if [ $val -eq 0 ]; then
         status="${green}[   OK   ]"
     else
@@ -214,7 +214,7 @@ check_login_settings(){
     fi
 
     val=`grep -E '^-:wheel:ALL EXCEPT LOCAL.*' /etc/security/access.conf &> /dev/null
-                         echo $?`
+         echo $?`
     if [ $val -eq 0 ]; then
         status="${green}[   OK   ]"
     else
