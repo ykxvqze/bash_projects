@@ -2,11 +2,11 @@
 : '
 An interactive script for server security auditing/hardening.
 
-USAGE: ./scansec.sh [ [ -h ] | [ -a ] ]
+USAGE: ./scansec.sh [ -h | -a ]
 
 OPTIONS:
-        [ -h ]               Print usage and exit
-        [ -a ]               Activate audit-only mode (no hardening/actions)\n"
+        [ -h ]    Print usage and exit
+        [ -a ]    Activate audit-only mode (no hardening/actions)\n"
 
 OUTPUT:
          The script will permit selecting all or specific categories of
@@ -63,7 +63,7 @@ J.A., xrzfyvqk_k1jw@pm.me
 '
 
 print_usage(){
-    echo -e "scansec: security auditing/hardening
+    echo -e "scansec.sh: security auditing/hardening
     Usage: ./${0##*/}
     [ -h ]            Print usage and exit
     [ -a ]            Activate audit-only mode (no hardening/actions)\n"

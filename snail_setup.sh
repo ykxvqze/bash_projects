@@ -20,7 +20,7 @@ OUTPUT:
 
 DESCRIPTION:
 
-s-nail will be installed unless already present (a Debian-based OS is
+s-nail will be installed unless already present (Debian-based OS is
 assumed). Email accounts can be added or removed via options -a and -r
 respectively, and ~/.mailrc will be consequently created and configured
 automatically.
@@ -49,7 +49,7 @@ cat reply | s-nail -A outlook
 
 Option -s is for adding a subject line, -a for attachments,
 -c for CC recipients, -b for BCC recipients.
-Note: option -r "fake_address@somewhere.com" is an often ignored by MTAs.
+Note: option -r "fake_address@somewhere.com" is often ignored by MTAs.
 
 # Downloading/saving mail to view (as ASCII)
 
@@ -79,7 +79,7 @@ J.A., xrzfyvqk_k1jw@pm.me
 path_to_mailbox="$HOME"/mailbox
 
 print_usage() {
-    echo -e "snail_setup: s-nail for sending/receiving mail over SMTP/IMAP via CLI.
+    echo -e "snail_setup.sh: s-nail for sending/receiving mail over SMTP/IMAP via CLI.
     Usage: ./${0##*/}
     [ -h ]               Print usage and exit
     [ -l ]               List all accounts registered in ~/.mailrc
@@ -140,7 +140,7 @@ append_account() {
     echo 'This will store account information you supply in config file ~/.mailrc used by s-nail.'
     read -p 'Enter mail address (e.g. john.doe@gmail.com or john.doe@outlook.com): ' email_address
     read -p 'Enter mail password: ' -s email_password
-    echo 
+    echo
     read -p 'Enter IMAP account (e.g. john.doe@imap.gmail.com or john.doe@imap-mail.outlook.com): ' imap_account
     read -p 'Enter SMTP address (e.g. smtp.gmail.com or smtp-mail.outlook.com): ' smtp_address
     echo 'Saving info in file ~/.mailrc'

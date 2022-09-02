@@ -14,7 +14,7 @@ OUTPUT:
 
 DESCRIPTION:
 
-The log file /var/log/auth.log is processed and failed SSH logins are
+The log file /var/log/auth.log is processed, and failed SSH logins are
 logged into a temporary file which is then also processed to create a
 table of unique IP addresses that have attempted to log in, along with
 the number of attempts in each case. Based on this table, if an IP
@@ -24,9 +24,10 @@ address appears more than 4 times _and_ it is not already logged in
   1. The IP address is added to ./ssh_blacklist.txt.
   2. The IP address gets banned by creating an iptables entry blocking it as source.
   3. A mail notification of the event is sent out to a preset email address
-     (modify variables: sender and recipient as needed).
+     (modify variables sender and recipient as needed).
 
-Note: execute script as a cron job.
+Note: execute the script as a cron job (e.g. every 2 minutes).
+*/2 * * * * /path/to/sshban.sh
 
 J.A., xrzfyvqk_k1jw@pm.me
 '
@@ -34,11 +35,11 @@ J.A., xrzfyvqk_k1jw@pm.me
 ssh_blacklist='ssh_blacklist.txt'
 ssh_badlogin='/tmp/ssh_badlogin.txt'
 logfile='/tmp/logfile.txt'
-sender='user@somewhere'
+sender='mail_account'
 recipient='user@somewhere'
 
 print_usage() {
-    echo -e "sshban:
+    echo -e "sshban.sh:
     Usage:
     ./${0##*/}             Check /var/log/auth.log, send alert and ban repeated failed SSH attempts
     ./${0##*/} [ -h ]      Print usage and exit\n"
@@ -46,7 +47,7 @@ print_usage() {
 
 ban_ip() {
     IP="$1"
-    sudo iptables -A INPUT -s $IP -j DROP
+    sudo iptables -A INPUT -s "$IP" -j DROP
     sudo iptables-save
 }
 
@@ -58,7 +59,7 @@ add_to_blacklist() {
 notify_mail() {
     IP="$1"
     n_attempts="$2"
-    echo "[!] Notification of failed SSH login attempts from $IP ($n_attempts failed attempts). IP address has been blocked." |
+    echo "[!] Notification of failed SSH login attempts from $IP (${n_attempts} failed attempts). IP address has been blocked." |
     s-nail -A $sender -s 'SSH failed logins' $recipient
 }
 
