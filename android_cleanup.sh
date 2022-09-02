@@ -2,15 +2,15 @@
 : '
 Uninstall and replace extraneous apps in Android with open-source ones.
 
-USAGE:  ./android_cleanup.sh [ -h ]
+USAGE:  ./android_cleanup.sh  [ -h ]
 
                 Phone must be connected by USB with debug mode enabled
-                under `Developer` options. File packages_to_remove.txt
+                under `Developer` options. File "packages_to_remove.txt"
                 should list apps to remove (1 per line) and can be
                 modified as needed. Packages to install are listed in
-                the file package_urls.txt and can be modified by
+                the file "package_urls.txt" and can be modified by
                 removing or adding URLs of open source apps to install
-                as replacement (e.g. from `f-droid.org`).
+                as replacement (e.g. from `F-Droid.org`).
 
 OPTIONS:
         [ -h ]  Print usage
@@ -20,11 +20,11 @@ OUTPUT:
 
 DESCRIPTION:
 
-A script for uninstalling apps on an Android device via adb shell (
-disallowing automatic reactivation). The script removes a list of
+A script for uninstalling apps on an Android device via adb shell
+(disallowing automatic reactivation). The script removes a list of
 preinstalled apps from Google, Huawei, Facebook, etc. without breaking
 the system. Additionally, basic apps like contacts, dialer, keyboard,
-filemanger, gallery, browser, notes, etc. are replaced by open-source
+file manager, gallery, browser, notes, etc. are replaced by open-source
 ones (`simplemobiletools` available on F-Droid); change these if you
 prefer other apps or update current versions in the URLs file.
 
@@ -34,7 +34,7 @@ J.A., xrzfyvqk_k1jw@pm.me
 trap 'echo error on line: $LINENO' ERR
 
 print_usage() {
-    echo -e "android_cleanup:  uninstall and replace extraneous apps with open-source ones.
+    echo -e "android_cleanup.sh:  uninstall and replace extraneous apps with open-source ones.
     Usage:
     ./${0##*/}             Install packages from package_urls.txt and uninstall those listed in packages_to_remove.txt
     ./${0##*/} [ -h ]      Print usage and exit\n"

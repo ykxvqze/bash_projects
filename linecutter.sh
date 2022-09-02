@@ -2,13 +2,13 @@
 : '
 Create line breaks at a limit of 72 characters without breaking any word
 
-USAGE:  ./linecutter.sh [ -r | -rm ] <filename(s)>
+USAGE:  ./linecutter.sh [ -r | --rm ] <filename(s)>
 
 ARGS:
         input file(s): ASCII text file(s)
 
 OUTPUT:
-        file(s): If -r or -rm switch is specified anywhere, original
+        file(s): If -r or --rm switch is specified anywhere, original
                  file(s) will be overwritten. Otherwise, the result(s)
                  will be saved as new file(s) with prefix __ i.e.
                  <__filename(s)>, and original files remain intact.
@@ -17,10 +17,10 @@ DESCRIPTION:
 
 If a line happens to extend beyond 72 characters, a newline character is
 added at a position that is lower but closest to the 72nd character in
-such a way as not to break any words. Internals of the method are
+such a way as not to break any words. Internal steps of the method are
 described below:
 
-1. Append a marker string to the file so that line-by-line processing
+1. Append a string marker to the file so that line-by-line processing
 stops when the marker is reached, allowing the script to end.
 
 2. Starting with the first line of the document, if the length of the
@@ -69,9 +69,9 @@ J.A., xrzfyvqk_k1jw@pm.me
 print_usage() {
     echo -e "linecutter: cut lines at 72 characters w/o breaking words.
     Usage:
-    ./${0##*/} <filename(s)>               keep original file(s) intact
-    ./${0##*/} [ -r | -rm ] <filename(s)>  overwrite original file(s)
-    ./${0##*/} [ -h | --help ]             Print usage and exit\n"
+    ./${0##*/} <filename(s)>                keep original file(s) intact
+    ./${0##*/} [ -r | --rm ] <filename(s)>  overwrite original file(s)
+    ./${0##*/} [ -h | --help ]              Print usage and exit\n"
 }
 
 cut_lines(){
@@ -100,14 +100,14 @@ main(){
     while [ "$#" -gt 0 ]; do
         case "$1" in
             -h | --help ) print_usage                ; exit 0 ;;
-            -r | -rm    ) keep=1                     ; shift  ;;
+            -r | --rm   ) keep='off'                 ; shift  ;;
             -*          ) echo "Option unknown: $1"  ; exit 1 ;;
              *          ) args+=("$1")               ; shift  ;;
         esac
     done
 
     for i in ${args[*]}; do
-        if [ "$keep" != 1 ]; then
+        if [ "$keep" != 'off' ]; then
             cp "$i" `dirname "$i"`/__`basename "$i"`
             cut_lines `dirname "$i"`/__`basename "$i"`
         else

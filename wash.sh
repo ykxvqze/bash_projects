@@ -5,7 +5,7 @@ Clear Firefox data, bookmarks, cookies, cache, and other files
 USAGE:  ./wash.sh [ -h ]
 
 OPTIONS:
-        [ -h ]         Print usage
+        [ -h ]         Print usage and exit
 
 OUTPUT:
         N/A
@@ -13,7 +13,7 @@ OUTPUT:
 DESCRIPTION:
 
 A script that can be set as cron job for browser and other cache cleanup.
-It iterates over existent firefox profiles and recursively clears cache
+It iterates over existent Firefox profiles and recursively clears cache
 and other files within target directories. Patterns sought include:
 `cookies`, `places`, `history`, `webappsstore`, and `bookmarks`,
 `datareporting`, `bookmarkbackups`. Also system thumbnail cache located
@@ -25,7 +25,7 @@ J.A., xrzfyvqk_k1jw@pm.me
 trap 'echo error on line: $LINENO' ERR
 
 print_usage() {
-    echo -e "wash: clear Firefox cache, cookies, and other files.
+    echo -e "wash.sh: clear Firefox cache, cookies, and other files.
     Usage: ./${0##*/}
     [ -h ]              Print usage and exit\n"
 }
@@ -38,7 +38,7 @@ while getopts 'h' option; do
     esac
 done
 
-# firefox
+# Firefox
 cd ~/.cache/mozilla/firefox/
 find . -type f ! -path "./*/settings/*"     \
                ! -path "./*/startupCache/*" \

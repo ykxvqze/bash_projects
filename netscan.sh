@@ -1,45 +1,45 @@
 #!/usr/bin/env bash
 : '
-Scan LAN to discover IP and MAC addresses of all devices on the network.
+Scan LAN to discover IP and MAC addresses of connected devices on the network.
 
-USAGE:  ./netscan.sh [-I <interface>] [ -h ]
+USAGE:  ./netscan.sh [ -i <interface> ] [ -h ]
 
 OPTIONS:
        [ -h ]              Print usage
-       [ -I <interface> ]  An optional switch to specify a network interface.
+       [ -i <interface> ]  An optional switch to specify a network interface.
                            If unspecified, the default interface is used.
                            Note that the IP range to scan is automatically
                            deduced from the netmask.
 
 OUTPUT:
         A listing of IP and MAC addresses of all network devices in
-        tabular format (via stdout)
+        tabular format (via stdout).
 
 DESCRIPTION:
 
 The script checks for nmap and arp-scan tools and installs them if
-missing (it assumes a Debian-based OS). It then extracts the name of the
-default network interface and its local IPv4 and MAC address. The script
-will use the default interface unless one is provided by the user via
-the -I switch (and is a valid interface, otherwise the script will
-revert to default interface). The IP address range to scan is derived
-from the netmask. Then nmap is executed over the local IP network range
-via ping-scan mode (i.e. no port scanning or OS detection).
-Additionally, arp-scan is executed following nmap. Both scans are
-repeated within a loop resulting in 4 scans in total; the reason for
-repeating the scans is that a scan may miss some devices if only one
-trial is attempted or if only 1 tool is used. The aggregated results of
-the scans are sorted sorted and made unique. An arp-scan returns both IP
-and MAC addresses, whereas nmap will be detecting only IP addresses. Any
-IP addresses that may have been detected by nmap but not by arp-scan are
-appended to the final result. In such cases, the corresponding MAC
-addresses are fetched from the local ARP cache/table which would have
-logged relevant entries as the system was pinging other devices during
-the nmap and arp-scan procedures. Finally, an entry for localhost IP and
-MAC address is appended (i.e. those of the system running the script)
-and the result is displayed in tabular format. Note: all devices on the
-LAN (including routers) will show in the table, except those whose
-iptables are set not to respond to ICMPs or pings.
+missing. It then extracts the name of the default network interface and
+its local IPv4 and MAC address. The script will use the default
+interface unless one is provided by the user via the -i switch (and is a
+valid interface, otherwise the script will revert to default interface).
+The IP address range to scan is derived from the netmask. Then nmap is
+executed over the local IP network range via ping-scan mode (i.e. no
+port scanning or OS detection). Additionally, arp-scan is executed
+following nmap. Both scans are repeated within a loop resulting in 4
+scans in total; the reason for repeating the scans is that a scan may
+miss some devices if only one trial is attempted or if only 1 tool is
+used. The aggregate results of the scans are sorted and made unique. An
+arp-scan returns both IP and MAC addresses, whereas nmap will be
+detecting only IP addresses. Any IP addresses that may have been
+detected by nmap but not by arp-scan are appended to the final result.
+In such cases, the corresponding MAC addresses are fetched from the
+local ARP cache/table which would have logged relevant entries as the
+system was pinging other devices during the nmap and arp-scan
+procedures. Finally, an entry for localhost IP and MAC address is
+appended (i.e. those of the system running the script) and the result is
+displayed in tabular format. Note: all devices on the LAN (including
+routers) will show in the table, except those whose iptables are set not
+to respond to ICMPs (e.g. so as not to participate in smurf attacks).
 
 ADDITIONAL NOTES:
 
@@ -52,10 +52,10 @@ Listings will be similar to the result you get from running this script
 (except that you do not need to control or check the gateway itself -
 you only need to be connected to the network as any other device).
 
-The library scapy in Python provides similar functionality as this
+The library Scapy in Python can provide similar functionality as this
 script, but it would be an overkill to use Python or to install a full
 library if network scanning is your only aim. A Bash-native solution is
-more efficient and suitable for system-level tasks.
+more efficient and suitable in this case.
 
 Demonstration:
 
@@ -86,7 +86,7 @@ J.A., xrzfyvqk_k1jw@pm.me
 print_usage() {
     echo -e "netscan: detect devices connected to your network.
     Usage: ./${0##*/}
-    [ -I <interface> ]  Specify network interface (otherwise default assumed)
+    [ -i <interface> ]  Specify network interface (otherwise default assumed)
     [ -h ]              Print usage and exit\n"
 }
 
@@ -103,40 +103,46 @@ get_all_ifaces(){
 }
 
 get_mac(){
-    sudo ip link show "$1" |
-    grep 'ether'           |
+    local interface="$1"
+    sudo ip link show "$interface" |
+    grep 'ether'                   |
     awk '{print $2}'
 }
 
 get_ips(){
-    sudo ip -o -4 address show "$1" |
-    tr -s ' '                       |
+    local interface="$1"
+    sudo ip -o -4 address show "$interface" |
+    tr -s ' '                               |
     cut -d ' ' -f 4
 }
 
 run_nmap(){
-    sudo nmap -e "$1" -sn "$2" |
+    local interface="$1"
+    local ip="$2"
+    sudo nmap -e "$interface" -sn "$ip" |
     grep -Eo "([0-9]{1,3}\.){3}[0-9]{1,3}$"
 }
 
 run_arpscan(){
-    sudo arp-scan -I "$1" "$2" 2> /dev/null |
-    grep -E '^[0-9]{1,3}\.'                 |
+    local interface="$1"
+    local ip="$2"
+    sudo arp-scan -I "$interface" "$ip" 2> /dev/null |
+    grep -E '^[0-9]{1,3}\.'                          |
     cut -f 1,2
 }
 
 main(){
     # parse input
-    while getopts 'I:h' option; do
+    while getopts 'i:h' option; do
         case $option in
             h) print_usage;  exit 0 ;;
-            I) iface="$OPTARG"      ;;
+            i) iface="$OPTARG"      ;;
             *) print_usage;  exit 1 ;;
         esac
     done
 
     sudo echo > /dev/null
-    if [ $? -ne 0 ]; then
+    if [ "$?" -ne 0 ]; then
         exit
     fi
 
@@ -167,7 +173,7 @@ main(){
     iface_default=`get_default_iface`
     ifaces_list=`get_all_ifaces`
     if [ -z "$iface" -o -z "$(grep "$iface" <<< "$ifaces_list")" ]; then
-        echo "Supplied network interface does not exist. Reverting to default $iface_default"
+        echo "Supplied network interface does not exist. Reverting to default ${iface_default}"
         iface="${iface_default}"
     fi
 
@@ -200,7 +206,7 @@ main(){
         fi
     done    >> "${file_arp}"
 
-    # add localhost entry to table
+    # add localhost entry to table and add a (*) sign
     echo -e "${IPs%/*}\t$MAC (*)" >> "${file_arp}"
 
     # display
