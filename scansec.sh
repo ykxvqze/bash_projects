@@ -87,7 +87,7 @@ check_umask(){
 
     define_colors
 
-    # diagnosis
+    # audit
     echo ''
     echo -e "${blue}-----------------------[checking umask]-----------------------"
 
@@ -98,6 +98,8 @@ check_umask(){
         status="${red}[ NOT OK ]"
     fi
     echo -e "${default}[*] Status of default umask for users is ${val} ${status}"
+    echo -e "    File : /etc/login.defs"
+    echo -e "    Value: `grep '^UMASK' /etc/login.defs`"
 
     # hardening
     if [ ! "$audit_only" -a ${val} -ne '077' ]; then
@@ -115,6 +117,8 @@ check_umask(){
         status="${red}[ NOT OK ]"
     fi
     echo -e "${default}[*] Status of default umask for root is ${val} ${status}"
+    echo -e "    File : /root/.bashrc"
+    echo -e "    Value: `sudo grep '^# umask' /root/.bashrc`"
 
     if [ ! "$audit_only" -a ${val} != '077' ]; then
         echo -e "${orange}[?] Set default umask for root to: 077 (y/n)"; read -s -n 1 x
@@ -148,6 +152,8 @@ check_login_settings(){
         status="${red}[ NOT OK ]"
     fi
     echo -e "${default}[*] Status of maximum number of days for password setting is ${val} ${status}"
+    echo -e "    File : /etc/login.defs"
+    echo -e "    Value: `grep '^PASS_MAX_DAYS' /etc/login.defs`"
 
     # hardening
     if [ ! "$audit_only" -a ${val} -ne '90' ]; then
@@ -167,6 +173,8 @@ check_login_settings(){
         status="${red}[ NOT OK ]"
     fi
     echo -e "${default}[*] Status of number of days till account locking for user inactivity is ${val} ${status}"
+    echo -e "    Command: sudo useradd -D | grep '^INACTIVE'"
+    echo -e "    Value  : `sudo useradd -D | grep '^INACTIVE'`"
 
     # hardening
     if [ ! "$audit_only" -a ${val} -ne '30' ]; then
@@ -186,6 +194,8 @@ check_login_settings(){
         status="${red}[ NOT OK ]"
     fi
     echo -e "${default}[*] Status of lockout time upon 5 unsuccessful login attempts ${status}"
+    echo -e "    File : /etc/pam.d/login"
+    echo -e "    Value: `grep -E '.*auth required pam_tally2\.so onerr=fail audit silent deny=5 unlock_time=600.*' /etc/pam.d/login || echo N/A`" 
 
     # hardening
     if [ ! "$audit_only" -a ${val} -ne '0' ]; then
@@ -203,6 +213,8 @@ check_login_settings(){
         status="${red}[ NOT OK ]"
     fi
     echo -e "${default}[*] Status of delay time between separate logins is ${val} microseconds ${status}"
+    echo -e "    File : /etc/pam.d/login"
+    echo -e "    Value: `grep -E '.*delay=.*' /etc/pam.d/login`"
 
     # hardening
     if [ ! "$audit_only" -a ${val} -ne '10000000' ]; then
@@ -221,6 +233,8 @@ check_login_settings(){
         status="${red}[ NOT OK ]"
     fi
     echo -e "${default}[*] Status of disallowing non-local logins to privileged accounts ${status}"
+    echo -e "    File : /etc/security/access.conf"
+    echo -e "    Value: `grep -E '^#-:wheel:ALL EXCEPT LOCAL.*' /etc/security/access.conf || echo N/A`"
 
     # hardening
     if [ ! "$audit_only" -a ${val} -ne 0 ]; then
@@ -365,6 +379,8 @@ check_services(){
         status="${red}[ NOT OK ]"
     fi
     echo -e "${default}[*] Status of CUPS service is ${is_active} ${status}"
+    echo -e "    Command: systemctl is-active cups"
+    echo -e "    Value  : ${is_active}"
 
     # hardening
     if [ ! "$audit_only" -a ${is_active} == 'active' ]; then
@@ -384,6 +400,8 @@ check_services(){
         status="${red}[ NOT OK ]"
     fi
     echo -e "${default}[*] Status of rpcbind service is ${is_active} ${status}"
+    echo -e "    Command: systemctl is-active rpcbind"
+    echo -e "    Value  : ${is_active}"
 
     # hardening
     if [ ! "$audit_only" -a ${is_active} == 'active' ]; then
@@ -416,7 +434,7 @@ check_sshd(){
     echo -e "${blue}-----------------------[checking sshd configurations]-----------------------"
 
     if [ ! -f /etc/ssh/sshd_config ]; then
-        echo -e '\nFile /etc/ssh/sshd_config does not exist.\nCheck that SSH server is installed!\n'
+        echo -e "\nFile /etc/ssh/sshd_config does not exist.\nCheck that SSH server is installed!${default}\n"
         return 1
     fi
 
@@ -430,6 +448,8 @@ check_sshd(){
         status="${red}[ NOT OK ]"
     fi
     echo -e "${default}[*] Status of SSH port ${status}"
+    echo -e "    File : /etc/ssh/sshd_config"
+    echo -e "    Value: `grep '^#Port 22' /etc/ssh/sshd_config || echo N/A`"
 
     # hardening
     if [ ! "$audit_only" -a $is_port_default -eq 0 ]; then
@@ -448,6 +468,8 @@ check_sshd(){
         status="${red}[ NOT OK ]"
     fi
     echo -e "${default}[*] Status of SSH LogLevel set of INFO ${status}"
+    echo -e "    File : /etc/ssh/sshd_config"
+    echo -e "    Value: `grep '^LogLevel' /etc/ssh/sshd_config || echo N/A`"
 
     # hardening
     if [ ! "$audit_only" -a $is_loglevel_info -ne 0 ]; then
@@ -466,6 +488,8 @@ check_sshd(){
         status="${red}[ NOT OK ]"
     fi
     echo -e "${default}[*] Status of SSH IgnoreRhosts ${status}"
+    echo -e "    File : /etc/ssh/sshd_config"
+    echo -e "    Value: `grep '^IgnoreRhosts' /etc/ssh/sshd_config || echo N/A`"
 
     # hardening
     if [ ! "$audit_only" -a $is_ignore_rhosts -ne 0 ]; then
@@ -484,6 +508,8 @@ check_sshd(){
         status="${red}[ NOT OK ]"
     fi
     echo -e "${default}[*] Status of SSH HostbasedAuthentication ${status}"
+    echo -e "    File : /etc/ssh/sshd_config"
+    echo -e "    Value: `grep '^HostbasedAuthentication' /etc/ssh/sshd_config || echo N/A`"
 
     # hardening
     if [ ! "$audit_only" -a $is_hostauth_off -ne 0 ]; then
@@ -502,6 +528,8 @@ check_sshd(){
         status="${red}[ NOT OK ]"
     fi
     echo -e "${default}[*] Status of SSH PermitRootLogin ${status}"
+    echo -e "    File : /etc/ssh/sshd_config"
+    echo -e "    Value: `grep '^PermitRootLogin' /etc/ssh/sshd_config || echo N/A`"
 
     # hardening
     if [ ! "$audit_only" -a $is_rootlogin_off -ne 0 ]; then
@@ -520,6 +548,8 @@ check_sshd(){
         status="${red}[ NOT OK ]"
     fi
     echo -e "${default}[*] Status of SSH PermitEmptyPasswords ${status}"
+    echo -e "    File : /etc/ssh/sshd_config"
+    echo -e "    Value: `grep '^PermitEmptyPasswords' /etc/ssh/sshd_config || echo N/A`"
 
     # hardening
     if [ ! "$audit_only" -a $is_emptypasswd_off -ne 0 ]; then
@@ -538,6 +568,8 @@ check_sshd(){
         status="${red}[ NOT OK ]"
     fi
     echo -e "${default}[*] Status of SSH PermitUserEnvironment ${status}"
+    echo -e "    File : /etc/ssh/sshd_config"
+    echo -e "    Value: `grep '^PermitUserEnvironment' /etc/ssh/sshd_config || echo N/A`"
 
     # hardening
     if [ ! "$audit_only" -a $is_userenv_off -ne 0 ]; then
@@ -556,6 +588,8 @@ check_sshd(){
         status="${red}[ NOT OK ]"
     fi
     echo -e "${default}[*] Status of SSH X11Forwarding ${status}"
+    echo -e "    File : /etc/ssh/sshd_config"
+    echo -e "    Value: `grep '^#X11Forwarding yes' /etc/ssh/sshd_config || echo N/A`"
 
     # hardening
     if [ ! "$audit_only" -a $is_x11_off -ne 0 ]; then
@@ -595,6 +629,8 @@ check_networks(){
         status="${red}[ NOT OK ]"
     fi
     echo -e "${default}[*] Status of IPv4 forwarding ${status}"
+    echo -e "    File : /etc/sysctl.conf"
+    echo -e "    Value: `grep -E '^#net\.ipv4\.ip_forward=0' /etc/sysctl.conf || echo N/A`"
 
     # hardening
     if [ ! "$audit_only" -a $is_ip_forward -ne 0 ]; then

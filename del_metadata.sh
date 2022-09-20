@@ -106,7 +106,7 @@ main() {
                        s/w:date="[^"]*"/w:date=""/g')
         echo "$data" > word/document.xml
         zip --update "$file_renamed" "word/document.xml"
-      
+        
         if [ -f word/comments.xml ]; then
             data=$(cat word/comments.xml |
                    sed -e 's/w:author="[^"]*"/w:author=""/g;
