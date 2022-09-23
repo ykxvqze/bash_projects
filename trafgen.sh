@@ -1,8 +1,14 @@
 #!/usr/bin/env bash
-: ' traffic generator (kill script to end session) '
+: ' traffic generator (kill script to end session w/ Ctrl+C) '
 
-export root_urls=`cat root_urls.txt`
-export user_agents=`cat user_agents.txt`
+export root_urls=`jq '.root_urls' config.json |
+                  grep -o '"[^"]*"'           |
+                  grep -o '[^"]*'`
+
+export user_agents=`jq '.user_agents' config.json |
+                    grep -o '"[^"]*"'             |
+                    grep -o '[^"]*'`
+
 export max_depth=3
 
 __tg__get_urls    () { :; }
@@ -55,15 +61,15 @@ __tg__fetch_url() {
 
     sleep 1."$time"  # in [1-1.9]
 
-    echo "`date +'%d-%m-%Y %H:%M:%S'`: $url"
-    echo ">> user_agent: $user_agent"
-    wget -O file_html -q \
+    echo "[*] `date +'%d-%m-%Y %H:%M:%S'`: $url"
+    echo "    >> user_agent: $user_agent"
+    wget -O ./file_html -q \
          -e robots=off \
          -np --user-agent="${user_agent}" \
          "$url"
 }
 
-trap 'rm ./file_html; exit' INT TERM ERR EXIT
+trap 'rm ./file_html 2>/dev/null; exit' INT TERM EXIT
 
 while :; do
     url=`__tg__choose_item "${root_urls}"`
