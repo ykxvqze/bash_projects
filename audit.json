@@ -1,0 +1,394 @@
+{
+    "/etc/login.defs" : [
+        {
+            "title": "Ensure users' default umask is 077",
+            "audit": "grep '^UMASK' /etc/login.defs | grep -oE '[0-9]+'",
+            "expected": "077",
+                "remediation": "sed -iE 's/(^UMASK\\s+)[0-9]+/\\1077/' /etc/login.defs"
+        },
+        {
+            "title": "Ensure maximum number of days a password may be used is 90 days (default: 99999)",
+            "audit": "grep '^PASS_MAX_DAYS' /etc/login.defs | grep -oE '[0-9]+'",
+            "expected": "90",
+            "remediation": "sed -iE 's/(^PASS_MAX_DAYS\\s+)[0-9]+/\\190/' /etc/login.defs"
+        },
+        {
+            "title": "Ensure minimum number of days allowed between password changes is 5 (default: 0)",
+            "audit": "grep '^PASS_MIN_DAYS' /etc/login.defs | grep -oE '[0-9]+'",
+            "expected": "5",
+            "remediation": "sed -iE 's/(^PASS_MIN_DAYS\\s+)[0-9]+/\\15/' /etc/login.defs"
+        },
+        {
+            "title": "Ensure number of days warning given before a password expires is 7 (default: 7)",
+            "audit": "grep '^PASS_WARN_AGE' /etc/login.defs | grep -oE '[0-9]+'",
+            "expected": "7",
+            "remediation": "sed -iE 's/(^PASS_WARN_AGE\\s+)[0-9]+/\\17/' /etc/login.defs"
+        },
+        {
+            "title": "Ensure inactive user accounts get locked after 30 days",
+            "audit": "useradd -D | grep '^INACTIVE' | sed 's/.*=//'",
+            "expected": "30",
+            "remediation": "useradd -D -f 30"
+        }
+    ],
+    "/etc/issue.net" : [
+        {
+            "title": "Ensure user-owner of /etc/issue.net is root",
+            "audit": "stat -c '%U' /etc/issue.net",
+            "expected": "root",
+            "remediation": "chown root:root /etc/issue.net"
+        },
+        {
+            "title": "Ensure group-owner of /etc/issue.net is root",
+            "audit": "stat -c '%G' /etc/issue.net",
+            "expected": "root",
+            "remediation": "chown root:root /etc/issue.net"
+        },
+        {
+            "title": "Ensure permission for /etc/issue.net is 644",
+            "audit": "stat -c '%a' /etc/issue.net",
+            "expected": "644",
+            "remediation": "chmod 644 /etc/issue.net"
+        },
+        {
+            "title": "Ensure a non-informative banner is set",
+            "audit": "cat /etc/issue.net",
+            "expected": "Authorized use only. Actions will be logged",
+            "remediation": "echo 'Authorized use only. Actions will be logged.' > /etc/issue.net"
+        }
+        ],
+        "/etc/issue" : [
+        {
+            "title": "Ensure user-owner of /etc/issue is root",
+            "audit": "stat -c '%U' /etc/issue",
+            "expected": "root",
+            "remediation": "chown root:root /etc/issue"
+        },
+        {
+            "title": "Ensure group-owner of /etc/issue is root",
+            "audit": "stat -c '%G' /etc/issue",
+            "expected": "root",
+            "remediation": "chown root:root /etc/issue"
+        },
+        {
+            "title": "Ensure permission for /etc/issue is 644",
+            "audit": "stat -c '%a' /etc/issue",
+            "expected": "644",
+            "remediation": "chmod 644 /etc/issue"
+        },
+        {
+            "title": "Ensure a non-informative banner is set",
+            "audit": "cat /etc/issue",
+            "expected": "Authorized use only. Actions will be logged",
+            "remediation": "echo 'Authorized use only. Actions will be logged.' > /etc/issue"
+        }
+    ],
+    "/etc/motd" : [
+        {
+            "title": "Ensure user-owner of /etc/motd is root",
+            "audit": "stat -c '%U' /etc/motd",
+            "expected": "root",
+            "remediation": "chown root:root /etc/motd"
+        },
+        {
+            "title": "Ensure group-owner of /etc/motd is root",
+            "audit": "stat -c '%G' /etc/motd",
+            "expected": "root",
+            "remediation": "chown root:root /etc/motd"
+        },
+        {
+            "title": "Ensure permission for /etc/motd is 644",
+            "audit": "stat -c '%a' /etc/motd",
+            "expected": "644",
+            "remediation": "chmod 644 /etc/motd"
+        },
+        {
+            "title": "Ensure a non-informative banner is set",
+            "audit": "cat /etc/motd",
+            "expected": "Authorized use only. Actions will be logged",
+            "remediation": "echo 'Authorized use only. Actions will be logged.' > /etc/motd"
+        }
+    ],
+    "services" : [
+        {
+            "id": 210100,
+            "cis": "2.1.1",
+            "title": "Ensure time synchronization is in use",
+            "audit": "systemctl is-enabled systemd-timesyncd",
+            "expected": "enabled",
+            "remediation": ""
+        },
+        {
+            "id": 210300,
+            "cis": "2.1.3",
+            "title": "Ensure Avahi Server is not installed",
+            "audit": "dpkg -l | grep 'avahi-daemon' | grep -o 'ii'",
+            "expected": "",
+            "remediation": "sudo systemctl stop avahi-daaemon.service && systemctl stop avahi-daemon.socket && apt purge avahi-daemon"
+        },
+        {
+            "id": 210400,
+            "cis": "2.1.4",
+            "title": "Ensure CUPS is not installed",
+            "audit": "dpkg -l | grep 'cups' | grep -o 'ii'",
+            "expected": "",
+            "remediation": "sudo apt purge cups"
+        },
+        {
+            "id": 210500,
+            "cis": "2.1.5",
+            "title": "Ensure DHCP Server is not installed",
+            "audit": "dpkg -l | grep 'isc-dhcp-server' | grep -o 'ii'",
+            "expected": "",
+            "remediation": "sudo apt purge isc-dhcp-server"
+        },
+        {
+            "id": 210600,
+            "cis": "2.1.6",
+            "title": "Ensure LDAP Server is not installed",
+            "audit": "dpkg -l | grep 'slapd' | grep -o 'ii'",
+            "expected": "",
+            "remediation": "sudo apt purge slapd"
+        },
+        {
+            "id": 210700,
+            "cis": "2.1.7",
+            "title": "Ensure NFS is not installed",
+            "audit": "dpkg -l | grep 'nfs-kernel-server' | grep -o 'ii'",
+            "expected": "",
+            "remediation": "sudo apt purge nfs-kernel-server"
+        },
+        {
+            "id": 210800,
+            "cis": "2.1.8",
+            "title": "Ensure DNS Server is not installed",
+            "audit": "dpkg -l | grep 'bind9' | grep -o 'ii'",
+            "expected": "",
+            "remediation": "sudo apt purge bind9"
+        },
+        {
+            "id": 210900,
+            "cis": "2.1.9",
+            "title": "Ensure FTP Server is not installed",
+            "audit": "dpkg -l | grep 'vsftpd' | grep -o 'ii'",
+            "expected": "",
+            "remediation": "sudo apt purge vsftpd"
+        },
+        {
+            "id": 211000,
+            "cis": "2.1.10",
+            "title": "Ensure HTTP server is not installed",
+            "audit": "dpkg -l | grep 'apache2' | grep -o 'ii'",
+            "expected": "",
+            "remediation": "sudo apt purge apache2"
+        },
+        {
+            "id": 211100,
+            "cis": "2.1.11",
+            "title": "Ensure IMAP and POP3 server are not installed",
+            "audit": "dpkg -l |grep 'dovecot-imapd|dovecot-pop3d' | grep -o 'ii'",
+            "expected": "",
+            "remediation": "sudo apt purge dovecot-imapd dovecot-pop3d"
+        },
+        {
+            "id": 211200,
+            "cis": "2.1.12",
+            "title": "Ensure Samba is not installed",
+            "audit": "dpkg -l | grep 'samba' | grep -o 'ii'",
+            "expected": "",
+            "remediation": "sudo apt purge samba"
+        },
+        {
+            "id": 211300,
+            "cis": "2.1.13",
+            "title": "Ensure HTTP Proxy Server is not installed",
+            "audit": "dpkg -l | grep 'squid' | grep -o 'ii'",
+            "expected": "",
+            "remediation": "sudo apt purge squid"
+        },
+        {
+            "id": 211400,
+            "cis": "2.1.14",
+            "title": "Ensure SNMP Server is not installed",
+            "audit": "dpkg -l | grep 'snmpd' | grep -o 'ii'",
+            "expected": "",
+            "remediation": "sudo apt purge snmpd"
+        },
+        {
+            "id": 211500,
+            "cis": "2.1.15",
+            "title": "Ensure mail transfer agent is configured for local-only mode",
+            "audit": "ss -lntu | grep -E ':25\\\\s' | grep -E -v '\\\\s(127.0.0.1|::1):25\\\\s'",
+            "expected": "",
+            "remediation": ""
+        },
+        {
+            "id": 211600,
+            "cis": "2.1.16",
+            "title": "Ensure rsync service is not installed",
+            "audit": "dpkg -l | grep 'rsync' | grep -o 'ii'",
+            "expected": "",
+            "remediation": "sudo apt purge rsync"
+        },
+        {
+            "id": 211700,
+            "cis": "2.1.17",
+            "title": "Ensure NIS Server is not installed",
+            "audit": "dpkg -l | grep 'nis' | grep -o 'ii'",
+            "expected": "",
+            "remediation": "sudo apt purge nis"
+        },
+        {
+            "id": 220100,
+            "cis": "2.2.1",
+            "title": "Ensure NIS Client is not installed",
+            "audit": "dpkg -l | grep 'nis' | grep -o 'ii'",
+            "expected": "",
+            "remediation": "sudo apt purge nis"
+        },
+        {
+            "id": 220200,
+            "cis": "2.2.2",
+            "title": "Ensure rsh client is not installed",
+            "audit": "dpkg -l | grep 'rsh-client' | grep -o 'ii'",
+            "expected": "",
+            "remediation": "sudo apt purge rsh-client"
+        },
+        {
+            "id": 220300,
+            "cis": "2.2.3",
+            "title": "Ensure talk client is not installed",
+            "audit": "dpkg -l | grep 'talk' | grep -o 'ii'",
+            "expected": "",
+            "remediation": "sudo apt purge talk"
+        },
+        {
+            "id": 220400,
+            "cis": "2.2.4",
+            "title": "Ensure telnet client is not installed",
+            "audit": "dpkg -l | grep 'telnet' | grep -o 'ii'",
+            "expected": "",
+            "remediation": "sudo apt purge telnet"
+        },
+        {
+            "id": 220500,
+            "cis": "2.2.5",
+            "title": "Ensure LDAP client is not installed",
+            "audit": "dpkg -l | grep 'ldap-utils' | grep -o 'ii'",
+            "expected": "",
+            "remediation": "sudo apt purge ldap-utils"
+        },
+        {
+            "id": 220600,
+            "cis": "2.2.6",
+            "title": "Ensure RPC is not installed",
+            "audit": "dpkg -l | grep 'rpcbind' | grep -o 'ii'",
+            "expected": "",
+            "remediation": "sudo apt purge rpcbind"
+        },
+        {
+            "id": 350101,
+            "cis": "3.5.1.1",
+            "title": "Ensure ufw is installed",
+            "audit": "dpkg -s 'ufw' | grep 'Status: install'",
+            "expected": "Status: install ok installed",
+            "remediation": "apt install ufw"
+        },
+        {
+            "id": 350102,
+            "cis": "3.5.1.2",
+            "title": "Ensure iptables-persistent is not installed with ufw",
+            "audit": "dpkg -l | grep iptables-persistent | grep -o 'ii'",
+            "expected": "",
+            "remediation": "apt purge iptables-persistent"
+        },
+        {
+            "id": 350103,
+            "cis": "3.5.1.3",
+            "title": "Ensure ufw service is enabled",
+            "audit": "systemctl is-enabled ufw && ufw status | grep Status",
+            "expected": "enabled\\nStatus: active",
+            "remediation": "ufw allow proto tcp from any to any port 22 && ufw enable"
+        },
+        {
+            "id": 350201,
+            "cis": "3.5.2.1",
+            "title": "Ensure nftables is installed ",
+            "audit": "dpkg-query -s nftables | grep 'Status: install ok installed'",
+            "expected": "Status: install ok installed",
+            "remediation": "apt install nftables"
+        },
+        {
+            "id": 350209,
+            "cis": "3.5.2.9",
+            "title": "Ensure nftables service is enabled",
+            "audit": "systemctl is-enabled nftables",
+            "expected": "enabled",
+            "remediation": "systemctl enable nftables"
+        },
+        {
+            "id": 420101,
+            "cis": "4.2.1.1",
+            "title": "Ensure rsyslog is installed",
+            "audit": "dpkg -s rsyslog | grep 'Status: install ok installed'",
+            "expected": "Status: install ok installed",
+            "remediation": "apt install rsyslog"
+        },
+        {
+            "id": 420102,
+            "cis": "4.2.1.2",
+            "title": "Ensure rsyslog Service is enabled",
+            "audit": "systemctl is-enabled rsyslog",
+            "expected": "enabled",
+            "remediation": "systemctl --now enable rsyslog"
+        }
+    ],
+    "/etc/systemd/journald.conf" : [
+        {
+            "id": 420202,
+            "cis": "4.2.2.2",
+            "title": "Ensure journald is configured to compress large log files",
+            "audit": "grep -e Compress /etc/systemd/journald.conf",
+            "expected": "Compress=yes",
+            "remediation": "echo 'Compress=yes' >> /etc/systemd/journald.conf"
+        },
+        {
+            "id": 420203,
+            "cis": "4.2.2.3",
+            "title": "Ensure journald is configured to write logfiles to persistent disk",
+            "audit": "grep -e Storage /etc/systemd/journald.conf",
+            "expected": "Storage=persistent",
+            "remediation": "echo 'Storage=persistent' >> /etc/systemd/journald.conf"
+        }
+    ],
+    "cron" : [
+        {
+            "id": 510100,
+            "cis": "5.1.1",
+            "title": "Ensure cron daemon is enabled and running",
+            "audit": "systemctl is-enabled cron &> /dev/null && systemctl status cron | grep -o 'Active: active (running)'",
+            "expected": "Active: active (running)",
+            "remediation": "systemctl --now enable cron"
+        }
+        ],
+    "sudo" : [
+        {
+            "id": 520100,
+            "cis": "5.2.1",
+            "title": "Ensure sudo is installed",
+            "audit": "dpkg -s sudo | grep 'Status: install ok installed'",
+            "expected": "Status: install ok installed",
+            "remediation": ""
+        }
+        ],
+    "/etc/passwd" : [
+        {
+            "id": 550300,
+            "cis": "5.5.3",
+            "title": "Ensure default group for the root account is GID 0",
+            "audit": "grep '^root:' /etc/passwd | cut -f4 -d:",
+            "expected": "0",
+            "remediation": "usermod -g 0 root"
+        }
+    ]
+}
