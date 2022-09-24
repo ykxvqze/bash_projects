@@ -8,11 +8,11 @@ setcolor() {
 }
 
 filetmp='/tmp/config.json'
-keys=`jq -r 'keys[]' audit_list.json`
+keys=`jq -r 'keys[]' audit.json`
 setcolor
 
 for key in $keys; do
-    sed -n "/\"${key////\\/}\"/,/\s]/p" audit_list.json |
+    sed -n "/\"${key////\\/}\"/,/\s]/p" audit.json |
     sed '1d' | sed '$d' | sed -E '1 s/(.*)/[\n&/'       |
     sed -E '$ s/}/&\n]/' > $filetmp
 
