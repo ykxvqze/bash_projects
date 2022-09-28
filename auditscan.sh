@@ -32,7 +32,7 @@ for key in $keys; do
         expected=`echo "$expected_values" | sed -n "$i p"`
         remediation=`echo "$remediations" | sed -n "$i p"`
 
-        echo '' 
+        echo ''
         printf '%s\n' "[*] $title"
         eval "$audit" &> /dev/null
         if [ "`eval "$audit" 2>/dev/null`" != "$expected" ]; then
