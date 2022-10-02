@@ -63,7 +63,7 @@ n_fail=0
 
 for key in $keys; do
     sed -n "/\"${key////\\/}\"/,/\s]/p" audit.json |
-    sed '1d' | sed '$d' | sed -E '1 s/(.*)/[\n&/'       |
+    sed '1d' | sed '$d' | sed -E '1 s/(.*)/[\n&/'  |
     sed -E '$ s/}/&\n]/' > $filetmp
 
     titles=`jq -r '.[].title' "$filetmp"`
