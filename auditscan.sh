@@ -1,4 +1,42 @@
 #!/usr/bin/env bash
+: '
+A script for server security auditing.
+
+USAGE: ./auditscan.sh [ -h ]
+
+OPTIONS:
+        [ -h ]    Print usage and exit
+
+OUTPUT:
+         PASS and FAIL/REMEDIATION results in stdout, in addition to an
+         audit report saved in the current work directory. The report
+         includes OS/kernel information and the PASS/FAIL audit results.
+
+DESCRIPTION:
+
+auditscan.sh will check for several commonly weak configuration settings
+relating to system files and networks. The main audit rules are listed
+in JSON file audit.json where more rules can be easily added. The script
+will audit each entry appearing in the JSON file by testing against an
+expected output listed in the JSON file. If there is a match with the
+expected output, the test is marked as PASS, otherwise as FAIL (and a
+remediation step is listed in such a case). In this design, the JSON
+file can be expanded independently to include more rules at will as the
+rules are not hard-coded into the script itself.
+
+J.A., xrzfyvqk_k1jw@pm.me
+'
+
+print_usage(){
+    echo -e "auditscan.sh: security auditing
+    Usage: ./${0##*/}
+    [ -h ]            Print usage and exit\n"
+}
+
+if [ "$1" == '-h' ]; then
+    print_usage
+    exit 0
+fi
 
 setcolor() {
     rst='\e[0m'

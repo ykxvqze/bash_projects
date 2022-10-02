@@ -52,6 +52,8 @@
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/scansec.sh">scansec.sh</a>: interactive script for server security auditing and hardening. Note: option -a activates an audit-only mode (i.e. no hardening actions are executed). The main functions of `scansec.sh` (along with areas audited) are listed below.
 
+Note: the script `auditscan.sh` is now a replacement for `scansec.sh`. The script `auditscan.sh` operates on a JSON file called 'audit.json' which explicitly contains the audit rules and can be independently expanded to include more rules. In this new design, the rules are not hard-coded into the script itself, hence allowing for more flexibility.
+
 ```
 scansec.sh
 |--- check_umask()

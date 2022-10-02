@@ -6,7 +6,7 @@ USAGE: ./scansec.sh [ -h | -a ]
 
 OPTIONS:
         [ -h ]    Print usage and exit
-        [ -a ]    Activate audit-only mode (no hardening/actions)\n"
+        [ -a ]    Activate audit-only mode (no hardening/actions)"
 
 OUTPUT:
          The script will permit selecting all or specific categories of
