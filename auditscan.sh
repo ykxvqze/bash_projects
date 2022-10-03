@@ -40,10 +40,8 @@ if [ "$1" == '-h' ]; then
 fi
 
 if [ $EUID -ne 0 ]; then
-    echo
-    echo 'Please run this script as a privileged user, e.g.'
-    echo 'sudo ./auditscan.sh'
-    echo
+    echo -e '\nPlease run this script as a privileged user, e.g.'
+    echo -e 'sudo ./auditscan.sh\n'
     exit 1
 fi
 
