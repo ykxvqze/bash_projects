@@ -1,10 +1,10 @@
 {
     "/etc/login.defs" : [
         {
-            "title": "Ensure users' default umask is 077",
+            "title": "Ensure default umask for users is 077",
             "audit": "grep '^UMASK' /etc/login.defs | grep -oE '[0-9]+'",
             "expected": "077",
-                "remediation": "sed -iE 's/(^UMASK\\s+)[0-9]+/\\1077/' /etc/login.defs"
+            "remediation": "sed -iE 's/(^UMASK\\s+)[0-9]+/\\1077/' /etc/login.defs"
         },
         {
             "title": "Ensure maximum number of days a password may be used is 90 days (default: 99999)",
@@ -30,6 +30,14 @@
             "expected": "30",
             "remediation": "useradd -D -f 30"
         }
+    ],
+    "/root/.bashrc": [
+         {
+            "title": "Ensure default umask for root is 077",
+            "audit": "grep '^# umask' /root/.bashrc | grep -oE '[0-9]+'`",
+            "expected": "077",
+            "remediation": "sed -iE '/^# umask\\s+[0-9]+/a\\umask 077' /root/.bashrc" 
+         }
     ],
     "/etc/issue.net" : [
         {
@@ -118,144 +126,140 @@
         },
         {
             "title": "Ensure Avahi Server is not installed",
-            "audit": "dpkg -l | grep 'avahi-daemon' | grep -o 'ii'",
-            "expected": "",
+            "audit": "dpkg-query -W -f='${Status}' 'avahi-daemon' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
             "remediation": "sudo systemctl stop avahi-daaemon.service && systemctl stop avahi-daemon.socket && apt purge avahi-daemon"
         },
         {
             "title": "Ensure CUPS is not installed",
-            "audit": "dpkg -l | grep 'cups' | grep -o 'ii'",
-            "expected": "",
+            "audit": "dpkg-query -W -f='${Status}' 'cups' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
             "remediation": "sudo apt purge cups"
         },
         {
             "title": "Ensure DHCP Server is not installed",
-            "audit": "dpkg -l | grep 'isc-dhcp-server' | grep -o 'ii'",
-            "expected": "",
+            "audit": "dpkg-query -W -f='${Status}' 'isc-dhcp-server' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
             "remediation": "sudo apt purge isc-dhcp-server"
         },
         {
             "title": "Ensure LDAP Server is not installed",
-            "audit": "dpkg -l | grep 'slapd' | grep -o 'ii'",
-            "expected": "",
+            "audit": "dpkg-query -W -f='${Status}' 'slapd' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
             "remediation": "sudo apt purge slapd"
         },
         {
             "title": "Ensure NFS is not installed",
-            "audit": "dpkg -l | grep 'nfs-kernel-server' | grep -o 'ii'",
-            "expected": "",
+            "audit": "dpkg-query -W -f='${Status}' 'nfs-kernel-server' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
             "remediation": "sudo apt purge nfs-kernel-server"
         },
         {
             "title": "Ensure DNS Server is not installed",
-            "audit": "dpkg -l | grep 'bind9' | grep -o 'ii'",
-            "expected": "",
+            "audit": "dpkg-query -W -f='${Status}' 'bind9' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
             "remediation": "sudo apt purge bind9"
         },
         {
             "title": "Ensure FTP Server is not installed",
-            "audit": "dpkg -l | grep 'vsftpd' | grep -o 'ii'",
-            "expected": "",
+            "audit": "dpkg-query -W -f='${Status}' 'vsftpd' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
             "remediation": "sudo apt purge vsftpd"
         },
         {
             "title": "Ensure HTTP server is not installed",
-            "audit": "dpkg -l | grep 'apache2' | grep -o 'ii'",
-            "expected": "",
+            "audit": "dpkg-query -W -f='${Status}' 'apache2' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
             "remediation": "sudo apt purge apache2"
         },
         {
-            "title": "Ensure IMAP and POP3 server are not installed",
-            "audit": "dpkg -l |grep 'dovecot-imapd|dovecot-pop3d' | grep -o 'ii'",
-            "expected": "",
-            "remediation": "sudo apt purge dovecot-imapd dovecot-pop3d"
+            "title": "Ensure IMAP server is not installed",
+            "audit": "dpkg-query -W -f='${Status}' 'dovecot-impad' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
+            "remediation": "sudo apt purge dovecot-imapd"
+        },
+        {
+            "title": "Ensure POP3 server is not installed",
+            "audit": "dpkg-query -W -f='${Status}' 'dovecot-pop3d' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
+            "remediation": "sudo apt purge dovecot-pop3d"
         },
         {
             "title": "Ensure Samba is not installed",
-            "audit": "dpkg -l | grep 'samba' | grep -o 'ii'",
-            "expected": "",
+            "audit": "dpkg-query -W -f='${Status}' 'samba' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
             "remediation": "sudo apt purge samba"
         },
         {
             "title": "Ensure HTTP Proxy Server is not installed",
-            "audit": "dpkg -l | grep 'squid' | grep -o 'ii'",
-            "expected": "",
+            "audit": "dpkg-query -W -f='${Status}' 'squid' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
             "remediation": "sudo apt purge squid"
         },
         {
             "title": "Ensure SNMP Server is not installed",
-            "audit": "dpkg -l | grep 'snmpd' | grep -o 'ii'",
-            "expected": "",
+            "audit": "dpkg-query -W -f='${Status}' 'snmpd' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
             "remediation": "sudo apt purge snmpd"
         },
         {
-            "id": 211500,
-            "cis": "2.1.15",
             "title": "Ensure mail transfer agent is configured for local-only mode",
-            "audit": "ss -lntu | grep -E ':25\\\\s' | grep -E -v '\\\\s(127.0.0.1|::1):25\\\\s'",
+            "audit": "ss -lntu | grep -E ':25\\s' | grep -E -v '\\s(127.0.0.1|::1):25\\s'",
             "expected": "",
             "remediation": ""
         },
         {
             "title": "Ensure rsync service is not installed",
-            "audit": "dpkg -l | grep 'rsync' | grep -o 'ii'",
-            "expected": "",
+            "audit": "dpkg-query -W -f='${Status}' 'rsync' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
             "remediation": "sudo apt purge rsync"
         },
         {
-            "title": "Ensure NIS Server is not installed",
-            "audit": "dpkg -l | grep 'nis' | grep -o 'ii'",
-            "expected": "",
-            "remediation": "sudo apt purge nis"
-        },
-        {
-            "title": "Ensure NIS Client is not installed",
-            "audit": "dpkg -l | grep 'nis' | grep -o 'ii'",
-            "expected": "",
+            "title": "Ensure NIS server and client are not installed",
+            "audit": "dpkg-query -W -f='${Status}' 'nis' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
             "remediation": "sudo apt purge nis"
         },
         {
             "title": "Ensure rsh client is not installed",
-            "audit": "dpkg -l | grep 'rsh-client' | grep -o 'ii'",
-            "expected": "",
+            "audit": "dpkg-query -W -f='${Status}' 'rsh-client' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
             "remediation": "sudo apt purge rsh-client"
         },
         {
             "title": "Ensure talk client is not installed",
-            "audit": "dpkg -l | grep 'talk' | grep -o 'ii'",
-            "expected": "",
+            "audit": "dpkg-query -W -f='${Status}' 'talk' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
             "remediation": "sudo apt purge talk"
         },
         {
             "title": "Ensure telnet client is not installed",
-            "audit": "dpkg -l | grep 'telnet' | grep -o 'ii'",
-            "expected": "",
+            "audit": "dpkg-query -W -f='${Status}' 'telnet' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
             "remediation": "sudo apt purge telnet"
         },
         {
-            "id": 220500,
-            "cis": "2.2.5",
             "title": "Ensure LDAP client is not installed",
-            "audit": "dpkg -l | grep 'ldap-utils' | grep -o 'ii'",
-            "expected": "",
+            "audit": "dpkg-query -W -f='${Status}' 'ldap-utils' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
             "remediation": "sudo apt purge ldap-utils"
         },
         {
             "title": "Ensure RPC is not installed",
-            "audit": "dpkg -l | grep 'rpcbind' | grep -o 'ii'",
-            "expected": "",
+            "audit": "dpkg-query -W -f='${Status}' 'rpcbind' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
             "remediation": "sudo apt purge rpcbind"
         },
         {
             "title": "Ensure ufw is installed",
-            "audit": "dpkg -s 'ufw' | grep 'Status: install'",
-            "expected": "Status: install ok installed",
+            "audit": "dpkg-query -W -f='${Status}' 'ufw' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "1",
             "remediation": "apt install ufw"
         },
         {
             "title": "Ensure iptables-persistent is not installed with ufw",
-            "audit": "dpkg -l | grep iptables-persistent | grep -o 'ii'",
-            "expected": "",
+            "audit": "dpkg-query -W -f='${Status}' 'iptables-persistent' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
             "remediation": "apt purge iptables-persistent"
         },
         {
@@ -266,8 +270,8 @@
         },
         {
             "title": "Ensure nftables is installed ",
-            "audit": "dpkg-query -s nftables | grep 'Status: install ok installed'",
-            "expected": "Status: install ok installed",
+            "audit": "dpkg-query -W -f='${Status}' 'nftables' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "1",
             "remediation": "apt install nftables"
         },
         {
@@ -278,8 +282,8 @@
         },
         {
             "title": "Ensure rsyslog is installed",
-            "audit": "dpkg -s rsyslog | grep 'Status: install ok installed'",
-            "expected": "Status: install ok installed",
+            "audit": "dpkg-query -W -f='${Status}' 'rsyslog' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "1",
             "remediation": "apt install rsyslog"
         },
         {
@@ -310,21 +314,43 @@
             "expected": "Active: active (running)",
             "remediation": "systemctl --now enable cron"
         }
-        ],
+    ],
     "sudo" : [
         {
             "title": "Ensure sudo is installed",
-            "audit": "dpkg -s sudo | grep 'Status: install ok installed'",
-            "expected": "Status: install ok installed",
+            "audit": "dpkg-query -W -f='${Status}' 'sudo' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "1",
             "remediation": ""
         }
-        ],
+    ],
     "/etc/passwd" : [
         {
             "title": "Ensure default group for the root account is GID 0",
             "audit": "grep '^root:' /etc/passwd | cut -f4 -d:",
             "expected": "0",
             "remediation": "usermod -g 0 root"
+        }
+    ],
+    "/etc/pam.d/login" : [
+        {
+            "title": "Ensure lockout time after 5 unsuccessful login attempts is set to 20 minutes",
+            "audit": "grep -E '.*auth required pam_tally2\\.so onerr=fail audit silent deny=5 unlock_time=1200.*' /etc/pam.d/login &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/session\\s+optional\\s+pam_keyinit.so\\s+force\\s+revoke/a\\auth required pam_tally2\\.so onerr=fail audit silent deny=5 unlock_time=1200' /etc/pam.d/login"
+        },
+        {
+            "title": "Ensure delay time between login prompts is set to 10 seconds (default: 3 seconds)",
+            "audit": "grep -E '.*delay=.*' /etc/pam.d/login | grep -oE '[0-9]+'",
+            "expected": "10000000",
+            "remediation": "sed -iE 's/(delay=)[0-9]+/\\110000000/' /etc/pam.d/login"
+        }
+    ],
+    "/etc/security/access.conf" : [
+        {
+            "title": "Ensure that non-local logins to priviliged accounts are disallowed",
+            "audit": "grep -E '^-:wheel:ALL EXCEPT LOCAL.*' /etc/security/access.conf &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/^#-:wheel:ALL EXCEPT LOCAL.*/s/#//' /etc/security/access.conf"
         }
     ]
 }

@@ -28,14 +28,23 @@ J.A., xrzfyvqk_k1jw@pm.me
 '
 
 print_usage(){
+    echo
     echo -e "auditscan.sh: security auditing
-    Usage: ./${0##*/}
+    Usage: sudo ./${0##*/}
     [ -h ]            Print usage and exit\n"
 }
 
 if [ "$1" == '-h' ]; then
     print_usage
     exit 0
+fi
+
+if [ $EUID -ne 0 ]; then
+    echo
+    echo 'Please run this script as a privileged user, e.g.'
+    echo 'sudo ./auditscan.sh'
+    echo
+    exit 1
 fi
 
 setcolor() {
@@ -94,8 +103,8 @@ for key in $keys; do
 
             # report
             printf "\n%s%s\n" "/!\ [FAIL]" "[*] $title"                     >> "${audit_report}"
-            printf "%s%s\n  " "          " "[X] Audit step  : $audit"       >> "${audit_report}"
-            printf "%s%s\n  " "          " "[-] Remediation : $remediation" >> "${audit_report}"
+            printf "%s%s\n"   "          " "[X] Audit step  : $audit"       >> "${audit_report}"
+            printf "%s%s\n"   "          " "[-] Remediation : $remediation" >> "${audit_report}"
         else
             ((n_pass+=1))
 
@@ -104,7 +113,7 @@ for key in $keys; do
 
             # report
             printf "\n%s%s\n" "    [PASS]" "[*] $title"                   >> "${audit_report}"
-            printf "%s%s\n  " "          " "[V] Audit step  : $audit"     >> "${audit_report}"
+            printf "%s%s\n"   "          " "[V] Audit step  : $audit"     >> "${audit_report}"
         fi
      done
 done
