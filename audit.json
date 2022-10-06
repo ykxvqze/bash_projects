@@ -329,8 +329,8 @@
             "audit": "grep '^root:' /etc/passwd | cut -f4 -d:",
             "expected": "0",
             "remediation": "usermod -g 0 root"
-	},
-	{
+    },
+    {
             "title": "Ensure user-owner of /etc/passwd is root",
             "audit": "stat -c '%U' /etc/passwd",
             "expected": "root",
@@ -370,7 +370,7 @@
         }
     ],
     "/etc/group" : [
-	{
+    {
             "title": "Ensure user-owner of /etc/group is root",
             "audit": "stat -c '%U' /etc/group",
             "expected": "root",
@@ -567,13 +567,13 @@
             "audit": "grep '^PermitUserEnvironment no' /etc/ssh/sshd_config &> /dev/null; echo $?",
             "expected": "0",
             "remediation": "sed -iE '/PermitUserEnvironment.*no/s/^#//' /etc/ssh/sshd_config"
-	},
+    },
         {
             "title": "Ensure that SSH X11Forwarding is disabled",
             "audit": "grep '^#X11Forwarding yes' /etc/ssh/sshd_config &> /dev/null; echo $?",
             "expected": "0",
             "remediation": "sed -iE 's/X11Forwarding.*yes/#X11Forwarding yes/' /etc/ssh/sshd_config"
-	}
+    }
     ],
     "/etc/sysctl.conf" : [
        {
