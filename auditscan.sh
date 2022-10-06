@@ -14,10 +14,10 @@ OUTPUT:
 
 DESCRIPTION:
 
-auditscan.sh will check for several commonly weak configuration settings
-relating to system files and networks. The main audit rules are listed
-in JSON file audit.json where more rules can be easily added. The script
-will audit each entry appearing in the JSON file by testing against an
+auditscan.sh will check for several weak configuration settings relating
+to system files and networks. The main audit rules are listed in JSON
+file audit.json where more rules can be easily added. The script will
+audit each entry appearing in the JSON file by testing against an
 expected output listed in the JSON file. If there is a match with the
 expected output, the test is marked as PASS, otherwise as FAIL (and a
 remediation step is listed in such a case). In this design, the JSON
@@ -61,7 +61,7 @@ printf "%s%s\n" "Kernel Version           : `uname -r`"                         
 printf "%s%s\n" "Hardware Platform        : `uname -m`"                         >> "${audit_report}"
 printf "%s%s\n" "Hostname                 : `hostname`"                         >> "${audit_report}"
 
-filetmp='/tmp/config.json'
+filetmp=`mktemp /tmp/config.json.XXXXXX`
 keys=`jq -r 'keys[]' audit.json`
 setcolor
 
@@ -115,6 +115,8 @@ for key in $keys; do
         fi
      done
 done
+
+rm "$filetmp"
 
 echo
 printf "${rst}%s\n" "=================================================="

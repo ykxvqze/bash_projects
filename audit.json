@@ -329,8 +329,186 @@
             "audit": "grep '^root:' /etc/passwd | cut -f4 -d:",
             "expected": "0",
             "remediation": "usermod -g 0 root"
+	},
+	{
+            "title": "Ensure user-owner of /etc/passwd is root",
+            "audit": "stat -c '%U' /etc/passwd",
+            "expected": "root",
+            "remediation": "chown root:root /etc/passwd"
+        },
+        {
+            "title": "Ensure group-owner of /etc/passwd is root",
+            "audit": "stat -c '%G' /etc/passwd",
+            "expected": "root",
+            "remediation": "chown root:root /etc/passwd"
+        },
+        {
+            "title": "Ensure permission for /etc/passwd is 644",
+            "audit": "stat -c '%a' /etc/passwd",
+            "expected": "644",
+            "remediation": "chmod 644 /etc/passwd"
         }
     ],
+    "/etc/shadow" : [
+        {
+            "title": "Ensure user-owner of /etc/shadow is root",
+            "audit": "stat -c '%U' /etc/shadow",
+            "expected": "root",
+            "remediation": "chown root:shadow /etc/shadow"
+        },
+        {
+            "title": "Ensure group-owner of /etc/shadow is shadow",
+            "audit": "stat -c '%G' /etc/shadow",
+            "expected": "shadow",
+            "remediation": "chown root:shadow /etc/shadow"
+        },
+        {
+            "title": "Ensure permission for /etc/shadow is 640",
+            "audit": "stat -c '%a' /etc/shadow",
+            "expected": "640",
+            "remediation": "chmod 640 /etc/shadow"
+        }
+    ],
+    "/etc/group" : [
+	{
+            "title": "Ensure user-owner of /etc/group is root",
+            "audit": "stat -c '%U' /etc/group",
+            "expected": "root",
+            "remediation": "chown root:root /etc/group"
+        },
+        {
+            "title": "Ensure group-owner of /etc/group is root",
+            "audit": "stat -c '%G' /etc/group",
+            "expected": "root",
+            "remediation": "chown root:root /etc/group"
+        },
+        {
+            "title": "Ensure permission for /etc/group is 644",
+            "audit": "stat -c '%a' /etc/group",
+            "expected": "644",
+            "remediation": "chmod 644 /etc/group"
+        }
+    ],
+    "/etc/gshadow" : [
+        {
+            "title": "Ensure user-owner of /etc/gshadow is root",
+            "audit": "stat -c '%U' /etc/gshadow",
+            "expected": "root",
+            "remediation": "chown root:shadow /etc/gshadow"
+        },
+        {
+            "title": "Ensure group-owner of /etc/gshadow is shadow",
+            "audit": "stat -c '%G' /etc/gshadow",
+            "expected": "shadow",
+            "remediation": "chown root:shadow /etc/gshadow"
+        },
+        {
+            "title": "Ensure permission for /etc/gshadow is 640",
+            "audit": "stat -c '%a' /etc/gshadow",
+            "expected": "640",
+            "remediation": "chmod 640 /etc/gshadow"
+        }
+    ],
+    "/etc/passwd-" : [
+        {
+            "title": "Ensure user-owner of /etc/passwd- is root",
+            "audit": "stat -c '%U' /etc/passwd-",
+            "expected": "root",
+            "remediation": "chown root:root /etc/passwd-"
+        },
+        {
+            "title": "Ensure group-owner of /etc/passwd- is root",
+            "audit": "stat -c '%G' /etc/passwd-",
+            "expected": "root",
+            "remediation": "chown root:root /etc/passwd-"
+        },
+        {
+            "title": "Ensure permission for /etc/passwd- is 600",
+            "audit": "stat -c '%a' /etc/passwd-",
+            "expected": "600",
+            "remediation": "chmod 600 /etc/passwd-"
+        }
+    ],
+    "/etc/shadow-" : [
+        {
+            "title": "Ensure user-owner of /etc/shadow- is root",
+            "audit": "stat -c '%U' /etc/shadow-",
+            "expected": "root",
+            "remediation": "chown root:root /etc/shadow-"
+        },
+        {
+            "title": "Ensure group-owner of /etc/shadow- is root",
+            "audit": "stat -c '%G' /etc/shadow-",
+            "expected": "root",
+            "remediation": "chown root:root /etc/shadow-"
+        },
+        {
+            "title": "Ensure permission for /etc/shadow- is 600",
+            "audit": "stat -c '%a' /etc/shadow-",
+            "expected": "600",
+            "remediation": "chmod 600 /etc/shadow-"
+        }
+    ],
+    "/etc/group-" : [
+        {
+            "title": "Ensure user-owner of /etc/group- is root",
+            "audit": "stat -c '%U' /etc/group-",
+            "expected": "root",
+            "remediation": "chown root:root /etc/group-"
+        },
+        {
+            "title": "Ensure group-owner of /etc/group- is root",
+            "audit": "stat -c '%G' /etc/group-",
+            "expected": "root",
+            "remediation": "chown root:root /etc/group-"
+        },
+        {
+            "title": "Ensure permission for /etc/group- is 600",
+            "audit": "stat -c '%a' /etc/group-",
+            "expected": "600",
+            "remediation": "chmod 600 /etc/group-"
+        }
+     ],
+     "/etc/gshadow-" : [
+        {
+            "title": "Ensure user-owner of /etc/gshadow- is root",
+            "audit": "stat -c '%U' /etc/gshadow-",
+            "expected": "root",
+            "remediation": "chown root:shadow /etc/gshadow-"
+        },
+        {
+            "title": "Ensure group-owner of /etc/gshadow- is shadow",
+            "audit": "stat -c '%G' /etc/gshadow-",
+            "expected": "shadow",
+            "remediation": "chown root:shadow /etc/gshadow-"
+        },
+        {
+            "title": "Ensure permission for /etc/gshadow- is 600",
+            "audit": "stat -c '%a' /etc/gshadow-",
+            "expected": "600",
+            "remediation": "chmod 600 /etc/gshadow-"
+        }
+    ],
+    "/etc/security/opasswd" : [
+        {
+            "title": "Ensure user-owner of etc/security/opasswd is root",
+            "audit": "stat -c '%U' /etc/security/opasswd",
+            "expected": "root",
+            "remediation": "chown root:root /etc/security/opasswd"
+        },
+        {
+            "title": "Ensure group-owner of /etc/security/opasswd is root",
+            "audit": "stat -c '%G' /etc/security/opasswd",
+            "expected": "root",
+            "remediation": "chown root:root /etc/security/opasswd"
+        },
+        {
+            "title": "Ensure permission for /etc/security/opasswd is 600",
+            "audit": "stat -c '%a' /etc/security/opasswd",
+            "expected": "600",
+            "remediation": "chmod 600 /etc/security/opasswd"
+        }
+     ],
     "/etc/pam.d/login" : [
         {
             "title": "Ensure lockout time after 5 unsuccessful login attempts is set to 20 minutes",
@@ -351,6 +529,58 @@
             "audit": "grep -E '^-:wheel:ALL EXCEPT LOCAL.*' /etc/security/access.conf &> /dev/null; echo $?",
             "expected": "0",
             "remediation": "sed -iE '/^#-:wheel:ALL EXCEPT LOCAL.*/s/#//' /etc/security/access.conf"
+        }
+    ],
+    "/etc/ssh/sshd_config" : [
+        {
+            "title": "Ensure that SSH LogLevel is set to INFO",
+            "audit": "grep '^LogLevel INFO' /etc/ssh/sshd_config &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/LogLevel INFO/s/^#//' /etc/ssh/sshd_config"
+        },
+        {
+            "title": "Ensure that SSH IgnoreRhosts is enabled",
+            "audit": "grep '^IgnoreRhosts yes' /etc/ssh/sshd_config &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/IgnoreRhosts.*/s/^#//' /etc/ssh/sshd_config"
+        },
+        {
+            "title": "Ensure that SSH HostbasedAuthentication is disabled",
+            "audit": "grep '^HostbasedAuthentication no' /etc/ssh/sshd_config &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/HostbasedAuthentication.*no/s/^#//' /etc/ssh/sshd_config"
+        },
+        {
+            "title": "Ensure that SSH PermitRootLogin is disabled",
+            "audit": "grep '^PermitRootLogin no' /etc/ssh/sshd_config &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE 's/#PermitRootLogin\\s+prohibit-password/PermitRootLogin no/' /etc/ssh/sshd_config"
+        },
+        {
+            "title": "Ensure that SSH PermitEmptyPasswords is disabled",
+            "audit": "grep '^PermitEmptyPasswords no' /etc/ssh/sshd_config &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/PermitEmptyPasswords.*no/s/^#//' /etc/ssh/sshd_config"
+        },
+        {
+            "title": "Ensure that SSH PermitUserEnvironment is disabled",
+            "audit": "grep '^PermitUserEnvironment no' /etc/ssh/sshd_config &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/PermitUserEnvironment.*no/s/^#//' /etc/ssh/sshd_config"
+	},
+        {
+            "title": "Ensure that SSH X11Forwarding is disabled",
+            "audit": "grep '^#X11Forwarding yes' /etc/ssh/sshd_config &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE 's/X11Forwarding.*yes/#X11Forwarding yes/' /etc/ssh/sshd_config"
+	}
+    ],
+    "/etc/sysctl.conf" : [
+       {
+            "title": "Ensure that IPv4 forwarding is disabled",
+            "audit": "grep -E '^net\\.ipv4\\.ip_forward=0' /etc/sysctl.conf &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE 's/^#net\\.ipv4\\.ip_forward=1/net.ipv4.ip_forward=0/' /etc/sysctl.conf"
         }
     ]
 }
