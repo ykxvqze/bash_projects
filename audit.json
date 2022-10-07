@@ -659,6 +659,12 @@
             "audit": "ssysctl net.ipv4.conf.default.accept_redirects | grep -E '^net\\.ipv4\\.conf\\.default\\.accept_redirects\\s=\\s0$ &> /dev/null; echo $?",
             "expected": "0",
             "remediation": "sysctl -w net.ipv4.conf.default.accept_redirects=0"
+        },
+        {
+            "title": "Ensure that suspicious packets logging is enabled (all)",
+            "audit": "grep -E '^net\\.ipv4\\.conf\\.all\\.log_martians\\s=\\s1$' /etc/sysctl.conf &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/net.ipv4.conf.all.log_martians.*/s/^#//g' /etc/sysctl.conf"
         }
     ]
 }
