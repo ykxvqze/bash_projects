@@ -291,6 +291,12 @@
             "audit": "systemctl is-enabled rsyslog",
             "expected": "enabled",
             "remediation": "systemctl --now enable rsyslog"
+        },
+        {
+            "title": "Ensure TCP wrappers are installed",
+            "audit": "dpkg-query -W -f='${Status}' 'tcpd' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "1",
+            "remediation": "apt -y install tcpd"
         }
     ],
     "/etc/systemd/journald.conf" : [
@@ -509,6 +515,50 @@
             "remediation": "chmod 600 /etc/security/opasswd"
         }
      ],
+     "/etc/pam.d/common-password" : [
+        {
+            "title": "Ensure libpam-cracklib is installed",
+            "audit": "dpkg-query -W -f='${Status}' 'libpam-cracklib' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "1",
+            "remediation": "apt -y install libpam-cracklib"
+        },
+        {
+            "title": "Ensure minimum password length is 14 characters",
+            "audit": "grep -E '.*minlen=14.*' /etc/pam.d/common-password &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE 's/minlen=[[:digit:]]\\+/minlen=14/' /etc/pam.d/common-password"
+        },
+        {
+            "title": "Ensure username (straight or reversed) contained password is rejected",
+            "audit": "grep -E '.*reject_username.*' /etc/pam.d/common-password &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -i 's/\\bdifok=3\\b/& reject_username/' /etc/pam.d/common-password"
+        },
+        {
+            "title": "Ensure password complexity class is 4 (digits, uppercase, lowecase, other symbols)",
+            "audit": "grep -E '.*minclass=4.*' /etc/pam.d/common-password &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -i 's/\\bpam_cracklib.so\\b/& minclass=4/' /etc/pam.d/common-password"
+        },
+        {
+            "title": "Ensure password contains at least 1 character of each class",
+            "audit": "grep -E '.*dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1.*' /etc/pam.d/common-password &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -i 's/\\breject_username\\b/& dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1/' /etc/pam.d/common-password"
+        },
+        {
+            "title": "Ensure passwords containing more than 2 identical consecutive characters are rejected",
+            "audit": "grep -E '.*maxrepeat=2.*' /etc/pam.d/common-password &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -i 's/\\bminclass=4\\b/& maxrepeat=2/' /etc/pam.d/common-password"
+        },
+        {
+            "title": "Ensure saving last 24 passwords to check against is enabled",
+            "audit": "grep -E '.*remember=24.*' /etc/pam.d/common-password &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -i 's/\\bpam_unix.so\\b/& remember=24/' /etc/pam.d/common-password"
+        }
+     ],
     "/etc/pam.d/login" : [
         {
             "title": "Ensure lockout time after 5 unsuccessful login attempts is set to 20 minutes",
@@ -567,7 +617,7 @@
             "audit": "grep '^PermitUserEnvironment no' /etc/ssh/sshd_config &> /dev/null; echo $?",
             "expected": "0",
             "remediation": "sed -iE '/PermitUserEnvironment.*no/s/^#//' /etc/ssh/sshd_config"
-    },
+        },
         {
             "title": "Ensure that SSH X11Forwarding is disabled",
             "audit": "grep '^#X11Forwarding yes' /etc/ssh/sshd_config &> /dev/null; echo $?",
@@ -611,7 +661,7 @@
             "audit": "sysctl net.ipv4.conf.default.send_redirects | grep -E '^net\\.ipv4\\.conf\\.default\\.send_redirects\\s=\\s0$' &> /dev/null; echo $?",
             "expected": "0",
             "remediation": "sysctl -w net.ipv4.conf.default.send_redirects=0"
-	},
+        },
         {
             "title": "Ensure that source routed packets are disabled (all)",
             "audit": "grep -E '^net\\.ipv4\\.conf\\.all\\.accept_source_route\\s=\\s0$' /etc/sysctl.conf &> /dev/null; echo $?",
@@ -665,6 +715,124 @@
             "audit": "grep -E '^net\\.ipv4\\.conf\\.all\\.log_martians\\s=\\s1$' /etc/sysctl.conf &> /dev/null; echo $?",
             "expected": "0",
             "remediation": "sed -iE '/net.ipv4.conf.all.log_martians.*/s/^#//g' /etc/sysctl.conf"
+        },
+        {
+            "title": "Ensure that suspicious packets logging is enabled (default)",
+            "audit": "grep -E '^net\\.ipv4\\.conf\\.default\\.log_martians=1$' /etc/sysctl.conf",
+            "expected": "0",
+            "remediation": "echo 'net.ipv4.conf.default.log_martians=1' >> /etc/sysctl.conf"
+        },
+        {
+            "title": "Ensure that suspicious packets logging for kernel is enabled (all)",
+            "audit": "sysctl net.ipv4.conf.all.log_martians | grep -E '^net\\.ipv4\\.conf\\.all\\.log_martians\\s=\\s1$' &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sysctl -w net.ipv4.conf.all.log_martians=1"
+        },
+        {
+            "title": "Ensure that suspicious packets logging for kernel is enabled (default)",
+            "audit": "sysctl net.ipv4.conf.default.log_martians | grep -E '^net\\.ipv4\\.conf\\.default\\.log_martians\\s=\\s1$' &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sysctl -w net.ipv4.conf.default.log_martians=1"
+        },
+        {
+            "title": "Ensure that broadcast ICMP requests are ignored",
+            "audit": "grep E '^net\\.ipv4\\.icmp_echo_ignore_broadcasts=1$' /etc/sysctl.conf &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "echo 'net.ipv4.icmp_echo_ignore_broadcasts=1' >> /etc/sysctl.conf"
+        },
+        {
+            "title": "Ensure that broadcast ICMP requests for kernel are ignored",
+            "audit": "sysctl net.ipv4.icmp_echo_ignore_broadcasts | grep -E '^net\\.ipv4\\.icmp_echo_ignore_broadcasts\\s=\\s1$' &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sysctl -w net.ipv4.icmp_echo_ignore_broadcasts=1"
+        },
+        {
+            "title": "Ensure that bad error message protection is enabled",
+            "audit": "grep -E '^net\\.ipv4\\.icmp_ignore_bogus_error_responses=1$' /etc/sysctl.conf &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "echo 'net.ipv4.icmp_ignore_bogus_error_responses=1' >> /etc/sysctl.conf"
+        },
+        {
+            "title": "Ensure that bad error message protection for kernel is enabled",
+            "audit": "sysctl net.ipv4.icmp_ignore_bogus_error_responses | grep -E '^net\\.ipv4\\.icmp_ignore_bogus_error_responses\\s=\\s1$' &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sysctl -w net.ipv4.icmp_ignore_bogus_error_responses=1"
+        },
+        {
+            "title": "Ensure that source route validation (reverse path filter) is enabled (all)",
+            "audit": "grep -E '^net\\.ipv4\\.conf\\.all\\.rp_filter=1$' /etc/sysctl.conf &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/net.ipv4.conf.all.rp_filter.*/s/^#//g' /etc/sysctl.conf"
+        },
+        {
+            "title": "Ensure that source route validation (reverse path filter) is enabled (default)",
+            "audit": "grep -cP '^net\\.ipv4\\.conf\\.default\\.rp_filter=1$' /etc/sysctl.conf &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/net.ipv4.conf.default.rp_filter.*/s/^#//g' /etc/sysctl.conf"
+        },
+        {
+            "title": "Ensure that source route validation (reverse path filter) for kernel is enabled (all)",
+            "audit": "sysctl net.ipv4.conf.all.rp_filter | grep -E '^net\\.ipv4\\.conf\\.all\\.rp_filter\\s=\\s1$' &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sysctl -w net.ipv4.conf.all.rp_filter=1"
+        },
+        {
+            "title": "Ensure that source route validation (reverse path filter) for kernel is enabled (default)",
+            "audit": "sysctl net.ipv4.conf.default.rp_filter | grep -E '^net\\.ipv4\\.conf\\.default\\.rp_filter\\s=\\s1$' &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sysctl -w net.ipv4.conf.default.rp_filter=1"
+        },
+        {
+            "title": "Ensure that TCP SYN cookies are enabled",
+            "audit": "grep -E '^net\\.ipv4\\.tcp_syncookies=1$' /etc/sysctl.conf &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/net.ipv4.tcp_syncookies.*/s/^#//g' /etc/sysctl.conf"
+        },
+        {
+            "title": "Ensure that TCP SYN cookies for kernel are enabled",
+            "audit": "sysctl net.ipv4.tcp_syncookies | grep -E '^net\\.ipv4\\.tcp_syncookies\\s=\\s1$' &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sysctl -w net.ipv4.tcp_syncookies=1"
+        }
+    ],
+    "/etc/hosts.allow" : [
+        {
+            "title": "Ensure user-owner of /etc/hosts.allow is root",
+            "audit": "stat -c '%U' /etc/hosts.allow",
+            "expected": "root",
+            "remediation": "chown root:root /etc/hosts.allow"
+        },
+        {
+            "title": "Ensure group-owner of /etc/hosts.allow is root",
+            "audit": "stat -c '%G' /etc/hosts.allow",
+            "expected": "root",
+            "remediation": "chown root:root /etc/hosts.allow"
+        },
+        {
+            "title": "Ensure permission for /etc/hosts.allow is 644",
+            "audit": "stat -c '%a' /etc/hosts.allow",
+            "expected": "644",
+            "remediation": "chmod 644 /etc/hosts.allow"
+        }
+    ],
+    "/etc/hosts.deny" : [
+        {
+            "title": "Ensure user-owner of /etc/hosts.deny is root",
+            "audit": "stat -c '%U' /etc/hosts.deny",
+            "expected": "root",
+            "remediation": "chown root:root /etc/hosts.deny"
+        },
+        {
+            "title": "Ensure group-owner of /etc/hosts.deny is root",
+            "audit": "stat -c '%G' /etc/hosts.deny",
+            "expected": "root",
+            "remediation": "chown root:root /etc/hosts.deny"
+        },
+        {
+            "title": "Ensure permission for /etc/hosts.deny is 644",
+            "audit": "stat -c '%a' /etc/hosts.deny",
+            "expected": "644",
+            "remediation": "chmod 644 /etc/hosts.deny"
         }
     ]
 }
