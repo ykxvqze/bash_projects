@@ -20,7 +20,7 @@ DESCRIPTION:
   - Add selected ports to /etc/apache2/ports.conf
   - Add a simple HTML file /var/www/html/${virtual_host}/index.html indicating "This is a test!"
   - Enable the site.
-  - Create .htpasswd for user (default: user_guest) /var/www/html/${virtual_host}/.htpasswd
+  - Create .htpasswd for user (default: "user_guest") /var/www/html/${virtual_host}/.htpasswd
     (a password must be entered twice).
   - Configure .htacess file for user: /var/www/html/${virtual_host}/.htaccess
     (pointing to the .htpasswd file).
@@ -65,7 +65,8 @@ main() {
 	done
 
 	if [ "$EUID" != 0 ]; then
-	    exit 1
+		print_usage
+		exit 1
 	fi
 
 	is_apache_installed
