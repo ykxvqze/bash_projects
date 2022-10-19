@@ -2,10 +2,10 @@
 << 'EOF'
 Utility functions for IPv4 networking/transformations
 
-USAGE: . ./iptx.sh [ -h ]
+USAGE: . ./iptx.sh
 
 OPTIONS:
-        [ -h ]  Print usage
+        N/A
 
 EXAMPLES:
          . ./iptx.sh
@@ -34,8 +34,8 @@ J.A., ykxvqz@pm.me
 EOF
 
 valid_ipv4     () { :; }  # Is IPv4 address valid?
-ip2bin         () { :; }  # IPv4 (decimal dotted) to binary
-bin2ip         () { :; }  # binary to IPv4 (decimal dotted)
+ip2bin         () { :; }  # IPv4 (decimal-dotted) to binary
+bin2ip         () { :; }  # binary to IPv4 (decimal-dotted)
 cidr2netmask   () { :; }  # CIDR to netmask address
 cidr2network   () { :; }  # CIDR to network address
 cidr2broadcast () { :; }  # CIDR to broadcast address
@@ -75,7 +75,7 @@ bin2ip() {
     done | xargs | tr ' ' '.'
 }
 
-# Example 110 --> 00000110 
+# Example: 110 --> 00000110 
 zero_pad(){
     local input="$1"
     local z
@@ -88,7 +88,7 @@ zero_pad(){
     echo ${z}${input}
 }
 
-# Example: 128.42.5.4/21 --> 55.255.248.0 
+# Example: 128.42.5.4/21 --> 255.255.248.0 
 cidr2netmask(){
     local ip_cidr="$1"
     netmask_length=`echo "${ip_cidr}" | cut -d '/' -f 2`
