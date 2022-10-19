@@ -86,13 +86,13 @@ Non-routable IP addresses
 -------------------------
 Non-routable addresses can be reused over and over internally (as leased by a router or DHCP server). These appear as private IP addresses.
 
-Non-routable IP addresses | Details
---------------------------|:-------------------------------
-172.16.\*.\* -- 172.31.*.*  | 172.16.0.0 -- 172.31.255.255/12
-192.168.*.*               | 192.168.0.0 -- 192.168.255.255/16
-10.*.*.*                  | 10.0.0.0 -- 10.255.255.255/8
-169.*.*.*                 | self-assigned if no response from DHCP server
-127.xx.yy.zz              | loopback
+Non-routable IP addresses     | Details
+------------------------------|:-------------------------------
+172.16.\*.\* -- 172.31.\*.\*  | 172.16.0.0 -- 172.31.255.255/12
+192.168.\*.\*                 | 192.168.0.0 -- 192.168.255.255/16
+10.\*.\*.\*                   | 10.0.0.0 -- 10.255.255.255/8
+169.\*.\*.\*                  | self-assigned if no response from DHCP server
+127.xx.yy.zz                  | loopback
 
 IP header
 ---------
