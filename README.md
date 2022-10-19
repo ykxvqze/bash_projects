@@ -98,6 +98,7 @@ scansec.sh
 ## IPv4 networking
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/iptx.sh">iptx.sh</a>: utility functions for transforming IPv4 addresses from decimal-dotted notation to binary and vice versa, as well as for obtaining the netmask address, network address, and broadcast address starting from CIDR notation.
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/ipv4.md">ipv4.md</a>: short summary on IPv4 addresses. 
 
 ## Android cleanup
 
