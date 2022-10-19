@@ -41,11 +41,11 @@ IP address: 128.42.5.4
 Netmask   : 255.255.248.0
 
 
-In binary: 10000000 00101010 00000101 00000100
+IP binary: 10000000 00101010 00000101 00000100
 
-In binary: 11111111 11111111 11111000 00000000
+Netmask: 11111111 11111111 11111000 00000000
 
-Logical &: 10000000 00101010 00000000 00000000
+Logical AND: 10000000 00101010 00000000 00000000
 
 i.e. network address: 128.42.0.0
 
@@ -88,9 +88,9 @@ Non-routable addresses can be reused over and over internally (as leased by a ro
 
 Non-routable IP addresses | Details
 --------------------------|:-------------------------------
-172.16.\*.\* -- 172.31.*.*  | 172.16.0.0 -- 172.31.255.255/12               (private ISP LAN, often used in NAT)
-192.168.*.*               | 192.168.0.0 -- 192.168.255.255/16             (private LAN)
-10.*.*.*                  | 10.0.0.0 -- 10.255.255.255/8                  (private LAN)
+172.16.\*.\* -- 172.31.*.*  | 172.16.0.0 -- 172.31.255.255/12
+192.168.*.*               | 192.168.0.0 -- 192.168.255.255/16
+10.*.*.*                  | 10.0.0.0 -- 10.255.255.255/8
 169.*.*.*                 | self-assigned if no response from DHCP server
 127.xx.yy.zz              | loopback
 
@@ -116,6 +116,6 @@ IP header
 |--- ...  (IP header has more room for options, however such options are rarely used since many routers ignore them)
 ```
 
-* IPv6 has no checksum. The argument against checksums was that any application that really cares about data integrity has to have a checksum in the transport layer anyway, so having another one in the IP layer (not to mention the checksum in the link layer) is an overkill. Moreover, experience with IPv4 has shown that computing an IP checksum was a major expense, hence it was dropped in IPv6.
+* IPv6 has no checksum. The argument against checksums is that any application that really cares about data integrity has to have a checksum in the transport layer anyway, so having another one in the IP layer (not to mention the checksum in the link layer) is an overkill. Moreover, experience with IPv4 has shown that computing an IP checksum was a major expense, hence it was dropped in IPv6.
 
 * IPv6 also does not use encryption like IPsec (nor is it kept optional like the null algorithm in IPsec). The argument was that a really secure application will want nothing less than end-to-end encryption (implemented at application-level), so there is no need to pay the price of having a slow bulky IP implementation that also does encryption.
