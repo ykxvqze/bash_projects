@@ -6,22 +6,22 @@
 
 ## Set up s-nail (send/receive mail via CLI)
 
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/snail_setup.sh">snail_setup.sh</a>: Bash script for installing and configuring s-nail. The script allows interactively adding/removing IMAP/SMTP configurations for mail accounts. Mail can then be fetched and sent (in ASCII format) via CLI with `s-nail` as demonstrated in the script. MIME attachments can be copied to separate files and then decoded (base64 decoding) before being viewed with an appropriate application depending on file type.
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/snail.sh">snail.sh</a>: Bash script for installing and configuring s-nail. The script allows interactively adding/removing IMAP/SMTP configurations for mail accounts. Mail can then be fetched and sent (in ASCII format) via CLI with `s-nail` as demonstrated in the script. MIME attachments can be copied to separate files and then decoded (base64 decoding) before being viewed with an appropriate application depending on file type.
 
 ## One-time pad encryption
 
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/otp_crypt.sh">otp_crypt.sh</a>: Implementation of a one-time pad encryption/decryption method: includes utility functions and a demo.
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/crypt_info.md">crypt_info.md</a>: A summary on public-key encryption and OTP symmetric-key encryption.
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/otpcrypt.sh">otpcrypt.sh</a>: Implementation of a one-time pad encryption/decryption method: includes utility functions and a demo.
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/cryptinfo.md">cryptinfo.md</a>: A summary on public-key encryption and OTP symmetric-key encryption.
 
 ## Delete metadata
 
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/del_metadata.sh">del_metadata.sh</a>: Bash script for deleting metadata (author name; date timestamps) from a docx (Word) document. Metadata in the output file will appear empty (no author), (no date), including comments in the margin which will now appear with no author and no timestamps.
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/delmeta.sh">delmeta.sh</a>: Bash script for deleting metadata (author name; date timestamps) from a docx (Word) document. Metadata in the output file will appear empty (no author), (no date), including comments in the margin which will now appear with no author and no timestamps.
 
-<!--a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/del_metadata.py">del_metadata.py</a>: Python script that does the same as above, however with an additional (mask) option for modifying timestamps of comments using numpy. If the mask option is specified, then timestamps of comments in the margin will be changed through randomization where timestamps are assigned with an incremental component drawn from a uniform distribution.
+<!--a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/delmeta.py">delmeta.py</a>: Python script that does the same as above, however with an additional (mask) option for modifying timestamps of comments using numpy. If the mask option is specified, then timestamps of comments in the margin will be changed through randomization where timestamps are assigned with an incremental component drawn from a uniform distribution.
 -->
 ## Scrape image files from xkcd site
 
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/scrape_xkcd.sh">scrape_xkcd.sh</a>: scrape cartoon images from an (inaccessible) xkcd directory. The script keeps a log of the last page scraped (from its previous execution if any) and will start fetching images from where it left off (i.e. adding only new cartoon images to a designated directory).
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/scrapexkcd.sh">scrapexkcd.sh</a>: scrape cartoon images from an (inaccessible) xkcd directory. The script keeps a log of the last page scraped (from its previous execution if any) and will start fetching images from where it left off (i.e. adding only new cartoon images to a designated directory).
 
 ## Linecutter tool
 
@@ -95,6 +95,10 @@ scansec.sh
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/apache2.sh">apache2.sh</a>: script for installing Apache httpd server and setting up a password-protected virtual host via .htaccess and .htpasswd files.
 
+## IPv4 networking
+
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/iptx.sh">iptx.sh</a>: utility functions for transforming IPv4 addresses from decimal-dotted notation to binary and vice versa, as well as for obtaining the netmask address, network address, and broadcast address starting from CIDR notation.
+
 ## Android cleanup
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/android_cleanup.sh">android_cleanup.sh</a>: script to brute-force uninstalling extraneous android apps (disallowing automatic reactivation) and replacing several preinstalled ones with open source apps. The list of packages to install/uninstall can be modified prior script execution.
@@ -121,7 +125,3 @@ Count   : 10
 Minimum : 1
 Maximum : 100
 ```
-
-## Privacy-preserving method for merging datasets
-
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/database_merger.md">database_merger.md</a>: A proposed method for merging datasets that contain sensitive information from two different parties without revealing any identifying information to either party. The task can be accomplished via a third party, e.g. a bot, without the bot receiving any identifying information either.

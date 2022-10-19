@@ -29,7 +29,7 @@ address appears more than 4 times _and_ it is not already logged in
 Note: execute the script as a cron job (e.g. every 2 minutes).
 */2 * * * * /path/to/sshban.sh
 
-J.A., xrzfyvqk_k1jw@pm.me
+J.A., ykxvqz@pm.me
 '
 
 ssh_blacklist='ssh_blacklist.txt'

@@ -2,7 +2,7 @@
 : '
 Scrape cartoon images iteratively from the xkcd site. Continue from last fetch upon script re-run.
 
-USAGE:  ./scrape_xkcd.sh [ -h ]
+USAGE:  ./scrapexkcd.sh [ -h ]
 
 OPTIONS:
         [ -h ]    Print usage and exit
@@ -39,13 +39,13 @@ scraping from the last `index.html` file it already scraped in the
 previous execution. Hence, it will fetch only new cartoon images adding
 them to ./xkcd/
 
-J.A., xrzfyvqk_k1jw@pm.me
+J.A., ykxvqz@pm.me
 '
 
 trap 'echo error on line: $LINENO' ERR
 
 print_usage() {
-    echo -e "scrape_xkcd.sh: fetch cartoon images from the xkcd site iteratively.
+    echo -e "scrapexkcd.sh: fetch cartoon images from the xkcd site iteratively.
     Usage:
     ./${0##*/}             Execute script and fetch images into ./xkcd directory
     ./${0##*/} [ -h ]      Print usage and exit\n"

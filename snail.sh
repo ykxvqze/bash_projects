@@ -2,7 +2,7 @@
 : '
 Set up s-nail for sending/receiving mail over SMTP/IMAP via CLI.
 
-USAGE: ./snail_setup.sh [-h] | [-s] | [-l] | [-a <account>] | [-r <account(s)>]
+USAGE: ./snail.sh [-h] | [-s] | [-l] | [-a <account>] | [-r <account(s)>]
 
 OPTIONS:
         [ -h ]               Print usage and exit
@@ -73,13 +73,13 @@ after decoding:
 base64 -d file1 > file1_decoded
 evince file1_decoded
 
-J.A., xrzfyvqk_k1jw@pm.me
+J.A., ykxvqz@pm.me
 '
 
 path_to_mailbox="$HOME"/mailbox
 
 print_usage() {
-    echo -e "snail_setup.sh: s-nail for sending/receiving mail over SMTP/IMAP via CLI.
+    echo -e "snail.sh: s-nail for sending/receiving mail over SMTP/IMAP via CLI.
     Usage: ./${0##*/}
     [ -h ]               Print usage and exit
     [ -l ]               List all accounts registered in ~/.mailrc

@@ -24,7 +24,7 @@ remediation step is listed in such a case). In this design, the JSON
 file can be expanded independently to include more rules at will as the
 rules are not hard-coded into the script itself.
 
-J.A., xrzfyvqk_k1jw@pm.me
+J.A., ykxvqz@pm.me
 '
 
 print_usage(){

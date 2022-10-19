@@ -11,6 +11,8 @@ EXAMPLES:
          . ./sysutil.sh
          battery_status      # battery percentage charge remaining
          userinfo            # call a utility function
+
+J.A., ykxvqz@pm.me
 '
 
 usage(){

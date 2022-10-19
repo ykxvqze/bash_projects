@@ -36,7 +36,7 @@
             "title": "Ensure default umask for root is 077",
             "audit": "grep '^# umask' /root/.bashrc | grep -oE '[0-9]+'`",
             "expected": "077",
-            "remediation": "sed -iE '/^# umask\\s+[0-9]+/a\\umask 077' /root/.bashrc" 
+            "remediation": "sed -iE '/^# umask\\s+[0-9]+/a\\umask 077' /root/.bashrc"
          }
     ],
     "/etc/issue.net" : [

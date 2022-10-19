@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-: ' traffic generator (kill script to end session w/ Ctrl+C) '
+: ' traffic generator (kill script to end session w/ Ctrl+C)
+
+J.A., ykxvqz@pm.me
+'
 
 export root_urls=`jq '.root_urls' config.json |
                   grep -o '"[^"]*"'           |
@@ -21,7 +24,7 @@ __tg__get_urls() {
 
     blacklist='
     .svg | .jpg | .jpeg | .png  | .tif  | .tiff | .bmp | .gif |
-    .iso | .zip | .rar  | .bz2  | .gz   | .tar  | .exe | 
+    .iso | .zip | .rar  | .bz2  | .gz   | .tar  | .exe |
     .mp3 | .mp4 | .mpeg | .wma  | .webm | .avi  |
     .css | .ico | .xml  | .json |
     .doc | .xls | .ppt'
@@ -75,7 +78,7 @@ while :; do
     url=`__tg__choose_item "${root_urls}"`
     __tg__fetch_url "$url"
     urls=`__tg__get_urls file_html`
-    
+
     for i in `seq 1 $max_depth`; do
         url=`__tg__choose_item "$urls"`
         __tg__fetch_url "$url"

@@ -28,7 +28,7 @@ file manager, gallery, browser, notes, etc. are replaced by open-source
 ones (`simplemobiletools` available on F-Droid); change these if you
 prefer other apps or update current versions in the URLs file.
 
-J.A., xrzfyvqk_k1jw@pm.me
+J.A., ykxvqz@pm.me
 '
 
 trap 'echo error on line: $LINENO' ERR

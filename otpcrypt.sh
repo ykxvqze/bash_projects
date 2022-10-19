@@ -2,7 +2,7 @@
 : '
 Functions and a demo for encrypting/decrypting via a one-time pad (OTP).
 
-USAGE: ./otp_crypt.sh [ -h ]
+USAGE: ./otpcrypt.sh [ -h ]
 
 OPTIONS:
       [ -h ]  Print usage
@@ -42,13 +42,13 @@ Ciphertext (binary)      1111101011110001111111001101010001101011001010011110001
 Decrypted msg (binary)   010010010010000001100001011011010010000001000010011011110110001000101110
 Decrypted msg (ASCII)    I am Bob.
 
-J.A., xrzfyvqk_k1jw@pm.me
+J.A., ykxvqz@pm.me
 '
 
 set -Eeo pipefail
 
 print_usage() {
-    echo -e "otp_crypt: demo and utility functions for one-time pad encryption/decryption.
+    echo -e "otpcrypt.sh: demo and utility functions for one-time pad encryption/decryption.
     Usage:
     ./${0##*/}             Execute demo
     ./${0##*/} [ -h ]      Print usage and exit\n"

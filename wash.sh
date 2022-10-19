@@ -19,7 +19,7 @@ and other files within target directories. Patterns sought include:
 `datareporting`, `bookmarkbackups`. Also system thumbnail cache located
 in ~/.cache/thumbnails is cleared and removed.
 
-J.A., xrzfyvqk_k1jw@pm.me
+J.A., ykxvqz@pm.me
 '
 
 trap 'echo error on line: $LINENO' ERR

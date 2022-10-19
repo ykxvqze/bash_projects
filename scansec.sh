@@ -59,7 +59,7 @@ EXAMPLES:
 
 ./scansec -a
 
-J.A., xrzfyvqk_k1jw@pm.me
+J.A., ykxvqz@pm.me
 '
 
 print_usage(){

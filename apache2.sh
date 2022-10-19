@@ -36,7 +36,7 @@ One can verify in browser that the site is accessible and that a username
 Note: Port 8080 (instead of 80) was used in order to demonstrate how to
 set up non-default ports. The script must run with privilege (see usage).
 
-J.A., xrzfyvqk_k1jw@pm.me
+J.A., ykxvqz@pm.me
 '
 
 virtual_host='websiteA'

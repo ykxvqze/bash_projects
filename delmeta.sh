@@ -2,7 +2,7 @@
 : '
 Delete .docx (Word) file metadata
 
-USAGE:  ./del_metadata.sh <file1.docx> <file2.docx> ... <fileN.docx>
+USAGE:  ./delmeta.sh <file1.docx> <file2.docx> ... <fileN.docx>
 
 OPTIONS:
        -h    Print usage and exit
@@ -35,17 +35,17 @@ Open the .docx file (in libreoffice) and `Save As` a .docx file (not
 Open the new file and `Save` it. The `Save As` step is mandatory; other
 attempts may corrupt the original .docx file (such as opening and saving
 the original in libreoffice prior script execution). Note: `Save As` leaves
-the original file intact. Now you may run ./del_metadata.sh on the new file.
+the original file intact. Now you may run ./delmeta.sh on the new file.
 The resulting formatted file will be readable in both libreoffice and
 Word and will be stripped of metadata.
 
-J.A., xrzfyvqk_k1jw@pm.me
+J.A., ykxvqz@pm.me
 '
 
 trap 'echo error on line: $LINENO' ERR
 
 print_usage() {
-    echo -e "del_metadata.sh: delete author and timestamp metadata from .docx (Word) files.
+    echo -e "delmeta.sh: delete author and timestamp metadata from .docx (Word) files.
     Usage:
     ./${0##*/} <filename(s).docx>  At least one filename must be supplied
     ./${0##*/} [ -h ]              Print usage and exit\n"
