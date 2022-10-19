@@ -1,8 +1,9 @@
-IPv4 is a 32-bit binary number written in decimal-dotted notation for readbility.
+IPv4 is a 32-bit binary number written in decimal-dotted notation for readability.
 
 ip2bin()
 --------
 IP address: 128.42.5.4
+
 IP binary : 10000000 00101010 00000101 00000100
 
 Usage: ip2bin 128.42.5.4
@@ -10,6 +11,7 @@ Usage: ip2bin 128.42.5.4
 bin2ip()
 --------
 IP binary : 10000000 00101010 00000101 00000100
+
 IP address: 128.42.5.4
 
 Usage: bin2ip '10000000 00101010 00000101 00000100'
@@ -20,6 +22,7 @@ cidr2netmask()
 The netmask tells which part of the IP address is the network address (and which is host address).
 
 Netmask  : 255.255.248.0
+
 In binary: 11111111 11111111 11111000 00000000
 
 There are 21 ones => /21 is the prefix (i.e. netmask length).
@@ -33,11 +36,15 @@ cidr2network()
 To obtain the network address of 128.42.5.4/21, the first 21 bits are kept unchanged
 while the rest are made into 0s.
 
-IP address: 128.42.5.4     
+IP address: 128.42.5.4
+
 Netmask   : 255.255.248.0
 
+
 In binary: 10000000 00101010 00000101 00000100
+
 In binary: 11111111 11111111 11111000 00000000
+
 Logical &: 10000000 00101010 00000000 00000000
 
 i.e. network address: 128.42.0.0
@@ -49,10 +56,13 @@ The broadcast address converts all host bits to 1s, keeping the network part unc
 To calculate the broadcast address, we force all host bits to be 1s:
 
 IP address: 128.42.5.4/21
+
 IP binary: 10000000 00101010 00000101 00000100
+
 Host mask: 00000000 00000000 00000hhh hhhhhhhh
 
 Force host bits to 1s (keep network part unchanged): 10000000 00101010 00000111 11111111
+
 i.e. broadcast address: 128.42.7.255
 
 A broadcast address transmits to all devices connected to the network (hence all host bits should be 1).
@@ -65,8 +75,11 @@ Subnetting is the splitting of the host part of an IP address for internal use (
 Example: the network 203.113.0.0/24 can be subnetted into 203.113.0.0/25 and 203.113.0.128/25.
 
 Example:
+
 Department-1: 10000000 11010000 1|xxxxxxx xxxxxxxx
+
 Department-2: 10000000 11010000 00|xxxxxx xxxxxxxx
+
 Department-3: 10000000 11010000 011|xxxxx xxxxxxxx
 
 Non-routable IP addresses
@@ -75,9 +88,9 @@ Non-routable addresses can be reused over and over internally (as leased by a ro
 
 Non-routable IP addresses | Details
 --------------------------|:-------------------------------
-172.16.*.* -- 172.31.*.*  | 172.16.0.0 -- 172.31.255.255/12               # 1,048,576 hosts   (private ISP LAN, often used in NAT)
-192.168.*.*               | 192.168.0.0 -- 192.168.255.255/16             # 65,536 hosts      (private LAN)
-10.*.*.*                  | 10.0.0.0 -- 10.255.255.255/8                  # 16,777,216 hosts  (private LAN)
+172.16.\*.\* -- 172.31.*.*  | 172.16.0.0 -- 172.31.255.255/12               (private ISP LAN, often used in NAT)
+192.168.*.*               | 192.168.0.0 -- 192.168.255.255/16             (private LAN)
+10.*.*.*                  | 10.0.0.0 -- 10.255.255.255/8                  (private LAN)
 169.*.*.*                 | self-assigned if no response from DHCP server
 127.xx.yy.zz              | loopback
 
@@ -104,4 +117,5 @@ IP header
 ```
 
 * IPv6 has no checksum. The argument against checksums was that any application that really cares about data integrity has to have a checksum in the transport layer anyway, so having another one in the IP layer (not to mention the checksum in the link layer) is an overkill. Moreover, experience with IPv4 has shown that computing an IP checksum was a major expense, hence it was dropped in IPv6.
-IPv6 also does not use encryption like IPsec (nor is it kept optional like the null algorithm in IPsec). The argument was that a really secure application will want nothing less than end-to-end encryption (implemented at application-level), so there is no need to pay the price of having a slow bulky IP implementation that also does encryption.
+
+* IPv6 also does not use encryption like IPsec (nor is it kept optional like the null algorithm in IPsec). The argument was that a really secure application will want nothing less than end-to-end encryption (implemented at application-level), so there is no need to pay the price of having a slow bulky IP implementation that also does encryption.
