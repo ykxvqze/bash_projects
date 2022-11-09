@@ -33,8 +33,7 @@ Usage: cidr2netmask 128.42.5.4/21  # returns 255.255.248.0
 
 cidr2network()
 --------------
-To obtain the network address of 128.42.5.4/21, the first 21 bits are kept unchanged
-while the rest are made into 0s.
+To obtain the network address of 128.42.5.4/21, the first 21 bits are kept unchanged while the rest are made into 0s.
 
 IP address: 128.42.5.4
 
@@ -51,7 +50,7 @@ i.e. network address: 128.42.0.0
 
 cidr2broadcast()
 ----------------
-The broadcast address converts all host bits to 1s, keeping the network part unchanged).
+The broadcast address converts all host bits to 1s, keeping the network part unchanged.
 
 To calculate the broadcast address, we force all host bits to be 1s:
 
@@ -74,14 +73,6 @@ Subnetting
 Subnetting is the splitting of the host part of an IP address for internal use (to create multiple internal networks), while still acting like a single network to the outside world.
 Example: the network 203.113.0.0/24 can be subnetted into 203.113.0.0/25 and 203.113.0.128/25.
 
-Example:
-
-Department-1: 10000000 11010000 1|xxxxxxx xxxxxxxx
-
-Department-2: 10000000 11010000 00|xxxxxx xxxxxxxx
-
-Department-3: 10000000 11010000 011|xxxxx xxxxxxxx
-
 Non-routable IP addresses
 -------------------------
 Non-routable addresses can be reused over and over internally (as leased by a router or DHCP server). These appear as private IP addresses.
@@ -92,7 +83,7 @@ Non-routable IP addresses     | Details
 192.168.\*.\*                 | 192.168.0.0 -- 192.168.255.255/16
 10.\*.\*.\*                   | 10.0.0.0 -- 10.255.255.255/8
 169.\*.\*.\*                  | self-assigned if no response from DHCP server
-127.xx.yy.zz                  | loopback
+127.\*.\*.\*                  | loopback
 
 IP header
 ---------
