@@ -16,13 +16,13 @@ DESCRIPTION:
 
 auditscan.sh will check for several weak configuration settings relating
 to system files and networks. The main audit rules are listed in JSON
-file audit.json where more rules can be easily added. The script will
+file "audit.json" where more rules can be easily added. The script will
 audit each entry appearing in the JSON file by testing against an
-expected output listed in the JSON file. If there is a match with the
-expected output, the test is marked as PASS, otherwise as FAIL (and a
-remediation step is listed in such a case). In this design, the JSON
-file can be expanded independently to include more rules at will as the
-rules are not hard-coded into the script itself.
+expected output listed there. If there is a match with the expected
+output, the test is marked as PASS, otherwise as FAIL (and a remediation
+step is listed in such a case). In this design, the JSON file can be
+expanded independently to include more rules as these are not hard-coded
+into the script itself.
 
 J.A., ykxvqz@pm.me
 '
@@ -31,7 +31,7 @@ print_usage(){
     echo
     echo -e "auditscan.sh: security auditing
     Usage: sudo ./${0##*/}
-    [ -h ]            Print usage and exit\n"
+    [ -h ]           Print usage and exit\n"
 }
 
 if [ "$1" == '-h' ]; then
@@ -41,6 +41,7 @@ fi
 
 if [ $EUID -ne 0 ]; then
     echo -e '\nPlease run this script as a privileged user, e.g.'
+    echo
     echo -e 'sudo ./auditscan.sh\n'
     exit 1
 fi
