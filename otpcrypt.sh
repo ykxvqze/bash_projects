@@ -113,9 +113,9 @@ main() {
 
     file_otp=`mktemp /tmp/file_otp.XXXXXX`
 
-    grn='\e[32m'  # green
-    blu='\e[34m'  # blue
-    rst='\e[0m'   # reset
+    grn='\e[32m'
+    blu='\e[34m'
+    rst='\e[0m'
 
     printf "${blu}Plaintext (ASCII)     : ${grn}%s${rst}\n" "$plaintext_ascii  " >> "$file_otp"
     printf "${blu}Plaintext (binary)    : ${grn}%s${rst}\n" "$plaintext_binary " >> "$file_otp"
