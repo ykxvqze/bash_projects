@@ -108,5 +108,3 @@ IP header
 ```
 
 * IPv6 has no checksum. The argument against checksums is that any application that really cares about data integrity has to have a checksum in the transport layer anyway, so having another one in the IP layer (not to mention the checksum in the link layer) is an overkill. Moreover, experience with IPv4 has shown that computing an IP checksum was a major expense, hence it was dropped in IPv6.
-
-* IPv6 also does not use encryption like IPsec (nor is it kept optional like the null algorithm in IPsec). The argument was that a really secure application will want nothing less than end-to-end encryption (implemented at application-level), so there is no need to pay the price of having a slow bulky IP implementation that also does encryption.
