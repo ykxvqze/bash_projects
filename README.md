@@ -8,25 +8,6 @@
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/snail.sh">snail.sh</a>: Bash script for installing and configuring s-nail. The script allows interactively adding/removing IMAP/SMTP configurations for mail accounts. Mail can then be fetched and sent (in ASCII format) via CLI with `s-nail` as demonstrated in the script. MIME attachments can be copied to separate files and then decoded (base64 decoding) before being viewed with an appropriate application depending on file type.
 
-## One-time pad encryption
-
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/otpcrypt.sh">otpcrypt.sh</a>: Implementation of a one-time pad encryption/decryption method: includes utility functions and a demo. <br>
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/cryptinfo.md">cryptinfo.md</a>: A summary on public-key encryption and OTP symmetric-key encryption.
-
-## Delete metadata
-
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/delmeta.sh">delmeta.sh</a>: Bash script for deleting metadata (author name; date timestamps) from a docx (Word) document. Metadata in the output file will appear empty (no author), (no date), including comments in the margin which will now appear with no author and no timestamps.
-
-<!--a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/delmeta.py">delmeta.py</a>: Python script that does the same as above, however with an additional (mask) option for modifying timestamps of comments using numpy. If the mask option is specified, then timestamps of comments in the margin will be changed through randomization where timestamps are assigned with an incremental component drawn from a uniform distribution.
--->
-## Scrape image files from xkcd site
-
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/scrapexkcd.sh">scrapexkcd.sh</a>: scrape cartoon images from an (inaccessible) xkcd directory. The script keeps a log of the last page scraped (from its previous execution if any) and will start fetching images from where it left off (i.e. adding only new cartoon images to a designated directory).
-
-## Linecutter tool
-
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/linecutter.sh">linecutter.sh</a>: Insert line breaks in a text file at a limit of 72 characters but without breaking the last word.
-
 ## Sysops utility functions
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/sysutil.sh">sysutil.sh</a>: Utility functions set up for daily sysops. The script should be sourced (note: it is a growing script; more functions will be written and added with time ...).
@@ -99,6 +80,25 @@ scansec.sh
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/iptx.sh">iptx.sh</a>: utility functions for transforming IPv4 addresses from decimal-dotted notation to binary and vice versa, as well as for obtaining the netmask address, network address, and broadcast address starting from CIDR notation. <br>
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/ipv4.md">ipv4.md</a>: short summary on IPv4 addresses. 
+
+## One-time pad encryption
+
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/otpcrypt.sh">otpcrypt.sh</a>: Implementation of a one-time pad encryption/decryption method: includes utility functions and a demo. <br>
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/cryptinfo.md">cryptinfo.md</a>: A summary on public-key encryption and OTP symmetric-key encryption.
+
+## Delete metadata
+
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/delmeta.sh">delmeta.sh</a>: Bash script for deleting metadata (author name; date timestamps) from a docx (Word) document. Metadata in the output file will appear empty (no author), (no date), including comments in the margin which will now appear with no author and no timestamps.
+
+<!--a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/delmeta.py">delmeta.py</a>: Python script that does the same as above, however with an additional (mask) option for modifying timestamps of comments using numpy. If the mask option is specified, then timestamps of comments in the margin will be changed through randomization where timestamps are assigned with an incremental component drawn from a uniform distribution.
+-->
+## Scrape image files from xkcd site
+
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/scrapexkcd.sh">scrapexkcd.sh</a>: scrape cartoon images from an (inaccessible) xkcd directory. The script keeps a log of the last page scraped (from its previous execution if any) and will start fetching images from where it left off (i.e. adding only new cartoon images to a designated directory).
+
+## Linecutter tool
+
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/linecutter.sh">linecutter.sh</a>: Insert line breaks in a text file at a limit of 72 characters but without breaking the last word.
 
 ## Android cleanup
 
