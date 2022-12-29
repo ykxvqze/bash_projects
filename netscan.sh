@@ -52,11 +52,6 @@ Listings will be similar to the result you get from running this script
 (except that you do not need to control or check the gateway itself -
 you only need to be connected to the network as any other device).
 
-The library Scapy in Python can provide similar functionality as this
-script, but it would be an overkill to use Python or to install a full
-library if network scanning is your only aim. A Bash-native solution is
-more efficient and suitable in this case.
-
 Demonstration:
 
 ./netscan.sh
