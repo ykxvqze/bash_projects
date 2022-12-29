@@ -12,8 +12,7 @@ Address Resolution Protocol (ARP) is a protocol for requesting information about
 ## Sysops utility functions
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/sysutil.sh">sysutil.sh</a>: Utility functions set up for daily sysops. The script should be sourced.
-<--
-```
+<!--```
 . ./sysutil.sh                    # Source the script; internal functions include:
     |
     |--- battery_status           # Show battery percentage charge remaining;
