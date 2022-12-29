@@ -1,8 +1,8 @@
 ## Network scanner
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/netscan.sh">netscan.sh</a>: A reliable method for discovering other devices connected to your network. The script is based on `nmap` and `arp-scan`. IP and MAC addresses are extracted and summarized in tabular format. The system's local ARP cache is also used to fill in missing MAC addresses that correspond to IP addresses which may have been detected by nmap but not by arp-scan.
-
-> Address Resolution Protocol (ARP) is a protocol for requesting information about an IP address; the response will be the MAC address of the network interface that has the requested IP address. An example is when a device must discover the MAC address of the gateway (router). ARP allows mapping an IP address to the link layer (MAC) address.
+<br>
+Address Resolution Protocol (ARP) is a protocol for requesting information about an IP address; the response will be the MAC address of the network interface that has the requested IP address. An example is when a device must discover the MAC address of the gateway (router). ARP allows mapping an IP address to the link layer (MAC) address.
 
 ## Set up s-nail (send/receive mail via CLI)
 
@@ -34,7 +34,7 @@
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/scansec.sh">scansec.sh</a>: interactive script for server security auditing and hardening. Note: option -a activates an audit-only mode (i.e. no hardening actions are executed). The main functions of `scansec.sh` (along with areas audited) are listed below.
 
 Note: the script <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/auditscan.sh">auditscan.sh</a> is now a replacement for `scansec.sh`. The script `auditscan.sh` operates on a JSON file called 'audit.json' which explicitly contains the audit rules and can be independently expanded to include more rules. In this new design, the rules are not hard-coded into the script itself, hence allowing for more flexibility.
-
+<!--
 ```
 scansec.sh
 |--- check_umask()
@@ -67,6 +67,7 @@ scansec.sh
 |--- check_networks()
      |--- Ipv4 forwarding = disabled
 ```
+-->
 
 ## SSH ban
 

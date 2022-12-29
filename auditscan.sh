@@ -55,15 +55,15 @@ setcolor() {
 
 audit_report="$PWD/audit_report_`date +'%Y_%m_%d_%H%M%S'`"
 
-printf "%s%s\n" "Operating System         : `uname -s`"                         >> "${audit_report}"
-printf "%s%s\n" "Operating System Name    : `lsb_release -i | sed 's/.*:\s//'`" >> "${audit_report}"
-printf "%s%s\n" "Operating System Version : `lsb_release -d | sed 's/.*:\s//'`" >> "${audit_report}"
-printf "%s%s\n" "Kernel Version           : `uname -r`"                         >> "${audit_report}"
-printf "%s%s\n" "Hardware Platform        : `uname -m`"                         >> "${audit_report}"
-printf "%s%s\n" "Hostname                 : `hostname`"                         >> "${audit_report}"
+printf "%s\n" "Operating System         : `uname -s`"                         >> "${audit_report}"
+printf "%s\n" "Operating System Name    : `lsb_release -i | sed 's/.*:\s//'`" >> "${audit_report}"
+printf "%s\n" "Operating System Version : `lsb_release -d | sed 's/.*:\s//'`" >> "${audit_report}"
+printf "%s\n" "Kernel Version           : `uname -r`"                         >> "${audit_report}"
+printf "%s\n" "Hardware Platform        : `uname -m`"                         >> "${audit_report}"
+printf "%s\n" "Hostname                 : `hostname`"                         >> "${audit_report}"
 
 filetmp=`mktemp /tmp/config.json.XXXXXX`
-keys=`jq -r 'keys[]' audit.json`
+keys=`jq -r 'keys[]' ./audit.json`
 setcolor
 
 n_pass=0
