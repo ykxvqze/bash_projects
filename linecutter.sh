@@ -11,14 +11,14 @@ OUTPUT:
         file(s): If -r or --rm switch is specified anywhere, original
                  file(s) will be overwritten. Otherwise, the result(s)
                  will be saved as new file(s) with prefix __ i.e.
-                 <__filename(s)>, and original files remain intact.
+                 <__filename>, and original files remain intact.
 
 DESCRIPTION:
 
 If a line happens to extend beyond 72 characters, a newline character is
-added at a position that is lower but closest to the 72nd character in
-such a way as not to break any words. Internal steps of the method are
-described below:
+added at a position that is possibly lower but closest to the 72nd
+character in such a way as not to break any words. Internal steps of the
+method are described below:
 
 1. Append a string marker to the file so that line-by-line processing
 stops when the marker is reached, allowing the script to end.
@@ -35,9 +35,9 @@ end-of-file marker is reached.
 
 4. The last line of the document (containing the marker) is removed.
 
-Why 72 characters? Because it ensures readability on most screens
-(including half-split ones). Note: linecutter.sh will not do anything
-special to lines that originally contain indentations.
+Why 72 characters? Because it ensures readability on most screens.
+Note: linecutter.sh will not do anything special to lines that
+originally contain indentations.
 
 Note: In Vim, the same can be done internally via:
 :setl tw=72 followed by the key sequence: gg gq G
