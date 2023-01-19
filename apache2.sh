@@ -27,7 +27,7 @@ DESCRIPTION:
   - Reload apache2 server to update configurations.
 
 One can verify in browser that the site is accessible and that a username
-("user_guest") and password are required to access the site, e.g.
+("user_guest") and password are required to access the site:
 
     localhost/${virtual_host}
     localhost:8080
@@ -75,7 +75,7 @@ main() {
 	    apt-get install apache2
 	fi
 
-    is_apache_installed || { echo 'apache2 failed to install. Exiting...'; exit 1; } 
+	is_apache_installed || { echo 'apache2 failed to install. Exiting...'; exit 1; } 
 
 	mkdir /var/www/html/"${virtual_host}"
 	touch /etc/apache2/sites-available/"${virtual_host}".conf
