@@ -62,6 +62,8 @@ if [ -z `which adb` ]; then
     esac
 fi
 
+[ -z `which adb` ] && exit 1
+
 wget -P /tmp/app_downloads -i ./package_urls.txt
 sed 's/.*\///g' package_urls.txt > /tmp/packages_to_add.txt
 
