@@ -37,8 +37,8 @@ trap 'echo error on line: $LINENO' ERR
 print_usage() {
     echo -e "android_cleanup.sh:  uninstall and replace extraneous apps with open-source ones.
     Usage:
-    ./${0##*/}             Install packages from package_urls.txt and uninstall those listed in packages_to_remove.txt
-    ./${0##*/} -h          Print usage and exit\n"
+    ./${0##*/}        Install packages from package_urls.txt and uninstall those listed in packages_to_remove.txt
+    ./${0##*/} -h     Print usage and exit\n"
 }
 
 while getopts 'h' option; do
