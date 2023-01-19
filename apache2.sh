@@ -27,7 +27,7 @@ DESCRIPTION:
   - Reload apache2 server to update configurations.
 
 One can verify in browser that the site is accessible and that a username
-("user_guest") and password are required to access the site:
+("user_guest") and password are required to access the site, e.g.
 
     localhost/${virtual_host}
     localhost:8080
