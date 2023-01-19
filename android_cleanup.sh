@@ -58,7 +58,7 @@ if [ -z `which adb` ]; then
         'n') echo -e '\nExiting...';
              exit 0 ;;
         *  ) echo -e '\nInvalid response. Exiting...';
-             exit 0 ;;
+             exit 1 ;;
     esac
 fi
 
