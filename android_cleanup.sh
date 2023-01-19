@@ -4,13 +4,13 @@ Uninstall and replace extraneous apps in Android with open-source ones.
 
 USAGE:  ./android_cleanup.sh  [ -h ]
 
-                Phone must be connected by USB with debug mode enabled
+                Phone must be connected by USB with Debug mode enabled
                 under `Developer` options. File "packages_to_remove.txt"
-                should list apps to remove (1 per line) and can be
+                lists applications to remove (1 per line) and can be
                 modified as needed. Packages to install are listed in
                 the file "package_urls.txt" and can be modified by
-                removing or adding URLs of open source apps to install
-                as replacement (e.g. from `F-Droid.org`).
+                removing/adding URLs of open-source apps to install as
+                replacement (e.g. from `f-droid.org`).
 
 OPTIONS:
         [ -h ]  Print usage
@@ -21,12 +21,13 @@ OUTPUT:
 DESCRIPTION:
 
 A script for uninstalling apps on an Android device via adb shell
-(disallowing automatic reactivation). The script removes a list of
+(disallows automatic reactivation). The script removes a list of
 preinstalled apps from Google, Huawei, Facebook, etc. without breaking
-the system. Additionally, basic apps like contacts, dialer, keyboard,
-file manager, gallery, browser, notes, etc. are replaced by open-source
-ones (`simplemobiletools` available on F-Droid); change these if you
-prefer other apps or update current versions in the URLs file.
+the system. Additionally, basic apps like Contacts, Dialer, Keyboard,
+File Manager, Gallery, Browser, Notes, etc. are replaced by open-source
+ones (`simplemobiletools` available on F-Droid). Change these if you
+prefer other apps or update the current versions in the file
+"package_urls.txt".
 
 J.A., ykxvqz@pm.me
 '
@@ -37,28 +38,36 @@ print_usage() {
     echo -e "android_cleanup.sh:  uninstall and replace extraneous apps with open-source ones.
     Usage:
     ./${0##*/}             Install packages from package_urls.txt and uninstall those listed in packages_to_remove.txt
-    ./${0##*/} [ -h ]      Print usage and exit\n"
+    ./${0##*/} -h          Print usage and exit\n"
 }
 
-if [ -z `which adb` ]; then
-    echo 'adb is not installed. Installing...'
-    sudo apt-get install adb
-fi
-
 while getopts 'h' option; do
-    case $option in
+    case "$option" in
         h) print_usage;  exit 0 ;;
         *) echo -e 'Incorrect usage!\n';
            print_usage;  exit 1 ;;
     esac
 done
 
+if [ -z `which adb` ]; then
+    echo 'adb shell is not installed.'
+    read -p 'Install adb shell (y/n)? ' -n 1 x
+    case "${x,,}" in
+        'y') echo -e '\nInstalling adb shell...';
+             sudo apt-get install adb ;;
+        'n') echo -e '\nExiting...';
+             exit 0 ;;
+        *  ) echo -e '\nInvalid response. Exiting...';
+             exit 0 ;;
+    esac
+fi
+
 wget -P /tmp/app_downloads -i ./package_urls.txt
 sed 's/.*\///g' package_urls.txt > /tmp/packages_to_add.txt
 
 # add packages in same order listed in ./package_urls.txt
 for i in $(cat /tmp/packages_to_add.txt); do
-    echo installing package "$i ..."
+    echo "installing package $i ..."
     adb install /tmp/app_downloads/"$i"
 done
 
