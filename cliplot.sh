@@ -3,20 +3,20 @@
 CLI plot of positive functions (no X window system required).
 
 USAGE: ./cliplot.sh  [ -h ]
-       ./cliplit.sh  <sequence_of_numerical_values>
+       ./cliplot.sh  <sequence_of_numerical_values>
 
 OPTIONS:
         [ -h ]    Print usage and exit
 
 OUTPUT:
-         A stemp plot of a numerical sequence (time series) in the CLI
+         A stem plot of a numerical sequence (time series) in the CLI
          without need for a GUI or X window system to show the plot. The
-         plot is normalized to a default figure height of 10 lines, thus
-         the y-axis values are proportional to the actual values plotted.
-         Plotting in CLI can be useful for quick assessment of values
-         such as CPU or memory usage over time (see last example). The
-         count, minimum, and maximum values of the time series are also
-         displayed.
+         plot is normalized to a default figure height of 10 lines. The
+         y-axis values are proportional to the actual values plotted.
+         Plotting in the CLI can be useful for quick assessment of
+         values such as CPU or memory usage over time (see last
+         example). The count, minimum, and maximum values of the time
+         series are also displayed.
 
 DESCRIPTION:
 
@@ -27,7 +27,7 @@ EXAMPLES:
          ./cliplot.sh 1 4 9 16 25 36 49 64 81 100
          echo '1 30 0 4 8 10' | xargs ./cliplot.sh
 
-        # run `top` in batch mode 8 times and plot CPU usage for a given PID.
+        # run `top` in batch mode 8 times and plot CPU usage for the process with PID 807.
         pid=807
         top -b -n 8 | grep -E "^ *$pid" | awk '{print $9}' | xargs ./cliplot.sh
 
@@ -40,9 +40,8 @@ set -eo pipefail
 __plt__print_usage(){
     echo -e "cliplot.sh: plot a function in CLI.
     Usage:
-
-    ./cliplot.sh 1 2 3 4 5        # plot the sequence
-    seq 1 5 | xargs ./cliplot.sh  # equivalent\n"
+            ./cliplot.sh 1 2 3 4 5        # plot the sequence
+            seq 1 5 | xargs ./cliplot.sh  # equivalent\n"
 }
 
 # height of plot
