@@ -15,9 +15,9 @@ OUTPUT:
 DESCRIPTION:
 
 auditscan.sh will check for several weak configuration settings relating
-to system files and networks. The main audit rules are listed in JSON
-file "audit.json" where more rules can be easily added. The script will
-audit each entry appearing in the JSON file by testing against an
+to system files and networks. The main audit rules are listed in the
+JSON file "audit.json" where more rules can be easily added. The script
+will audit each entry appearing in the JSON file by testing against an
 expected output listed there. If there is a match with the expected
 output, the test is marked as PASS, otherwise as FAIL (and a remediation
 step is listed in such a case). In this design, the JSON file can be
@@ -31,7 +31,7 @@ print_usage(){
     echo
     echo -e "auditscan.sh: security auditing
     Usage: sudo ./${0##*/}
-    [ -h ]           Print usage and exit\n"
+                ./${0##*/} -h     Print usage and exit\n"
 }
 
 if [ "$1" == '-h' ]; then
@@ -92,7 +92,6 @@ for key in $keys; do
 
         echo ''
         printf '%s\n' "[*] $title"
-        eval "$audit" &> /dev/null
         if [ "`eval "$audit" 2>/dev/null`" != "$expected" ]; then
             ((n_fail+=1))
 
@@ -121,15 +120,15 @@ rm "$filetmp"
 
 echo
 printf "${rst}%s\n" "=================================================="
-printf "${rst}%s${rst}\n" "Audit complete."
+printf "${rst}%s\n" "Audit complete."
 echo
 
-printf "${rst}%s${rst}\n" "SUMMARY"
+printf "${rst}%s\n" "SUMMARY"
 echo '-------'
-printf "${grn}%s${grn}\n" "PASS: ${n_pass}"
-printf "${red}%s${red}\n" "FAIL: ${n_fail}"
+printf "${grn}%s${rst}\n" "PASS: ${n_pass}"
+printf "${red}%s${rst}\n" "FAIL: ${n_fail}"
 echo
 
-printf "${rst}%s${rst}\n" "Audit file saved in current directory."
+printf "${rst}%s\n" "Audit file saved in current directory."
 echo "Filename: ${audit_report}"
 echo
