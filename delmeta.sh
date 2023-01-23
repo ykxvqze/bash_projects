@@ -14,8 +14,8 @@ ARGS:
                      a filename should not begin with a dash -
 
 OUTPUT:
-        files (<basename>_formatted.docx) with metadata removed in same
-        directory as original (input) files.
+        files (<basename>_formatted.docx) with metadata removed in the
+        same directory as the original (input) files.
 
 DESCRIPTION:
 
@@ -30,14 +30,14 @@ Note: the script automatically checks for the .docx extension at the end
 of a filename or path and will not format a file if it lacks the extension.
 
 Note: do the below _before_ running this script on any *.docx file.
-Open the .docx file (in libreoffice) and `Save As` a .docx file (not
-`Save`) to obtain a libreoffice-based version, then `Close` the files.
-Open the new file and `Save` it. The `Save As` step is mandatory; other
-attempts may corrupt the original .docx file (such as opening and saving
-the original in libreoffice prior script execution). Note: `Save As` leaves
-the original file intact. Now you may run ./delmeta.sh on the new file.
-The resulting formatted file will be readable in both libreoffice and
-Word and will be stripped of metadata.
+Open the .docx file (in libreoffice) and `Save As` (not `Save`) a .docx
+file to obtain a libreoffice-based version, then `Close` the files. Open
+the new file and `Save` it.
+The `Save As` step is mandatory; other attempts may corrupt the original
+.docx file (such as opening and saving the original in libreoffice prior
+script execution). `Save As` leaves the original file intact. Now you
+may run ./delmeta.sh on the new file. The resulting formatted file will
+be readable in both libreoffice and Word and will be stripped of metadata.
 
 J.A., ykxvqz@pm.me
 '
@@ -61,14 +61,14 @@ get_abspath(){
 }
 
 main() {
+
     if [ "$#" -eq 0 ]; then
         print_usage
         exit 1
     fi
 
-    # catch help option and incorrect flags
     while getopts 'h' option; do
-        case $option in
+        case "$option" in
             h) print_usage;  exit 0 ;;
             *) echo -e 'Incorrect usage! See below:\n'; 
                print_usage;  exit 1 ;;
