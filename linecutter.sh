@@ -11,7 +11,7 @@ OUTPUT:
         file(s): If -r or --rm switch is specified anywhere, original
                  file(s) will be overwritten. Otherwise, the result(s)
                  will be saved as new file(s) with prefix __ i.e.
-                 <__filename>, and original files remain intact.
+                 <__filename>, and the original files remain intact.
 
 DESCRIPTION:
 
@@ -36,15 +36,18 @@ end-of-file marker is reached.
 4. The last line of the document (containing the marker) is removed.
 
 Why 72 characters? Because it ensures readability on most screens.
-Note: linecutter.sh will not do anything special to lines that
-originally contain indentations.
 
-Note: In Vim, the same can be done internally via:
+Note-1: linecutter.sh will not do anything special to lines that
+originally contain indentations. 
+
+Note-2: filenames normally must not contain any spaces.
+
+Note-3: In Vim, the same can be done internally via:
 :setl tw=72 followed by the key sequence: gg gq G
 
 EXAMPLE:
 
-Below is some sample text of an input file and the resulting output.
+Below is a sample text from an input file and the resulting output.
 
 Input:
 
@@ -75,18 +78,18 @@ print_usage() {
 }
 
 cut_lines(){
-    local file="$1"
+    local fileinput="$1"
     local marker='!EOF'
-    echo "$marker" >> "$file"
+    echo "$marker" >> "$fileinput"
     
     i=1
-    while [ "`head -n $i "$file" | tail -1`" != "$marker" ]; do
-        if [ `sed -n "$i p" "$file" | wc -c` -gt 72 ]; then
-            sed -i "$i s/^\(.\{0,72\}\)\s/\1\n/" "$file"
+    while [ "`head -n $i "$fileinput" | tail -1`" != "$marker" ]; do
+        if [ `sed -n "$i p" "$fileinput" | wc -c` -gt 72 ]; then
+            sed -i "$i s/^\(.\{0,72\}\)\s/\1\n/" "$fileinput"
         fi
         let i++
     done
-    sed -i '$d' "$file"
+    sed -i '$ d' "$fileinput"
 }
 
 main(){
@@ -106,7 +109,7 @@ main(){
         esac
     done
 
-    for i in ${args[*]}; do
+    for i in "${args[@]}"; do
         if [ "$keep" != 'off' ]; then
             cp "$i" `dirname "$i"`/__`basename "$i"`
             cut_lines `dirname "$i"`/__`basename "$i"`
