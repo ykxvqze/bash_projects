@@ -2,7 +2,7 @@
 : '
 Scan LAN to discover IP and MAC addresses of connected devices on the network.
 
-USAGE:  ./netscan.sh [ -i <interface> ] [ -h ]
+USAGE:  sudo ./netscan.sh [ -i <interface> ] [ -h ]
 
 OPTIONS:
        [ -h ]              Print usage
@@ -49,12 +49,12 @@ The entries for the DHCP leases given to various devices will reveal
 their IP and MAC addresses (note: some leases may be expired). The ARP
 table will also show all devices the router has communicated with.
 Listings will be similar to the result you get from running this script
-(except that you do not need to control or check the gateway itself -
-you only need to be connected to the network as any other device).
+except that you do not need to control or check the gateway itself -
+you only need to be connected to the network as any other device.
 
-Demonstration:
+DEMONSTRATION:
 
-./netscan.sh
+sudo ./netscan.sh
 
 Output:
 
@@ -80,18 +80,17 @@ J.A., ykxvqz@pm.me
 
 print_usage() {
     echo -e "netscan: detect devices connected to your network.
-    Usage: ./${0##*/}
+    Usage: sudo ./${0##*/}
     [ -i <interface> ]  Specify network interface (otherwise default assumed)
     [ -h ]              Print usage and exit\n"
 }
 
 get_default_iface(){
-    sudo ip route show default |
-    cut -d ' ' -f 5
+    ip route show default | cut -d ' ' -f 5
 }
 
 get_all_ifaces(){
-    sudo ip link      |
+    ip link           |
     grep -E '^[0-9]:' |
     cut -d ':' -f 2   |
     grep -Ev 'lo$'
@@ -99,29 +98,29 @@ get_all_ifaces(){
 
 get_mac(){
     local interface="$1"
-    sudo ip link show "$interface" |
-    grep 'ether'                   |
+    ip link show "$interface" |
+    grep 'ether'              |
     awk '{print $2}'
 }
 
 get_ips(){
     local interface="$1"
-    sudo ip -o -4 address show "$interface" |
-    tr -s ' '                               |
+    ip -o -4 address show "$interface" |
+    tr -s ' '                          |
     cut -d ' ' -f 4
 }
 
 run_nmap(){
     local interface="$1"
-    local ip="$2"
-    sudo nmap -e "$interface" -sn "$ip" |
+    local ip_cidr="$2"
+    nmap -e "$interface" -sn "$ip_cidr" |
     grep -Eo "([0-9]{1,3}\.){3}[0-9]{1,3}$"
 }
 
 run_arpscan(){
     local interface="$1"
-    local ip="$2"
-    sudo arp-scan -I "$interface" "$ip" 2> /dev/null |
+    local ip_cidr="$2"
+    arp-scan -I "$interface" "$ip_cidr" 2> /dev/null |
     grep -E '^[0-9]{1,3}\.'                          |
     cut -f 1,2
 }
@@ -136,30 +135,36 @@ main(){
         esac
     done
 
-    sudo echo > /dev/null
-    if [ "$?" -ne 0 ]; then
-        exit
+    if [ "$EUID" != 0 ]; then
+        echo "Use sudo to run the script: sudo ./${0##*/}"
+        echo "Exiting..."
+        exit 1
     fi
 
-    if [ -z "`sudo which nmap`" ]; then
+    #sudo echo > /dev/null
+    #if [ "$?" -ne 0 ]; then
+    #    exit
+    #fi
+
+    if [ -z "`which nmap`" ]; then
         sudo apt-get install nmap
     fi
 
-    if [ -z "`sudo which arp-scan`" ]; then
+    if [ -z "`which arp-scan`" ]; then
         sudo apt-get install arp-scan
     fi
 
     # temporary files
     file_nmap=`mktemp /tmp/file_nmap.XXXXXX`
     file_arp=`mktemp /tmp/file_arp.XXXXXX`
+    PID_FILE="/tmp/${0##*/}.pid"
 
     # avoid concurrent executions
-    if [ -e "${PID_FILE}" ]; then
+    if [ -f "${PID_FILE}" ]; then
         echo "A concurrent execution is already running: PID `cat ${PID_FILE}`"
         echo "If not, delete ${PID_FILE}"
         exit 1
     fi
-    PID_FILE="/tmp/${0##*/}.pid"
     echo $$ > "${PID_FILE}"
 
     trap 'rm ${PID_FILE} ${file_nmap} ${file_arp}' SIGINT SIGTERM EXIT
@@ -189,20 +194,16 @@ main(){
 
     # construct results table
     for i in ${IP_plus}; do
-        table_plus=$(sudo arp          |
-                     grep -E "$i\s"    |
-                     tr -s ' '         |
-                     cut -d ' ' -f 1,3 |
-                     tr ' ' '\t')
+        table_plus=$(arp | grep -E "$i\s" | tr -s ' ' | cut -d ' ' -f 1,3 | tr ' ' '\t')
         if [ -n "${table_plus}" ]; then
             echo -e "${table_plus}"
         else
             echo -e "$i\tMAC_not_available"
         fi
-    done    >> "${file_arp}"
+    done  >> "${file_arp}"
 
     # add localhost entry to table and add a (*) sign
-    echo -e "${IPs%/*}\t$MAC (*)" >> "${file_arp}"
+    echo -e "${IPs%/*}\t${MAC} (*)" >> "${file_arp}"
 
     # display
     DEFAULT='\e[0m'
