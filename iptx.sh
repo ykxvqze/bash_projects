@@ -106,11 +106,7 @@ cidr2network(){
     local ip=`echo "${ip_cidr}" | cut -d '/' -f 1`
     local ip_bin=`ip2bin "$ip" | tr -d ' '`
 
-    network_part=`grep -Eo '.' <<< "$ip_bin"  |
-                  head -n "${netmask_length}" |
-                  xargs                       |
-                  tr -d ' '`
-
+    network_part=`echo "${ip_bin:0:netmask_length}"`
     d=$((32-netmask_length))
     zeros=`head -c "$d" /dev/zero | tr '\0' '0'`
     sequence=`sed -E 's/(.{8})(.{8})(.{8})(.{8})/\1 \2 \3 \4/' <<< "${network_part}${zeros}"`
@@ -124,11 +120,7 @@ cidr2broadcast(){
     local ip=`echo ${ip_cidr} | cut -d '/' -f 1`
     local ip_bin=`ip2bin "$ip" | tr -d ' '`
 
-    network_part=`grep -Eo '.' <<< "$ip_bin"  |
-                  head -n "${netmask_length}" |
-                  xargs                       |
-                  tr -d ' '`
-
+    network_part=`echo "${ip_bin:0:netmask_length}"`
     d=$((32-netmask_length))
     ones=`head -c "$d" /dev/zero | tr '\0' '1'`
     sequence=`sed -E 's/(.{8})(.{8})(.{8})(.{8})/\1 \2 \3 \4/' <<< "${network_part}${ones}"`
