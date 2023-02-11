@@ -4,13 +4,13 @@ ip2bin()
 --------
 IP address: 128.42.5.4
 
-IP binary : 10000000 00101010 00000101 00000100
+IP binary: 10000000 00101010 00000101 00000100
 
 Usage: ip2bin 128.42.5.4
 
 bin2ip()
 --------
-IP binary : 10000000 00101010 00000101 00000100
+IP binary: 10000000 00101010 00000101 00000100
 
 IP address: 128.42.5.4
 
@@ -21,11 +21,11 @@ cidr2netmask()
 
 The netmask tells which part of the IP address is the network address (and which is host address).
 
-Netmask  : 255.255.248.0
+Netmask: 255.255.248.0
 
 In binary: 11111111 11111111 11111000 00000000
 
-There are 21 ones => /21 is the prefix (i.e. netmask length).
+There are 21 ones: this is the netmask length.
 
 Thus, in CIDR notation, 128.42.5.4/21 => 21 bits are network bits and the last 11 are host bits.
 
@@ -33,11 +33,11 @@ Usage: cidr2netmask 128.42.5.4/21  # returns 255.255.248.0
 
 cidr2network()
 --------------
-To obtain the network address of 128.42.5.4/21, the first 21 bits are kept unchanged while the rest are made into 0s.
+To obtain the network address of 128.42.5.4/21, the first 21 bits are kept unchanged, while the rest are made into 0s.
 
 IP address: 128.42.5.4
 
-Netmask   : 255.255.248.0
+Netmask: 255.255.248.0
 
 
 IP binary: 10000000 00101010 00000101 00000100
@@ -79,15 +79,15 @@ Non-routable addresses can be reused over and over internally (as leased by a ro
 
 Non-routable IP addresses     | Details
 ------------------------------|:-------------------------------
-172.16.\*.\* -- 172.31.\*.\*  | 172.16.0.0 -- 172.31.255.255/12
-192.168.\*.\*                 | 192.168.0.0 -- 192.168.255.255/16
-10.\*.\*.\*                   | 10.0.0.0 -- 10.255.255.255/8
+172.16.\*.\* - 172.31.\*.\*   | 172.16.0.0 - 172.31.255.255/12
+192.168.\*.\*                 | 192.168.0.0 - 192.168.255.255/16
+10.\*.\*.\*                   | 10.0.0.0 - 10.255.255.255/8
 169.\*.\*.\*                  | self-assigned if no response from DHCP server
 127.\*.\*.\*                  | loopback
 
 IP header
 ---------
-A packet carries several headers. The IP and TCP headers do not change along the packet's journey.
+A packet carries several headers. The IP and TCP headers do not change along a packet's journey.
 
 ```
 IP header
