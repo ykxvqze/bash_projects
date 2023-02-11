@@ -141,11 +141,6 @@ main(){
         exit 1
     fi
 
-    #sudo echo > /dev/null
-    #if [ "$?" -ne 0 ]; then
-    #    exit
-    #fi
-
     if [ -z "`which nmap`" ]; then
         sudo apt-get install nmap
     fi
