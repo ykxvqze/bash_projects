@@ -15,8 +15,8 @@ DESCRIPTION:
 - Function ascii_to_binary() requires plaintext input (e.g. "I am Bob.")
 and will convert the input into a binary string containing no spaces.
 - Function binary_to_ascii() requires a binary string input (without spaces)
-and converts it to plaintext (by parsing and transforming every 8 bits
-into a character).
+and converts it to plaintext by parsing and transforming every 8 bits
+into a character.
 - Function generate_otp() requires a binary string input as returned by
 ascii_to_binary() and generates a _random_ binary string of the same
 length, L, by randomly shuffling the sequence of integers [1,...,L] and
@@ -87,7 +87,9 @@ xor() {
 }
 
 generate_otp() {
-    for i in `shuf -i 1-${#1}`; do
+    local string="$1"
+    local length="${#string}"
+    for i in `shuf -i 1-"$length"`; do
         echo -n $((i % 2))
     done
 }
