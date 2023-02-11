@@ -189,7 +189,7 @@ add_account() {
         case "$x" in
             n | N) echo 'Exiting...'; exit 0 ;;
             y | Y) remove_account "$1"; append_account "$1"; exit 0 ;;
-            *    ) echo 'Invalid response. Exiting...'; exit 1 ;;
+                *) echo 'Invalid response. Exiting...'; exit 1 ;;
         esac
     else
         append_account "$1"
