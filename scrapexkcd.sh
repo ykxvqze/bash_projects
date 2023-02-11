@@ -11,7 +11,7 @@ OUTPUT:
         * Image files (e.g. *.jpg or *.png) saved in ./xkcd/ directory.
         * A file named `log_counter` containing a single integer, useful
           for keeping track of the last page scraped so that re-runs of the
-          script commence from where it left off (instead of from first page).
+          script begin from where it left off (instead of from first page).
 
 DESCRIPTION:
 
@@ -70,7 +70,7 @@ if [ -f ./xkcd/log_counter ]; then
     echo 'Last logged site counter exists.'
 else
     echo 'Last logged site counter does not exist.'
-    echo 'Will start anew from: i=1...'
+    echo 'Will start newly from: i=1...'
     echo 1 > ./xkcd/log_counter
 fi
 
