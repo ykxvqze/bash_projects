@@ -142,11 +142,11 @@ main(){
     fi
 
     if [ -z "`which nmap`" ]; then
-        sudo apt-get install nmap
+        apt-get install nmap
     fi
 
     if [ -z "`which arp-scan`" ]; then
-        sudo apt-get install arp-scan
+        apt-get install arp-scan
     fi
 
     # temporary files
