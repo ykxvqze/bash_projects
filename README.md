@@ -129,3 +129,8 @@ Count   : 10
 Minimum : 1
 Maximum : 100
 ```
+
+## Subsetting Dataframes
+
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/subset">subset</a>: tool for transposing or slicing a dataframe given in a CSV file. Subsetting can be done via row(s) and/or column(s). It also supports an option for dropping rows and/or columns instead.
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/shape">shape</a>: finds the dimensions of a dataframe given in a CSV file.
