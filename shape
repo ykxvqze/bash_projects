@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-: '
+<< 'EOF'
 Find dimensions of a dataframe in a CSV file
 
 USAGE:  ./shape [ -r | -c ] <filename>
@@ -22,7 +22,7 @@ EXAMPLES:
         ./shape -c filecsv    # number of columns only\n"
 
 J.A., ykxvqz@pm.me
-'
+EOF
 
 set -eo pipefail
 
