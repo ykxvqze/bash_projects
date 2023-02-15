@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-: '
+<< 'EOF'
 Slice subsets of a matrix or dataframe given in a CSV file
 
 USAGE:
@@ -48,7 +48,7 @@ ADVANCED EXAMPLES:
     cat filecsv | sed 's/1/9/g'
 
 J.A., ykxvqz@pm.me
-'
+EOF
 
 set -eo pipefail
 
