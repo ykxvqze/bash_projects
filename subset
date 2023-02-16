@@ -71,7 +71,7 @@ print_usage(){
 
 transpose(){
     local file="$1"
-    n_cols=`head -1 "$file" | tr ',' ' ' | wc -w`
+    local n_cols=`head -1 "$file" | tr ',' ' ' | wc -w`
     for i in `seq 1 "$n_cols"`; do
         cut -d ',' -f "$i" "$file" | xargs | tr ' ' ','
     done
@@ -80,23 +80,79 @@ transpose(){
 row_select(){
     local rows="$1"
     local file="$2"
+    local n_rows=`cat "$file" | wc -l`
 
-    # transpose and cut
-    transpose "$file" | cut -d ',' -f "$rows" > "$filetmp1"
-
-    # re-transppse
-    transpose "$filetmp1"
+    if [ "$n_rows" -eq 1 ] &&
+       [[ ! "$rows" =~ ^1- ]] &&
+       [[ ! "$rows" =~ -1$ ]] &&
+       [[ ! "$rows" =~ ^1, ]] &&
+       [[ ! "$rows" =~ ,1, ]] &&
+       [[ ! "$rows" =~ ,1$ ]] &&
+       [[ ! "$rows" =~ ^1$ ]]; then
+        echo ''
+    else
+        # transpose and cut
+        transpose "$file" | cut -d ',' -f "$rows" > "$filetmp1"
+        # re-transppse
+        transpose "$filetmp1"
+    fi
 }
 
 row_deselect(){
     local rows="$1"
     local file="$2"
+    local n_rows=`cat "$file" | wc -l`
 
-    # transpose and cut
-    transpose "$file" | cut --complement -d ',' -f "$rows" > "$filetmp1"
+    if [ "$n_rows" -eq 1 ] && (
+       [[ "$rows" =~ ^1- ]] ||
+       [[ "$rows" =~ -1$ ]] ||
+       [[ "$rows" =~ ^1, ]] ||
+       [[ "$rows" =~ ,1, ]] ||
+       [[ "$rows" =~ ,1$ ]] ||
+       [[ "$rows" =~ ^1$ ]] ); then
+        echo ''
+    else
+        # transpose and cut
+        transpose "$file" | cut --complement -d ',' -f "$rows" > "$filetmp1"
+        # re-transppse
+        transpose "$filetmp1"
+    fi
+}
 
-    # re-transppse
-    transpose "$filetmp1"
+col_select(){
+    local cols="$1"
+    local file="$2"
+    local n_cols=`head -1 "$file" | tr ',' ' ' | wc -w`
+
+    if [ "$n_cols" -eq 1 ] &&
+       [[ ! "$cols" =~ ^1- ]] &&
+       [[ ! "$cols" =~ -1$ ]] &&
+       [[ ! "$cols" =~ ^1, ]] &&
+       [[ ! "$cols" =~ ,1, ]] &&
+       [[ ! "$cols" =~ ,1$ ]] &&
+       [[ ! "$cols" =~ ^1$ ]]; then
+        echo ''
+    else
+        cut -d ',' -f "$cols" "$file"
+    fi
+}
+
+col_deselect(){
+    local cols="$1"
+    local file="$2"
+    local n_cols=`head -1 "$file" | tr ',' ' ' | wc -w`
+
+    if [ "$n_cols" -eq 1 ] && (
+       [[ "$cols" =~ ^1- ]] ||
+       [[ "$cols" =~ -1$ ]] ||
+       [[ "$cols" =~ ^1, ]] ||
+       [[ "$cols" =~ ,1, ]] ||
+       [[ "$cols" =~ ,1$ ]] ||
+       [[ "$cols" =~ ^1$ ]] ); then
+        echo ''
+    else
+        cut --complement -d ',' -f "$cols" "$file"
+    fi
 }
 
 main(){
@@ -144,7 +200,8 @@ main(){
         fi
         # column select
         if [ -z "$row" ] && [ -n "$col" ]; then
-            cut -d ',' -f "$col" "$filecsv"
+            #cut -d ',' -f "$col" "$filecsv"
+            col_select "$col" "$filecsv"
         fi
         # row and column select
         if [ -n "$col" ] && [ -n "$row" ]; then
@@ -158,7 +215,8 @@ main(){
         fi
         # column deselect
         if [ -z "$row" ] && [ -n "$col" ]; then
-            cut --complement -d ',' -f "$col" "$filecsv"
+            #cut --complement -d ',' -f "$col" "$filecsv"
+            col_deselect "$col" "$filecsv"
         fi
         # row and column deselect
         if [ -n "$col" ] && [ -n "$row" ]; then
