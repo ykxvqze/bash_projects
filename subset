@@ -106,8 +106,8 @@ main(){
             h ) print_usage; exit 0;;
             c ) col="$OPTARG";;
             r ) row="$OPTARG";;
-	    t ) flip='true';;
-	    d ) drop='true';; 
+	        t ) flip='true';;
+	        d ) drop='true';; 
             -*) echo 'Unknown option. Exiting ...'; exit 1;;
         esac
     done
@@ -116,8 +116,8 @@ main(){
     if [ "$argf" != '-h' -a \
          "$argf" != '-r' -a \
          "$argf" != '-c' -a \
-	 "$argf" != '-t' -a \
-	 "$argf" != '-d' -a \
+         "$argf" != '-t' -a \
+         "$argf" != '-d' -a \
          "$argf" != "$0" ]; then
         filecsv="$argf"
     else
@@ -127,8 +127,14 @@ main(){
 
     # transpose
     if [ "$flip" == 'true' ]; then
-        transpose "$filecsv"
-        exit 0
+        if [ -n "$col" ] || [ -n "$row" ] || [ -n "$drop" ]; then
+            echo 'Cannot use other options when option -t is set!'
+            print_usage
+            exit 1
+        else
+            transpose "$filecsv"
+            exit 0
+        fi
     fi
 
     if [ -z "$drop" ]; then
