@@ -200,7 +200,6 @@ main(){
         fi
         # column select
         if [ -z "$row" ] && [ -n "$col" ]; then
-            #cut -d ',' -f "$col" "$filecsv"
             col_select "$col" "$filecsv"
         fi
         # row and column select
@@ -215,7 +214,6 @@ main(){
         fi
         # column deselect
         if [ -z "$row" ] && [ -n "$col" ]; then
-            #cut --complement -d ',' -f "$col" "$filecsv"
             col_deselect "$col" "$filecsv"
         fi
         # row and column deselect
