@@ -52,7 +52,8 @@ EOF
 
 set -eo pipefail
 
-filetmp=`mktemp "/tmp/$0.XXXXXX"`
+filetmp1=`mktemp "/tmp/${0##*/}.XXX"`
+filetmp2=`mktemp "/tmp/${0##*/}.XXXXXX"`
 
 print_usage(){
     echo -e "
@@ -81,10 +82,10 @@ row_select(){
     local file="$2"
 
     # transpose and cut
-    transpose "$file" | cut -d ',' -f "$rows" > "$filetmp"
+    transpose "$file" | cut -d ',' -f "$rows" > "$filetmp1"
 
     # re-transppse
-    transpose "$filetmp"
+    transpose "$filetmp1"
 }
 
 row_deselect(){
@@ -92,10 +93,10 @@ row_deselect(){
     local file="$2"
 
     # transpose and cut
-    transpose "$file" | cut --complement -d ',' -f "$rows" > "$filetmp"
+    transpose "$file" | cut --complement -d ',' -f "$rows" > "$filetmp1"
 
     # re-transppse
-    transpose "$filetmp"
+    transpose "$filetmp1"
 }
 
 main(){
@@ -141,8 +142,8 @@ main(){
         fi
         # row and column select
         if [ -n "$col" ] && [ -n "$row" ]; then
-            cut -d ',' -f "$col" "$filecsv" > "$filetmp"
-            row_select "$row" "$filetmp"
+            cut -d ',' -f "$col" "$filecsv" > "$filetmp2"
+            row_select "$row" "$filetmp2"
         fi
     else
         # row deselect
@@ -155,8 +156,8 @@ main(){
         fi
         # row and column deselect
         if [ -n "$col" ] && [ -n "$row" ]; then
-            cut --complement -d ',' -f "$col" "$filecsv" > "$filetmp"
-            row_deselect "$row" "$filetmp"
+            cut --complement -d ',' -f "$col" "$filecsv" > "$filetmp2"
+            row_deselect "$row" "$filetmp2"
         fi
     fi
 }
