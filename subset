@@ -9,9 +9,9 @@ INPUT:
     Dataframe in a CVS file
 
 OUTPUT:
-    The transpose of the dataframe if -t is specified
-    A slice of the original dataframe if -r and/or -c are specified.
-    Option -d is for deleting rows and/or columns.
+    - The transpose of the dataframe if -t is specified
+    - A slice of the original dataframe if -r and/or -c are specified.
+    - Option -d is for deleting rows and/or columns.
 
 EXAMPLES:
     echo '1,2,3,4,5,6,7,8,9,10'          >> ./filecsv
@@ -28,7 +28,7 @@ EXAMPLES:
 
 ADVANCED EXAMPLES:
 
-    # replace in 2nd row, all 1s into 9s
+    # replace in 2nd row, all 1s by 9s
     ./subset -r 1 filecsv
     ./subset -r 2 filecsv | sed 's/1/9/g'
     ./subset -r 3- filecsv
