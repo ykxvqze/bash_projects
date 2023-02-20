@@ -13,44 +13,41 @@ OPTIONS:
 
 OUTPUT:
         A listing of IP and MAC addresses of all network devices in
-        tabular format (via stdout).
+        tabular format via stdout.
 
 DESCRIPTION:
 
 The script checks for nmap and arp-scan tools and installs them if
 missing. It then extracts the name of the default network interface and
-its local IPv4 and MAC address. The script will use the default
-interface unless one is provided by the user via the -i switch (and is a
-valid interface, otherwise the script will revert to default interface).
-The IP address range to scan is derived from the netmask. Then nmap is
-executed over the local IP network range via ping-scan mode (i.e. no
-port scanning or OS detection). Additionally, arp-scan is executed
-following nmap. Both scans are repeated within a loop resulting in 4
-scans in total; the reason for repeating the scans is that a scan may
-miss some devices if only one trial is attempted or if only 1 tool is
-used. The aggregate results of the scans are sorted and made unique. An
-arp-scan returns both IP and MAC addresses, whereas nmap will be
-detecting only IP addresses. Any IP addresses that may have been
-detected by nmap but not by arp-scan are appended to the final result.
-In such cases, the corresponding MAC addresses are fetched from the
-local ARP cache/table which would have logged relevant entries as the
-system was pinging other devices during the nmap and arp-scan
+its local IPv4 and MAC address. The script uses the default interface
+unless one is provided via the -i switch. The IP address range to scan
+locally is derived from the netmask. Then, nmap is executed over this
+range via ping-scan mode (i.e. no port scanning or OS detection).
+Additionally, arp-scan is executed following nmap. Both scans are
+repeated resulting in 4 scans in total. The reason for repeating the
+scans is to avoid missing any devices. The aggregate results of the
+scans are sorted and made unique. An arp-scan returns both IP and MAC
+addresses, whereas nmap detects only IP addresses. Any IP addresses that
+may have been detected by nmap but not by arp-scan are appended to the
+final result. In such cases, the corresponding MAC addresses are fetched
+from the local ARP cache/table which would have logged relevant entries
+as the system pinged other devices during the nmap and arp-scan
 procedures. Finally, an entry for localhost IP and MAC address is
-appended (i.e. those of the system running the script) and the result is
-displayed in tabular format. Note: all devices on the LAN (including
-routers) will show in the table, except those whose iptables are set not
-to respond to ICMPs (e.g. so as not to participate in smurf attacks).
+appended and the result is displayed in tabular format. Note: all
+devices on the LAN, including routers, will show in the table, except
+those whose iptables are set not to respond to ICMPs (e.g. so as not to
+participate in smurf attacks).
 
 ADDITIONAL NOTES:
 
 If you are on a home LAN and you control the gateway router, you can
 check its ARP or DHCP table by accessing the router menu via browser.
-The entries for the DHCP leases given to various devices will reveal
-their IP and MAC addresses (note: some leases may be expired). The ARP
-table will also show all devices the router has communicated with.
-Listings will be similar to the result you get from running this script
-except that you do not need to control or check the gateway itself -
-you only need to be connected to the network as any other device.
+The entries for the DHCP leases given to various devices reveal their
+IP and MAC addresses (note: some leases may be expired). The ARP table
+will also show all devices the router has communicated with. Listings
+will be similar to the result you get from running this script except
+that you do not need to control or check the gateway itself - you only
+need to be connected to the network as any other device.
 
 DEMONSTRATION:
 
