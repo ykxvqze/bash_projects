@@ -3,7 +3,8 @@
 Slice subsets of a matrix or dataframe given in a CSV file
 
 USAGE:
-    ./subset [ -t <filename> ] | [[ -d ] | [ -r | -c ]] <rows|cols> <filename>
+    ./subset -t <filename>
+    ./subset < -d | -r | -c > <rows|cols> <filename>
 
 INPUT:
     Dataframe in a CVS file
@@ -19,9 +20,9 @@ EXAMPLES:
     echo '21,22,23,24,25,26,27,28,29,30' >> ./filecsv
 
     ./subset -c 2 filecsv              # select second column
-    ./subset -c 1,3 filecsv            # select first and third column
+    ./subset -c 1,3 filecsv            # select first and third columns
     ./subset -c 1-3 filecsv            # select first till third column
-    ./subset -c 1,3 -r 2- filecsv      # select first and third column, second till last row
+    ./subset -c 1,3 -r 2- filecsv      # select first and third columns, second till last row
     ./subset -c 1 -r 2 filecsv         # select an element (first column, second row)
     ./subset -t filecsv                # transpose
     ./subset -d -r 1,3 -c 1-5 filecsv  # drop rows 1 and 3 and columns 1 till 5\n"
@@ -61,9 +62,9 @@ print_usage(){
     
     USAGE:
     ./subset -c 2 filecsv              # select second column
-    ./subset -c 1,3 filecsv            # select first and third column
+    ./subset -c 1,3 filecsv            # select first and third columns
     ./subset -c 1-3 filecsv            # select first till third column
-    ./subset -c 1,3 -r 2- filecsv      # select first and third column, second till last row
+    ./subset -c 1,3 -r 2- filecsv      # select first and third columns, second till last row
     ./subset -c 1 -r 2 filecsv         # select an element (first column, second row)
     ./subset -t filecsv                # transpose
     ./subset -d -r 1,3 -c 1-5 filecsv  # drop rows 1 and 3 and columns 1 till 5\n"
