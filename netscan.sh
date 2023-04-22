@@ -83,7 +83,7 @@ print_usage() {
 }
 
 get_default_iface(){
-    ip route show default | cut -d ' ' -f 5
+    ip route show default | head -1 | cut -d ' ' -f 5
 }
 
 get_all_ifaces(){
