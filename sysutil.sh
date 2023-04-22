@@ -146,12 +146,12 @@ config_files(){
     echo ''
     echo 'The following configuration files exist:'
     cnt=0
-    for i in ${files[*]}; do
-        [ -f $i ] && echo $i
+    for i in "${files[@]}"; do
+        [ -f "$i" ] && echo "$i"
         ((cnt++))
     done
 
-    if [ $cnt -eq 0 ]; then
+    if [ "$cnt" -eq 0 ]; then
         echo 'No configuration files found.'
     fi
 }
