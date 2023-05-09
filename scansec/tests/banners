@@ -1,0 +1,17 @@
+Banners
+
+###
+
+title='Ensure a non-informative banner is set'
+test=$(cat /etc/issue.net)
+expected='Authorized use only. Actions will be logged'
+remediation="echo 'Authorized use only. Actions will be logged.' > /etc/issue.net"
+
+###
+
+title='Ensure a non-informative banner is set'
+test=$(cat /etc/motd)
+expected='Authorized use only. Actions will be logged'
+remediation="echo 'Authorized use only. Actions will be logged.' > /etc/motd"
+
+###
