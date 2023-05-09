@@ -33,12 +33,12 @@ Address Resolution Protocol (ARP) is a protocol for requesting information about
 
 ## Security auditing/hardening
 
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/scansec.sh">scansec.sh</a>: interactive script for server security auditing and hardening. Note: option -a activates an audit-only mode (i.e. no hardening actions are executed). The main functions of `scansec.sh` (along with areas audited) are listed below.
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/auditscan.sh">auditscan.sh</a>: interactive script for server security auditing and hardening. Note: option -a activates an audit-only mode (i.e. no hardening actions are executed).
 
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/auditscan.sh">auditscan.sh</a> is now a replacement for `scansec.sh`. It operates on a JSON file called 'audit.json' which explicitly contains the audit rules and can be independently expanded to include more rules. In this new design, the rules are not hard-coded into the script itself, hence allowing for more flexibility.
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/scansec/scansec.sh">scansec.sh</a> is now a replacement for `auditscan.sh`. It operates on a set of test files which explicitly contains the audit rules and can be independently expanded to include more rules. In this design, the rules are not hard-coded into the script itself, which only handles the display and report.
 <!--
 ```
-scansec.sh
+auditscan.sh
 |--- check_umask()
 |    |--- default umask for users = 077
 |    |--- default umask for root = 077
