@@ -55,21 +55,24 @@ setcolor() {
     YELLOW='\e[33m'
     BLUEE='\e[34m'
 }
+setcolor
 
 audit_report="$PWD/audit_report_`date +'%Y_%m_%d_%H%M%S'`"
 
-printf "%s\n" "Operating System         : `uname -s`"                         | tee "${audit_report}"
-printf "%s\n" "Operating System Name    : `lsb_release -i | sed 's/.*:\s//'`" | tee "${audit_report}"
-printf "%s\n" "Operating System Version : `lsb_release -d | sed 's/.*:\s//'`" | tee "${audit_report}"
-printf "%s\n" "Kernel Version           : `uname -r`"                         | tee "${audit_report}"
-printf "%s\n" "Hardware Platform        : `uname -m`"                         | tee "${audit_report}"
-printf "%s\n" "Hostname                 : `hostname`"                         | tee "${audit_report}"
+echo ''
+echo -e "[+] ${YELLOW}Operating System Information${DEFAULT}"
+echo "----------------------------------------"
+printf "%s\n" "Operating System         : `uname -s`"                         | tee -a "${audit_report}"
+printf "%s\n" "Operating System Name    : `lsb_release -i | sed 's/.*:\s//'`" | tee -a "${audit_report}"
+printf "%s\n" "Operating System Version : `lsb_release -d | sed 's/.*:\s//'`" | tee -a "${audit_report}"
+printf "%s\n" "Kernel Version           : `uname -r`"                         | tee -a "${audit_report}"
+printf "%s\n" "Hardware Platform        : `uname -m`"                         | tee -a "${audit_report}"
+printf "%s\n" "Hostname                 : `hostname`"                         | tee -a "${audit_report}"
 
 # test files
 includedir='./tests'
 testfiles=$(ls "$includedir")
 
-setcolor
 n_pass=0
 n_fail=0
 

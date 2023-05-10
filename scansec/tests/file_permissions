@@ -4,7 +4,7 @@ File permissions
 
 title="Ensure default umask for users is 077"
 test=$(grep '^UMASK' /etc/login.defs | grep -oE '[0-9]+')
-expected='0777'
+expected='077'
 remediation="sed -iE 's/(^UMASK\s+)[0-9]+/\1077/' /etc/login.defs"
 
 ###
@@ -299,13 +299,6 @@ remediation='chown root:root /etc/hosts.deny'
 
 title='Ensure permission for /etc/hosts.deny is 644'
 test=$(stat -c '%a' /etc/hosts.deny)
-expected='644'
-remediation='chmod 644 /etc/hosts.deny'
-
-###
-
-title='Ensure permission for /etc/hosts.deny is 644'
-test='644'
 expected='644'
 remediation='chmod 644 /etc/hosts.deny'
 

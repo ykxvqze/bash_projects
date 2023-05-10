@@ -1,4 +1,4 @@
-Firewall and settings
+Firewall settings
 
 ###
 
@@ -17,8 +17,8 @@ remediation='apt purge iptables-persistent'
 ###
 
 title='Ensure ufw service is enabled'
-test=$(systemctl is-enabled ufw && ufw status | grep Status)
-expected='enabled\\nStatus: active'
+test=$(systemctl is-enabled ufw 2>/dev/null && ufw status | grep Status)
+expected='enabled\nStatus: active'
 remediation='ufw allow proto tcp from any to any port 22 && ufw enable'
 
 ###
@@ -31,7 +31,8 @@ remediation='apt install nftables'
 ###
 
 title='Ensure nftables service is enabled'
-test=$(systemctl is-enabled nftables)
+test=$(systemctl is-enabled nftables 2>/dev/null)
 expected='enabled'
 remediation='systemctl enable nftables'
 
+###
