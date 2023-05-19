@@ -116,8 +116,8 @@ enum() {
             echo "$i"
         else
             # we have a range item (start-end)
-            start=`grep -oE '^[^-]' <<< "$i"`
-            end=`grep -oE '[^-]?$' <<< "$i"`
+            start=`grep -oE '^[^-]*' <<< "$i"`
+            end=`grep -oE '[^-]*$' <<< "$i"`
             if [ -z "$start" ]; then
                 start=1
             fi
