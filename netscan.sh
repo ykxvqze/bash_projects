@@ -132,6 +132,13 @@ main(){
         esac
     done
 
+    dpkg --version &> /dev/null
+    if [ "$?" -ne 0 ]; then
+        echo "Not a Debian-based distribution"
+        echo "Exiting..."
+        exit 1
+    fi
+
     if [ "$EUID" != 0 ]; then
         echo "Use sudo to run the script: sudo ./${0##*/}"
         echo "Exiting..."
