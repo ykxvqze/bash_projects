@@ -17,7 +17,7 @@ OUTPUT:
 
 DESCRIPTION:
 
-The script checks for nmap and arp-scan tools and installs them if
+The script checks for nmap and arp-scan tools and aks to install them if
 missing. It then extracts the name of the default network interface and
 its local IPv4 and MAC address. The script uses the default interface
 unless one is provided via the -i switch. The IP address range to scan
