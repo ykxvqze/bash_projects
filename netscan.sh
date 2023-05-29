@@ -132,6 +132,7 @@ main(){
         esac
     done
 
+    # check if debian-based
     dpkg --version &> /dev/null
     if [ "$?" -ne 0 ]; then
         echo "Not a Debian-based distribution"
@@ -139,18 +140,41 @@ main(){
         exit 1
     fi
 
+    # check privilege
     if [ "$EUID" != 0 ]; then
         echo "Use sudo to run the script: sudo ./${0##*/}"
         echo "Exiting..."
         exit 1
     fi
 
+    # install nmap or exit
     if [ -z "`which nmap`" ]; then
-        apt-get install nmap
+        echo "nmap not found. Script will exit unless you allow installing nmap."
+        read -p "Install nmap? (y/n): " -n 1 x
+        if [ "${x,,}" == 'y' ]; then
+            apt-get install nmap
+        elif [ "${x,,}" == 'n' ]; then
+            echo 'Exiting...'
+            exit 0
+        else
+            echo 'Invalid response. Exiting...'
+            exit 1
+        fi
     fi
 
+    # install arp-scan or exit
     if [ -z "`which arp-scan`" ]; then
-        apt-get install arp-scan
+        echo "arp-scan not found. Script will exit unless you allow installing arp-scan."
+        read -p "Install arp-scan? (y/n): " -n 1 x
+        if [ "${x,,}" == 'y' ]; then
+            apt-get install arp-scan
+        elif [ "${x,,}" == 'n' ]; then
+            echo 'Exiting...'
+            exit 0
+        else
+            echo 'Invalid response. Exiting...'
+            exit 1
+        fi
     fi
 
     # temporary files
