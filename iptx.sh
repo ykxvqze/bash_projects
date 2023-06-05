@@ -59,11 +59,26 @@ valid_ipv4() {
     return "$status"
 }
 
+valid_cidr() {
+    local ip_cidr="$1"
+    local status=1
+
+    grep -E '^([0-9]{1,3}\.){3}[0-9]{1,3}/([1-9]|[1-2][0-9]|3[0-1])$' <<< "$ip_cidr" &> /dev/null
+    if [ "$?" -eq 0 ]; then
+        ip=$(echo "${ip_cidr}" | cut -d '/' -f 1)
+        valid_ipv4 "$ip"
+        if [ "$?" -eq 0 ]; then
+            status=0
+        fi
+    fi 
+    return "$status"
+}
+
 # Example: 110 --> 00000110
 zero_pad(){
     local input="$1"
     local z
-    n=`expr length $input`
+    n=`expr length "$input"`
 
     if [ "$n" -lt 8 ]; then
 	    d=$((8-n))
@@ -75,8 +90,8 @@ zero_pad(){
 # Example: 128.42.5.4 --> 10000000 00101010 00000101 00000100
 ip2bin() {
     local ip="$1"
-    x=`echo $ip | tr '.' ';'`
-    r=`echo "obase=2; ibase=10; $x" | bc`
+    x=$(echo "$ip" | tr '.' ';')
+    r=$(echo "obase=2; ibase=10; $x" | bc)
     for i in $r; do zero_pad "$i"; done | xargs
 }
 
@@ -91,10 +106,14 @@ bin2ip() {
 # Example: 128.42.5.4/21 --> 255.255.248.0
 cidr2netmask(){
     local ip_cidr="$1"
+    valid_cidr "$ip_cidr"
+    if [ "$?" -ne 0 ]; then
+        return 1
+    fi
     netmask_length=`echo "${ip_cidr}" | cut -d '/' -f 2`
     d=$((32-netmask_length))
-    ones=`head -c "${netmask_length}" /dev/zero | tr '\0' '1'`
-    zeros=`head -c "$d" /dev/zero | tr '\0' '0'`
+    ones=$(head -c "${netmask_length}" /dev/zero | tr '\0' '1')
+    zeros=$(head -c "$d" /dev/zero | tr '\0' '0')
     sequence=`sed -E 's/(.{8})(.{8})(.{8})(.{8})/\1 \2 \3 \4/' <<< "${ones}${zeros}"`
     bin2ip "$sequence"
 }
@@ -102,6 +121,10 @@ cidr2netmask(){
 # Example: 128.42.5.4/21 -->  128.42.0.0
 cidr2network(){
     local ip_cidr="$1"
+    valid_cidr "$ip_cidr"
+    if [ "$?" -ne 0 ]; then
+        return 1
+    fi
     local netmask_length=`echo "${ip_cidr}" | cut -d '/' -f 2`
     local ip=`echo "${ip_cidr}" | cut -d '/' -f 1`
     local ip_bin=`ip2bin "$ip" | tr -d ' '`
@@ -116,6 +139,10 @@ cidr2network(){
 # Example: 128.42.5.4/21 --> 128.42.7.255
 cidr2broadcast(){
     local ip_cidr="$1"
+    valid_cidr "$ip_cidr"
+    if [ "$?" -ne 0 ]; then
+        return 1
+    fi
     local netmask_length=`echo "${ip_cidr}" | cut -d '/' -f 2`
     local ip=`echo ${ip_cidr} | cut -d '/' -f 1`
     local ip_bin=`ip2bin "$ip" | tr -d ' '`
