@@ -54,6 +54,7 @@ Number of usable hosts   2046
 J.A., ykxvqz@pm.me
 EOF
 
+print_usage    () { :; }  # print usage
 valid_ipv4     () { :; }  # Is IPv4 address valid?
 valid_cidr     () { :; }  # Is CIDR address valid? 
 ip2bin         () { :; }  # IPv4 (decimal-dotted) to binary
@@ -64,6 +65,16 @@ cidr2broadcast () { :; }  # CIDR to broadcast address
 cidr2numhosts  () { :; }  # CIDR to number of hosts
 cidr2ipfirst   () { :; }  # CIDR to first usable IP address
 cidr2iplast    () { :; }  # CIDR to last usable IP address
+
+print_usage(){
+    echo -e "iptx.sh: utility for CIDR to IPv4 transformations.
+    Usage:
+           ./${0##*/} 128.42.5.4/21
+
+           . ./${0##*/}
+           cidr2network 128.42.5.4/21
+           cidr2broadcast 128.42.5.4/21"
+}
 
 valid_ipv4() {
     local ip="$1"
@@ -225,12 +236,6 @@ cidr2iplast(){
     ones=`head -c "$((d-1))" /dev/zero | tr '\0' '1'`
     sequence=`sed -E 's/(.{8})(.{8})(.{8})(.{8})/\1 \2 \3 \4/' <<< "${network_part}${ones}0"`
     bin2ip "$sequence"
-}
-
-print_usage(){
-    echo -e "iptx.sh: utility for CIDR to IPv4 transformations.
-    Usage: sudo ./${0##*/} <CIDR_address>
-    [ -h ]              Print usage and exit\n"
 }
 
 main(){
