@@ -249,6 +249,7 @@ main(){
     local ip_cidr="$1"
     valid_cidr "$ip_cidr"
     if [ "$?" -ne 0 ]; then
+        echo 'Not a valid CIDR notation'
         exit 1
     fi
     {
