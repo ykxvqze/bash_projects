@@ -3,15 +3,24 @@
 Utility functions for IPv4 networking/transformations
 
 USAGE: . ./iptx.sh
+       cidr2network 128.42.5.4/21
+       cidr2broadcast 128.42.5.4/21
+
+       ./iptx.sh 128.42.5.4/21
 
 OPTIONS:
-         N/A
+       [ -h ]              Print usage
 
 EXAMPLES:
          . ./iptx.sh
          cidr2network 128.42.5.4/21    # get network address
          cidr2netmask 128.42.5.4/21    # get netmask
          cidr2broadcast 128.42.5.4/21  # get broadcast address
+         cidr2ipfirst 128.42.5.4/21    # get first usable IP address
+         cidr2iplast 128.42.5.4/21     # get last usable IP address
+         cidr2numhosts 128.42.5.4/21   # get number of usable hosts
+
+        ./iptx.sh 128.42.5.4/21        # get printout summary of all info
 
 DESCRIPTION:
 
@@ -29,16 +38,32 @@ bin2ip '10000000 00101010 00000101 00000100'  # 128.42.5.4
 cidr2network 128.42.5.4/21                    # 128.42.0.0
 cidr2netmask 128.42.5.4/21                    # 255.255.248.0
 cidr2broadcast 128.42.5.4/21                  # 128.42.7.255
+cidr2numhosts 128.42.5.4/21                   # 2048
+cidr2ipfirst 128.42.5.4/21                    # 128.42.0.1
+cidr2iplast 128.42.5.4/21                     # 128.42.7.254
+
+./iptx.sh 128.42.5.4/21
+
+Network address          128.42.0.0
+Broadcast address        128.42.7.255
+Subnet mask              255.255.248.0
+First usable address     128.42.0.1
+Last usable address      128.42.7.254
+Number of usable hosts   2046
 
 J.A., ykxvqz@pm.me
 EOF
 
 valid_ipv4     () { :; }  # Is IPv4 address valid?
+valid_cidr     () { :; }  # Is CIDR address valid? 
 ip2bin         () { :; }  # IPv4 (decimal-dotted) to binary
 bin2ip         () { :; }  # binary to IPv4 (decimal-dotted)
 cidr2netmask   () { :; }  # CIDR to netmask address
 cidr2network   () { :; }  # CIDR to network address
 cidr2broadcast () { :; }  # CIDR to broadcast address
+cidr2numhosts  () { :; }  # CIDR to number of hosts
+cidr2ipfirst   () { :; }  # CIDR to first usable IP address
+cidr2iplast    () { :; }  # CIDR to last usable IP address
 
 valid_ipv4() {
     local ip="$1"
@@ -153,3 +178,82 @@ cidr2broadcast(){
     sequence=`sed -E 's/(.{8})(.{8})(.{8})(.{8})/\1 \2 \3 \4/' <<< "${network_part}${ones}"`
     bin2ip "$sequence"
 }
+
+# Example: 128.42.5.4/21 --> 2046 (number of usable hosts)
+cidr2numhosts(){
+    local ip_cidr="$1"
+    valid_cidr "$ip_cidr"
+    if [ "$?" -ne 0 ]; then
+        return 1
+    fi
+    local netmask_length=`echo "${ip_cidr}" | cut -d '/' -f 2`
+    d=$((32-netmask_length))
+    echo $((2**d-2))
+}
+
+# Example: 128.42.5.4/21 --> 128.42.0.1 (first usable IP address)
+cidr2ipfirst(){
+    local ip_cidr="$1"
+    valid_cidr "$ip_cidr"
+    if [ "$?" -ne 0 ]; then
+        return 1
+    fi
+    local netmask_length=`echo "${ip_cidr}" | cut -d '/' -f 2`
+    local ip=`echo "${ip_cidr}" | cut -d '/' -f 1`
+    local ip_bin=`ip2bin "$ip" | tr -d ' '`
+
+    network_part=`echo "${ip_bin:0:netmask_length}"`
+    d=$((32-netmask_length))
+    zeros=`head -c "$((d-1))" /dev/zero | tr '\0' '0'`
+    sequence=`sed -E 's/(.{8})(.{8})(.{8})(.{8})/\1 \2 \3 \4/' <<< "${network_part}${zeros}1"`
+    bin2ip "$sequence"
+}
+
+# Example: 128.42.5.4/21 --> 128.42.7.254 (last usable IP address)
+cidr2iplast(){
+    local ip_cidr="$1"
+    valid_cidr "$ip_cidr"
+    if [ "$?" -ne 0 ]; then
+        return 1
+    fi
+    local netmask_length=`echo "${ip_cidr}" | cut -d '/' -f 2`
+    local ip=`echo ${ip_cidr} | cut -d '/' -f 1`
+    local ip_bin=`ip2bin "$ip" | tr -d ' '`
+
+    network_part=`echo "${ip_bin:0:netmask_length}"`
+    d=$((32-netmask_length))
+    ones=`head -c "$((d-1))" /dev/zero | tr '\0' '1'`
+    sequence=`sed -E 's/(.{8})(.{8})(.{8})(.{8})/\1 \2 \3 \4/' <<< "${network_part}${ones}0"`
+    bin2ip "$sequence"
+}
+
+print_usage(){
+    echo -e "iptx.sh: utility for CIDR to IPv4 transformations.
+    Usage: sudo ./${0##*/} <CIDR_address>
+    [ -h ]              Print usage and exit\n"
+}
+
+main(){
+    while getopts 'h' option; do
+        case $option in
+            h) print_usage;  exit 0 ;;
+            *) print_usage;  exit 1 ;;
+        esac
+    done
+
+    local ip_cidr="$1"
+    valid_cidr "$ip_cidr"
+    if [ "$?" -ne 0 ]; then
+        exit 1
+    fi
+    {
+    echo "Network address: $(cidr2network ${ip_cidr})"
+    echo "Broadcast address: $(cidr2broadcast ${ip_cidr})"
+    echo "Subnet mask: $(cidr2netmask ${ip_cidr})"
+    echo "First usable address: $(cidr2ipfirst ${ip_cidr})"
+    echo "Last usable address: $(cidr2iplast ${ip_cidr})"
+    echo "Number of usable hosts: $(cidr2numhosts ${ip_cidr})"
+    } | column -t -s ':'
+}
+
+main "$@"
