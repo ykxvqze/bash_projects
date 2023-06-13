@@ -5,6 +5,11 @@
 
 Address Resolution Protocol (ARP) is a protocol for requesting information about an IP address; the response will be the MAC address of the network interface that has the requested IP address. An example is when a device must discover the MAC address of the gateway (router). ARP allows mapping an IP address to the link layer (MAC) address.
 
+## IPv4 networking
+
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/iptx.sh">iptx.sh</a>: utility functions for transforming IPv4 addresses from decimal-dotted notation into binary and vice versa, as well as for transforming CIDR notation into the network address, broadcast address, netmask, range of usable IP addresses, and the number of usable hosts. <br>
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/ipv4.md">ipv4.md</a>: short summary on IPv4 addresses. 
+
 ## Set up s-nail (send/receive mail via CLI)
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/snail.sh">snail.sh</a>: Bash script for installing and configuring s-nail. The script allows interactively adding/removing IMAP/SMTP configurations for mail accounts. Mail can then be fetched and sent (in ASCII format) via CLI with `s-nail` as demonstrated in the script. MIME attachments can be copied to separate files and then decoded (base64 decoding) before being viewed with an appropriate application depending on file type.
@@ -78,11 +83,6 @@ auditscan.sh
 ## Apache2 setup
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/apache2.sh">apache2.sh</a>: script for installing Apache httpd server and setting up a password-protected virtual host via .htaccess and .htpasswd files.
-
-## IPv4 networking
-
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/iptx.sh">iptx.sh</a>: utility functions for transforming IPv4 addresses from decimal-dotted notation to binary and vice versa, as well as for obtaining the netmask address, network address, and broadcast address starting from CIDR notation. <br>
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/ipv4.md">ipv4.md</a>: short summary on IPv4 addresses. 
 
 ## One-time pad encryption
 
