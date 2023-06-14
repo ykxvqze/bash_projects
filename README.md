@@ -107,7 +107,7 @@ auditscan.sh
 
 ## CLI plot
 
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/cliplot.sh">cliplot.sh</a>: tool for plotting a time series (numerical sequence) within the CLI without needing an X window system to view the plot. The plot is 'painted' top-level down in the CLI, line-by-line. This tool is useful for quick assessment of values such as CPU or memory usage over time (see 'Examples' in script).
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/cliplot.sh">cliplot.sh</a>: tool for plotting a numeric sequence within the CLI without needing an X window system to view the plot. The plot is 'painted' top-level down in the CLI, line-by-line. This tool is useful for quick assessment of values such as CPU or memory usage over time (see 'Examples' in script).
 
 ```bash
 $ ./cliplot.sh 1 4 9 16 25 36 49 64 81 100
