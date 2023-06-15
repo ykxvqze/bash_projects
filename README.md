@@ -6,7 +6,8 @@
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/iptx.sh">iptx.sh</a>: utility functions for transforming IPv4 addresses from decimal-dotted notation into binary and vice versa, as well as for transforming CIDR notation into a network address, broadcast address, netmask, etc. <br>
 
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/ipv4.md">ipv4.md</a>: short summary on IPv4 addresses. 
+<!--a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/ipv4.md">ipv4.md</a>: short summary on IPv4 addresses.
+-->
 
 ### Set up s-nail (send/receive mail via CLI)
 
