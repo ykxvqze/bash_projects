@@ -1,8 +1,8 @@
-## Network scanner
+### Network scanner
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/netscan.sh">netscan.sh</a>: A method for discovering devices connected to a network. The script is based on _nmap_ and _arp-scan_. IP and MAC addresses are extracted and summarized in tabular format.
 
-## IPv4 networking
+### IPv4 networking
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/iptx.sh">iptx.sh</a>: utility functions for transforming IPv4 addresses from decimal-dotted notation into binary and vice versa, as well as for transforming CIDR notation into a network address, broadcast address, netmask, etc. <br>
 
@@ -89,7 +89,7 @@ auditscan.sh
 
 ## Delete metadata
 
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/delmeta.sh">delmeta.sh</a>: Bash script for deleting metadata (author name; date timestamps) from a docx document. Metadata in the output file will appear empty, including comments in the margin.
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/delmeta.sh">delmeta.sh</a>: script for deleting metadata (author name; date timestamps) from a docx document. Metadata in the output file will appear empty, including comments in the margin.
 
 <!--a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/delmeta.py">delmeta.py</a>: Python script that does the same as above, however with an additional (mask) option for modifying timestamps of comments using numpy. If the mask option is specified, then timestamps of comments in the margin will be changed through randomization where timestamps are assigned with an incremental component drawn from a uniform distribution.
 -->
@@ -103,11 +103,11 @@ auditscan.sh
 
 ## Android cleanup
 
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/android_cleanup.sh">android_cleanup.sh</a>: script to brute-force uninstalling extraneous android apps (disallowing automatic reactivation) and replacing preinstalled ones with open source apps. The list of packages to install/uninstall can be modified prior script execution.
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/android_cleanup.sh">android_cleanup.sh</a>: brute-force uninstall extraneous android apps (disallowing automatic reactivation) and replace preinstalled ones with open source apps. The list of packages to install/uninstall can be modified prior script execution.
 
 ## CLI plot
 
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/cliplot.sh">cliplot.sh</a>: tool for plotting a numeric sequence within the CLI without needing an X window system to view the plot. The plot is 'painted' top-level down in the CLI, line-by-line. This tool is useful for quick assessment of values such as CPU or memory usage over time (see 'Examples' in script).
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/cliplot.sh">cliplot.sh</a>: tool for plotting a numeric sequence within the CLI without needing an X window system to view the plot. The plot is painted top-level down in the CLI, line-by-line. This tool is useful for quick assessment of values such as CPU or memory usage over time (see 'Examples' in script).
 
 ```bash
 $ ./cliplot.sh 1 4 9 16 25 36 49 64 81 100
@@ -130,4 +130,4 @@ Maximum : 100
 
 ## Subsetting Dataframes
 
-<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/bmat">bmat</a>: tool for transposing or slicing a dataframe given in a CSV file. Subsetting can be done via row/column names or numbers. It also supports an option for dropping rows and/or columns.
+<a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/bmat">bmat</a>: tool for transposing or slicing a dataframe given in a CSV file. Subsetting can be done via row/column names or numbers in any order. It also supports an option for dropping rows and/or columns.
