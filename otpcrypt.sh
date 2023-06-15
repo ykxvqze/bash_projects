@@ -106,12 +106,12 @@ main() {
 
     # Demo
     plaintext_ascii='I am Bob.'
-    plaintext_binary=$(ascii_to_binary "$plaintext_ascii")
-    key=$(generate_otp "$plaintext_binary")
-    ciphertext_binary=$(xor "$plaintext_binary" "$key")
-    ciphertext_ascii=$(binary_to_ascii "$ciphertext_binary")
-    decrypted_binary=$(xor "$ciphertext_binary" "$key")
-    decrypted_ascii=$(binary_to_ascii "$decrypted_binary")
+    plaintext_binary="$(ascii_to_binary "$plaintext_ascii")"
+    key="$(generate_otp "$plaintext_binary")"
+    ciphertext_binary="$(xor "$plaintext_binary" "$key")"
+    ciphertext_ascii="$(binary_to_ascii "$ciphertext_binary")"
+    decrypted_binary="$(xor "$ciphertext_binary" "$key")"
+    decrypted_ascii="$(binary_to_ascii "$decrypted_binary")"
 
     grn='\e[32m'
     blu='\e[34m'
