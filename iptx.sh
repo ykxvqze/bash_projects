@@ -2,7 +2,7 @@
 << 'EOF'
 Utility functions for IPv4 networking/transformations
 
-USAGE: . ./iptx.sh
+USAGE: . ./iptx.sh --source-only
        cidr2network 128.42.5.4/21
        cidr2broadcast 128.42.5.4/21
 
@@ -10,9 +10,10 @@ USAGE: . ./iptx.sh
 
 OPTIONS:
        [ -h ]              Print usage
+       [ --source-only ]   Source the script without executing main()
 
 EXAMPLES:
-         . ./iptx.sh
+         . ./iptx.sh --source-only
          cidr2network 128.42.5.4/21    # get network address
          cidr2netmask 128.42.5.4/21    # get netmask
          cidr2broadcast 128.42.5.4/21  # get broadcast address
@@ -25,11 +26,15 @@ EXAMPLES:
 DESCRIPTION:
 
 * valid_ipv4() - check if an IPv4 address is valid or not.
+* valid_cidr() - check if CIDR notation is valid or not.
 * ip2bin() - convert an IPv4 address from decimal-dotted notation to binary.
 * bin2ip() - convert an IPv4 address from binary to decimal-dotted notation.
 * cidr2netmask() - extract the netmask from an IPv4 address given in CIDR notation.
 * cidr2network() - extract the network address from a CIDR IPv4 address.
 * cidr2broadcast() - extract the broadcast address from a CIDR IPv4 address.
+* cidr2numhosts() - extract the number of hosts that can be assigned IP addresses.
+* cidr2ipfirst() - extract the first usable IP address from CIDR notation.
+* cidr2iplast() - extract the last usable IP address from CIDR notation.
 
 EXAMPLES:
 
@@ -38,7 +43,7 @@ bin2ip '10000000 00101010 00000101 00000100'  # 128.42.5.4
 cidr2network 128.42.5.4/21                    # 128.42.0.0
 cidr2netmask 128.42.5.4/21                    # 255.255.248.0
 cidr2broadcast 128.42.5.4/21                  # 128.42.7.255
-cidr2numhosts 128.42.5.4/21                   # 2048
+cidr2numhosts 128.42.5.4/21                   # 2046
 cidr2ipfirst 128.42.5.4/21                    # 128.42.0.1
 cidr2iplast 128.42.5.4/21                     # 128.42.7.254
 
@@ -71,7 +76,7 @@ print_usage(){
     Usage:
            ./${0##*/} 128.42.5.4/21
 
-           . ./${0##*/}
+           . ./${0##*/} --source-only
            cidr2network 128.42.5.4/21
            cidr2broadcast 128.42.5.4/21"
 }
@@ -262,4 +267,6 @@ main(){
     } | column -t -s ':'
 }
 
-main "$@"
+if [ "${1}" != "--source-only" ]; then
+    main "${@}"
+fi
