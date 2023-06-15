@@ -31,7 +31,7 @@ EXAMPLE:
 An example is demonstrated in main(). Running the script will show the
 output. The plaintext sample used is: "I am Bob.". This is converted into
 a binary string, an OTP is generated of the same length, the two binary
-strings are then XORed, and the result can be transformed into ciphertext (ASCII).
+strings are then XORed, and the result is decrypted back into plaintext.
 
 Sample output:
 
@@ -97,7 +97,7 @@ generate_otp() {
 main() {
     # Parse
     while getopts 'h' option; do
-        case $option in
+        case "$option" in
             h) print_usage; exit 0         ;;
             *) echo -e 'Incorrect usage!\n'; 
                print_usage; exit 1         ;;
@@ -106,28 +106,28 @@ main() {
 
     # Demo
     plaintext_ascii='I am Bob.'
-    plaintext_binary=`ascii_to_binary "$plaintext_ascii"`
-    key=`generate_otp "$plaintext_binary"`
-    ciphertext_binary=`xor "$plaintext_binary" "$key"`
-    ciphertext_ascii=`binary_to_ascii "$ciphertext_binary"`
-    decrypted_binary=`xor "$ciphertext_binary" "$key"`
-    decrypted_ascii=`binary_to_ascii "$decrypted_binary"`
-
-    file_otp=`mktemp /tmp/file_otp.XXXXXX`
+    plaintext_binary=$(ascii_to_binary "$plaintext_ascii")
+    key=$(generate_otp "$plaintext_binary")
+    ciphertext_binary=$(xor "$plaintext_binary" "$key")
+    ciphertext_ascii=$(binary_to_ascii "$ciphertext_binary")
+    decrypted_binary=$(xor "$ciphertext_binary" "$key")
+    decrypted_ascii=$(binary_to_ascii "$decrypted_binary")
 
     grn='\e[32m'
     blu='\e[34m'
     rst='\e[0m'
 
-    printf "${blu}Plaintext (ASCII)     : ${grn}%s${rst}\n" "$plaintext_ascii  " >> "$file_otp"
-    printf "${blu}Plaintext (binary)    : ${grn}%s${rst}\n" "$plaintext_binary " >> "$file_otp"
-    printf "${blu}OTP/Key               : ${grn}%s${rst}\n" "$key              " >> "$file_otp"
-    printf "${blu}Ciphertext (binary)   : ${grn}%s${rst}\n" "$ciphertext_binary" >> "$file_otp"
-    printf "${blu}Decrypted msg (binary): ${grn}%s${rst}\n" "$decrypted_binary " >> "$file_otp"
-    printf "${blu}Decrypted msg (ASCII) : ${grn}%s${rst}\n" "$decrypted_ascii  " >> "$file_otp"
+    {
 
-    column -t -s ':' "$file_otp"
-    rm "$file_otp"
+    printf "${blu}Plaintext (ASCII)     : ${grn}%s${rst}\n" "$plaintext_ascii  "
+    printf "${blu}Plaintext (binary)    : ${grn}%s${rst}\n" "$plaintext_binary "
+    printf "${blu}OTP/Key               : ${grn}%s${rst}\n" "$key              "
+    printf "${blu}Ciphertext (binary)   : ${grn}%s${rst}\n" "$ciphertext_binary"
+    printf "${blu}Decrypted msg (binary): ${grn}%s${rst}\n" "$decrypted_binary "
+    printf "${blu}Decrypted msg (ASCII) : ${grn}%s${rst}\n" "$decrypted_ascii  "
+
+    } | column -t -s ':'
+
 }
 
 main "$@"
