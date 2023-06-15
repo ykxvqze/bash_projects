@@ -197,7 +197,6 @@ row_deselect() {
 }
 
 main(){
-
     while getopts 'hc:r:td' option; do
         case $option in
             h ) print_usage; exit 0;;
