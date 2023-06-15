@@ -8,11 +8,11 @@
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/ipv4.md">ipv4.md</a>: short summary on IPv4 addresses. 
 
-## Set up s-nail (send/receive mail via CLI)
+### Set up s-nail (send/receive mail via CLI)
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/snail.sh">snail.sh</a>: script for installing and configuring s-nail. The script allows interactively adding/removing IMAP/SMTP configurations for mail accounts. Mail can then be fetched and sent in ASCII format via CLI.
 
-## Sysops utility functions
+### Sysops utility functions
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/sysutil.sh">sysutil.sh</a>: Utility functions for daily sysops.
 <!--```
@@ -34,7 +34,7 @@
 ```
 -->
 
-## Security auditing/hardening
+### Security auditing/hardening
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/auditscan.sh">auditscan.sh</a>: interactive script for server security auditing and hardening.
 
@@ -74,20 +74,21 @@ auditscan.sh
 ```
 -->
 
-## SSH ban
+### SSH ban
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/sshban.sh">sshban.sh</a>: script for processing _/var/log/auth.log_, alerting via mail, and automatically logging and banning IP addresses that have multiple failed SSH login attempts.
 
-## Apache2 setup
+### Apache2 setup
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/apache2.sh">apache2.sh</a>: script for installing Apache2 httpd server and setting up a password-protected virtual host via .htaccess and .htpasswd files.
 
-## One-time pad encryption
+### One-time pad encryption
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/otpcrypt.sh">otpcrypt.sh</a>: Implementation of a one-time pad encryption/decryption method: includes utility functions and a demo. <br>
+
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/cryptinfo.md">cryptinfo.md</a>: A summary on public-key encryption and OTP symmetric-key encryption.
 
-## Delete metadata
+### Delete metadata
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/delmeta.sh">delmeta.sh</a>: script for deleting metadata (author name; date timestamps) from a docx document. Metadata in the output file will appear empty, including comments in the margin.
 
@@ -97,15 +98,15 @@ auditscan.sh
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/scrapexkcd.sh">scrapexkcd.sh</a>: scrape cartoon images from an inaccessible xkcd directory. The script keeps a log of the last page scraped from any previous execution and will start fetching images from where it left off (i.e. adding only new images to a designated directory).
 
-## Linecutter tool
+### Linecutter tool
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/linecutter.sh">linecutter.sh</a>: Insert line breaks in a text file at a limit of 72 characters but without breaking any word.
 
-## Android cleanup
+### Android cleanup
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/android_cleanup.sh">android_cleanup.sh</a>: brute-force uninstall extraneous android apps (disallowing automatic reactivation) and replace preinstalled ones with open source apps. The list of packages to install/uninstall can be modified prior script execution.
 
-## CLI plot
+### CLI plot
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/cliplot.sh">cliplot.sh</a>: tool for plotting a numeric sequence within the CLI without needing an X window system to view the plot. The plot is painted top-level down in the CLI, line-by-line. This tool is useful for quick assessment of values such as CPU or memory usage over time (see 'Examples' in script).
 
@@ -128,6 +129,6 @@ Minimum : 1
 Maximum : 100
 ```
 
-## Subsetting Dataframes
+### Subsetting Dataframes
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/bmat">bmat</a>: tool for transposing or slicing a dataframe given in a CSV file. Subsetting can be done via row/column names or numbers in any order. It also supports an option for dropping rows and/or columns.
