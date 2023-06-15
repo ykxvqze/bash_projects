@@ -24,7 +24,6 @@ address appears more than 4 times _and_ it is not already logged in
   1. The IP address is added to ./ssh_blacklist.txt.
   2. The IP address gets banned by creating an iptables entry blocking it as source.
   3. A mail notification of the event is sent out to a preset email address
-     (modify variables sender and recipient as needed).
 
 Note: execute the script as a cron job (e.g. every 2 minutes).
 */2 * * * * /path/to/sshban.sh
@@ -35,14 +34,14 @@ J.A., ykxvqz@pm.me
 ssh_blacklist='ssh_blacklist.txt'
 ssh_badlogin='/tmp/ssh_badlogin.txt'
 logfile='/tmp/logfile.txt'
-sender='mail_account'
-recipient='user@somewhere'
+recipient='sysadmin'
 
 print_usage() {
     echo -e "sshban.sh:
     Usage:
     ./${0##*/}             Check /var/log/auth.log, send alert and ban repeated failed SSH attempts
-    ./${0##*/} [ -h ]      Print usage and exit\n"
+    ./${0##*/} [ -h ]      Print usage and exit
+    ./${0##*/} [ -l ]      List the log\n"
 }
 
 ban_ip() {
@@ -53,30 +52,30 @@ ban_ip() {
 
 add_to_blacklist() {
     IP="$1"
-    echo "$IP" >> $ssh_blacklist
+    echo "$IP" >> "$ssh_blacklist"
 }
 
 notify_mail() {
     IP="$1"
     n_attempts="$2"
     echo "[!] Notification of failed SSH login attempts from $IP (${n_attempts} failed attempts). IP address has been blocked." |
-    s-nail -A $sender -s 'SSH failed logins' $recipient
+    mail -s 'SSH failed logins' "$recipient"
 }
 
 is_ip_blacklisted() {
     IP="$1"
-    grep "$IP" $ssh_blacklist && return 0 || return 1
+    grep "$IP" "$ssh_blacklist" &> /dev/null && return 0 || return 1
 }
 
 get_log() {
     sudo cat /var/log/auth.log |
     grep -i 'sshd.*fail'       |
     grep -ho 'rhost=.*\s'      |
-    grep -Eo '[^=]+$' > $ssh_badlogin
+    grep -Eo '[^=]+$' > "$ssh_badlogin"
 
-    sort $ssh_badlogin |
-    uniq -c            |
-    sort -nr -k 1      |
+    sort "$ssh_badlogin" |
+    uniq -c              |
+    sort -nr -k 1        |
     sed -E 's/\s //g'
 }
 
@@ -90,19 +89,18 @@ main() {
         esac
     done
 
-    [ `command -v s-nail` ] || sudo apt-get install s-nail
-    [ -f $ssh_badlogin ] && rm -rf $ssh_badlogin
-    [ ! -f $ssh_blacklist ] && touch $ssh_blacklist
+    [ -f "$ssh_badlogin" ] && rm -rf "$ssh_badlogin"
+    [ ! -f "$ssh_blacklist" ] && touch "$ssh_blacklist"
 
-    get_log > $logfile
+    get_log > "$logfile"
     n_entries=`cat $logfile | wc -l`
     n_attempts=(`cut -d ' ' -f 1 "$logfile"`)
     ip_list=(`cut -d ' ' -f 2 "$logfile"`)
 
     for i in `seq 1 "$n_entries"`; do
         index=$((i-1))
-        IP=${ip_list[$index]}
-        n=${n_attempts[$index]}
+        IP="${ip_list[$index]}"
+        n="${n_attempts[$index]}"
         if [ "$n" -gt 4 ]; then
             if [ ! `is_ip_blacklisted "$IP"` ]; then
                 add_to_blacklist "$IP"
