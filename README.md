@@ -94,7 +94,8 @@ auditscan.sh
 
 <!--a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/delmeta.py">delmeta.py</a>: Python script that does the same as above, however with an additional (mask) option for modifying timestamps of comments using numpy. If the mask option is specified, then timestamps of comments in the margin will be changed through randomization where timestamps are assigned with an incremental component drawn from a uniform distribution.
 -->
-## Scrape image files from xkcd site
+
+### Scrape image files from xkcd site
 
 <a class="external reference" href="https://github.com/thln2ejz/bash_projects/blob/master/scrapexkcd.sh">scrapexkcd.sh</a>: scrape cartoon images from an inaccessible xkcd directory. The script keeps a log of the last page scraped from any previous execution and will start fetching images from where it left off (i.e. adding only new images to a designated directory).
 
