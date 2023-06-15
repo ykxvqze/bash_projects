@@ -23,6 +23,7 @@ EXAMPLES:
     ./bmat -c 2 filecsv              # select second column
     ./bmat -c 3,1 filecsv            # select third then first column
     ./bmat -c 1-3 filecsv            # select first till third column
+    ./bmat -c 3-1 filecsv            # select third column back till first
     ./bmat -c 4,col2-col3 filecsv    # select fourth column, then columns col2 till col3.
     ./bmat -c 1,3 -r 2- filecsv      # select first and third columns, second till last row
     ./bmat -c 1 -r 2 filecsv         # select an element (first column, second row)
@@ -90,21 +91,22 @@ str2num() {
     unset a
     declare -A a
     cnt=1
-    for i in `head -1 "$file" | tr ',' ' '`; do
+    header=`head -1 "$file" | tr ',' ' '`
+    for i in $header; do
         a["$i"]=$cnt
         ((cnt++))
     done
 
-    for i in `head -1 "$file" | tr ',' ' '`; do
-        item=`grep -oE "$i" <<< "$items" | head -1`
-        # if non-zero and non-integer
-        [ "$item" -eq "$item" ] 2>/dev/null
-        if [ "$?" -ne 0 ] && [ -n "$item" ]; then
-            val=`echo ${a["$item"]}`
-            items=`sed -E "s/$i/$val/g" <<< "$items"`
+    items_new="$items"
+    for i in $(echo $items | tr ',-' '  '); do
+        item=$(grep -oE "$i" <<< "$header" | head -1)
+        # if non-integer and non-zero
+        if [[ ! ("$item" =~ ^[1-9][0-9]*$) && -n "$item" ]]; then
+            val=$(echo ${a["$item"]})
+            items_new=$(sed -E "s/$i/$val/g" <<< "$items_new")
         fi
     done
-    echo "$items"
+    echo "$items_new"
 }
 
 # enumerate input as a,b,c,d,...
@@ -121,10 +123,16 @@ enum() {
             if [ -z "$start" ]; then
                 start=1
             fi
+
             if [ -z "$end" ]; then
                 end="$max_items"
             fi
-            seq "$start" "$end"  # null-string if start > end
+
+            if [ "$start" -gt "$end" ]; then
+                seq "$start" -1 "$end"
+            else
+                seq "$start" "$end"
+            fi
         fi
     done | xargs | tr ' ' ','
 }
