@@ -107,4 +107,4 @@ IP header
 |--- ...  (IP header has more room for options, however such options are rarely used since many routers ignore them)
 ```
 
-* IPv6 has no checksum. The argument against checksums is that any application that really cares about data integrity has to have a checksum in the transport layer anyway, so having another one in the IP layer (not to mention the checksum in the link layer) is an overkill. Moreover, experience with IPv4 has shown that computing an IP checksum was a major expense, hence it was dropped in IPv6.
+* IPv6 has no checksum. The argument against checksums is that any application that really cares about data integrity has to have a checksum in the transport layer, so having another one in the IP layer is an overkill. Moreover, experience with IPv4 has shown that computing an IP checksum was a major expense, hence it was dropped in IPv6.
