@@ -85,7 +85,7 @@ cut_lines(){
     i=1
     while [ "$(head -n $i "$fileinput" | tail -1)" != "$marker" ]; do
         if [ "$(sed -n "$i p" "$fileinput" | wc -c)" -gt 72 ]; then
-            sed -i "$i s/^\(.\{0,72\}\)\s/\1\n/" "$fileinput"
+            sed -Ei "$i s/^(.{0,72})\s/\1\n/" "$fileinput"
         fi
         let i++
     done
