@@ -23,7 +23,7 @@ output listed there. If there is a match with the expected output, the
 test is marked as OK, otherwise it is marked with a WARNING (and a
 remediation step is listed in such a case). In this design, the test
 files can be expanded independently to include more rules as these are
-not hard-coded into the main script itself which only handles the
+not hard-coded into the main script itself, which only handles the
 display.
 
 J.A., ykxvqz@pm.me
@@ -102,7 +102,7 @@ for testfile in $testfiles; do
             printf "%11s ${YELLOW}%s${DEFAULT}\n" "" ">> Remediation: ${remediation}"
 
             # report
-            printf "\n%s %s\n" "[ WARNING! ]" "$title"                        >> "${audit_report}"
+            printf "\n%s %s\n" "[ WARNING! ]" "$title" >> "${audit_report}"
             printf "%s %s\n"   "            " ">> Remediation : $remediation" >> "${audit_report}"
         else
             ((n_pass+=1))
@@ -111,7 +111,7 @@ for testfile in $testfiles; do
             echo -e "[ ${GREEN}   OK   ${DEFAULT} ] $title"
         
             # report
-            printf "\n%s %s\n" "[    OK    ]" "$title"                        >> "${audit_report}"
+            printf "\n%s %s\n" "[    OK    ]" "$title" >> "${audit_report}"
         fi
      done
 done
