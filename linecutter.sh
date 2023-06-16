@@ -24,10 +24,10 @@ method are described below:
 stops when the marker is reached, allowing the script to end.
 
 2. Starting with the first line of the document, if the length of the
-line is greater than 72 characters, then the maximum-length pattern
-consisting of at most 72 characters followed by whitespace will be
-replaced by those same characters, plus a newline appended. The file has
-now increased by 1 line, and the result is saved _in-place_ in the file.
+line is greater than 72 characters, then the pattern consisting of at
+most 72 characters followed by whitespace will be replaced by those same
+characters, plus a newline appended. The file will have now increased by
+1 line, and the result is saved _in-place_ in the file.
 
 3. The line counter is incremented, and the previous condition is
 checked again for the next line. This is repeated line-by-line until the
