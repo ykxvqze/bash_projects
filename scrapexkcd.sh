@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 : '
-Scrape cartoon images iteratively from the xkcd site. Continue from last fetch upon script re-run.
+Scrape images iteratively from the xkcd site. Continue from last fetch upon script re-run.
 
 USAGE:  ./scrapexkcd.sh [ -h ]
 
@@ -34,10 +34,10 @@ directory under the current directory from which the script is executed
 (./xkcd/). If the directory does not already exist, it will be created
 and fetching will begin at i=1. The script will also save a file named
 `log_counter` in the mentioned directory to keep track of the counter <i>.
-This way, if the script is re-run on some other day, it will start
+This way, if the script is re-run some other time, it will start
 scraping from the last `index.html` file it already scraped in the
-previous execution. Hence, it will fetch only new cartoon images adding
-them to ./xkcd/
+previous execution. Hence, it will fetch only new images adding them to
+./xkcd/
 
 J.A., ykxvqz@pm.me
 '
@@ -74,7 +74,7 @@ else
     echo 1 > ./xkcd/log_counter
 fi
 
-i=`cat ./xkcd/log_counter`
+i=$(cat ./xkcd/log_counter)
 while : ; do
     if [ -f ./xkcd/index.html ]; then
         rm ./xkcd/index.html
@@ -88,9 +88,9 @@ while : ; do
         break
     fi
 
-    url_of_image=`grep 'Image URL (for hotlinking/embedding):' ./xkcd/index.html |
-                  grep -o '"https://imgs.xkcd.com/comics/[^"]*"'                 |
-                  sed 's/"//g'`
+    url_of_image=$(grep 'Image URL (for hotlinking/embedding):' ./xkcd/index.html |
+                   grep -o '"https://imgs.xkcd.com/comics/[^"]*"'                 |
+                   sed 's/"//g')
     echo "Fetching $url_of_image ..."
     wget -q -P './xkcd' "$url_of_image"
     let i++
