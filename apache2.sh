@@ -2,7 +2,7 @@
 : '
 Demo - install apache2 web server and set up a password-protected virtual host.
 
-USAGE: ./apache2.sh [ -h ]
+USAGE: sudo ./apache2.sh [ -h ]
 
 OPTIONS:
       [ -h ]  Print usage
@@ -33,8 +33,8 @@ One can verify in browser that the site is accessible and that a username
     localhost:8080
     localhost:443
 
-Note: Port 8080 (instead of 80) is used in order to demonstrate how to
-set up non-default ports. The script must run with privilege (see usage).
+Note: Port 8080 (instead of 80) is used as a non-default port.
+The script must run with privilege (see usage).
 
 J.A., ykxvqz@pm.me
 '
@@ -67,7 +67,7 @@ main() {
 	if [ "$EUID" != 0 ]; then
         echo -e 'script requires sudo privilege.\n'
         print_usage
-		exit 1
+        exit 1
 	fi
 
 	is_apache_installed
