@@ -65,9 +65,9 @@ main() {
 	done
 
 	if [ "$EUID" != 0 ]; then
-        echo -e 'script requires sudo privilege.\n'
-        print_usage
-        exit 1
+	    echo -e 'script requires sudo privilege.\n'
+	    print_usage
+	    exit 1
 	fi
 
 	is_apache_installed
