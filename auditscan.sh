@@ -19,7 +19,7 @@ DESCRIPTION:
 auditscan.sh will check for several commonly weak configuration settings
 relating to system files and networks. These audits include the default
 umask, login settings, password/group/shadow files, disabling services
-such as CUPS and rpcbind, and disabling IPv4 forwarding. The main internal
+such as CUPS and rpcbind, and disabling IPv4 forwarding. The internal
 functions (along with areas audited) are listed below.
 
 auditscan
@@ -56,7 +56,6 @@ auditscan
 EXAMPLES:
 
 ./auditscan
-
 ./auditscan -a
 
 J.A., ykxvqz@pm.me
