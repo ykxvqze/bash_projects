@@ -5,7 +5,7 @@ Uninstall and replace extraneous apps in Android with open-source ones.
 USAGE:  ./android_cleanup.sh  [ -h ]
 
                 Phone must be connected by USB with Debug mode enabled
-                under `Developer` options. File "packages_to_remove.txt"
+                (under `Developer` options). File "packages_to_remove.txt"
                 lists applications to remove (1 per line) and can be
                 modified as needed. Packages to install are listed in
                 the file "package_urls.txt" and can be modified by
@@ -22,8 +22,8 @@ DESCRIPTION:
 
 A script for uninstalling apps on an Android device via adb shell
 (disallows automatic reactivation). The script removes a list of
-preinstalled apps from Google, Huawei, Facebook, etc. without breaking
-the system. Additionally, basic apps like Contacts, Dialer, Keyboard,
+preinstalled apps from Google, Facebook, etc. without breaking the
+system. Additionally, basic apps like Contacts, Dialer, Keyboard,
 File Manager, Gallery, Browser, Notes, etc. are replaced by open-source
 ones (`simplemobiletools` available on F-Droid). Change these if you
 prefer other apps or update the current versions in the file
@@ -49,7 +49,7 @@ while getopts 'h' option; do
     esac
 done
 
-if [ -z `which adb` ]; then
+if [ -z "$(which adb)" ]; then
     echo 'adb shell is not installed.'
     read -p 'Install adb shell (y/n)? ' -n 1 x
     case "${x,,}" in
@@ -62,7 +62,7 @@ if [ -z `which adb` ]; then
     esac
 fi
 
-[ -z `which adb` ] && { echo 'adb shell failed to install. Exiting...'; exit 1; }
+[ -z "$(which adb)" ] && { echo 'adb shell failed to install. Exiting...'; exit 1; }
 
 wget -P /tmp/app_downloads -i ./package_urls.txt
 sed 's/.*\///g' package_urls.txt > /tmp/packages_to_add.txt
