@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 << 'EOF'
-CLI plot of positive functions (no X window system required).
+CLI plot of positive numeric sequences (no X window system required).
 
 USAGE: ./cliplot.sh  [ -h ]
        ./cliplot.sh  <sequence_of_numerical_values>
@@ -9,19 +9,20 @@ OPTIONS:
         [ -h ]    Print usage and exit
 
 OUTPUT:
-         A stem plot of a numerical sequence (time series) in the CLI
-         without need for a GUI or X window system to show the plot. The
-         plot is normalized to a default figure height of 10 lines. The
-         y-axis values are proportional to the actual values plotted.
+         A stem plot of a positive numerical sequence in the CLI without
+         need for a GUI or X window system to show the plot. The plot is
+         normalized to a default figure height of 10 lines. The y-axis
+         values are proportional to the actual values plotted. Negative
+         values are clipped at zero.
          Plotting in the CLI can be useful for quick assessment of
-         values such as CPU or memory usage over time (see last
-         example). The count, minimum, and maximum values of the time
-         series are also displayed.
+         values such as CPU or memory usage over time (see last example).
+         The count, minimum, and maximum values of the time series are
+         also displayed.
 
 DESCRIPTION:
 
 cliplot.sh will 'paint' a plot in the CLI, top-level down line-by-line.
-The result is a stem plot delineating the function to be plotted.
+The result is a stem plot delineating the sequence to be plotted.
 
 EXAMPLES:
          ./cliplot.sh 1 4 9 16 25 36 49 64 81 100
@@ -91,10 +92,10 @@ __plt__draw_line() {
          height=`tput lines`
     fi
 
-    local    input=(${@})
-    local    count="${#@}"
-    local   values=`__plt__normalize_input ${input[@]}`
-    local  y_label=' y  '
+    local input=(${@})
+    local count="${#@}"
+    local values=`__plt__normalize_input ${input[@]}`
+    local y_label=' y  '
     local x_offset='    '
 
     echo ''
