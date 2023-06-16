@@ -81,15 +81,15 @@ for testfile in $testfiles; do
     echo -e "[+] ${YELLOW}$(sed -n '1 p' ${includedir}/${testfile})${DEFAULT}"
     echo "----------------------------------------"
 
-    filetmp=$(mktemp /tmp/file.XXXXXX)
-    line_numbers=$(grep -n '^###' "${includedir}/${testfile}" | cut -d ':' -f 1)
-    n=$(echo "$line_numbers" | wc -l)
+    filetmp="$(mktemp /tmp/file.XXXXXX)"
+    line_numbers="$(grep -n '^###' "${includedir}/${testfile}" | cut -d ':' -f 1)"
+    n="$(echo "$line_numbers" | wc -l)"
 
     trap 'rm "$filetmp"' INT TERM EXIT
 
     for i in $(seq 1 $((n-1)) ); do
-        start=$(sed -n "$i p" <<< "$line_numbers")
-        end=$(sed -n "$((i+1)) p" <<< "$line_numbers")
+        start="$(sed -n "$i p" <<< "$line_numbers")"
+        end="$(sed -n "$((i+1)) p" <<< "$line_numbers")"
         sed -n "${start},${end} p" "${includedir}/${testfile}" > "${filetmp}"
         source "${filetmp}"
 
