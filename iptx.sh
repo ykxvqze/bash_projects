@@ -83,21 +83,8 @@ print_usage(){
 
 valid_ipv4() {
     local ip="$1"
-    local status=1
-
-    grep -E '^([0-9]{1,3}\.){3}[0-9]{1,3}$'  <<< "$ip"  &> /dev/null
-
-    if [ "$?" -eq 0 ]; then
-        OIFS=$IFS; IFS='.'
-        ip=($ip)
-        IFS=$OIFS
-
-        [ "${ip[0]}" -le 255 -a "${ip[1]}" -le 255 -a \
-          "${ip[2]}" -le 255 -a "${ip[3]}" -le 255 ]
-
-        status="$?"
-    fi
-    return "$status"
+    grep -Eo '^(([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))\.){3}([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))$' <<< "$ip" &> /dev/null
+    return "$?"
 }
 
 valid_cidr() {
