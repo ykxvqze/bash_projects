@@ -131,6 +131,8 @@ Minimum : 1
 Maximum : 100
 ```
 
+<!--
 ### Subsetting Dataframes
 
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/bmat">bmat</a>: tool for transposing or slicing a dataframe given in a CSV file. Subsetting can be done via row/column names or numbers in any order. It also supports an option for dropping rows and/or columns.
+-->
