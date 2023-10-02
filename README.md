@@ -138,7 +138,7 @@ A data toolkit for processing CSV files written in Bash. The tools can be passed
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/df/tp">tp</a>: transpose a CSV data frame.<br>
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/df/sl">sl</a>: slice a CSV data frame.<br>
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/df/ins">ins</a>: insert a row or column.<br>
-<a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/df/drop">drop</a>: drop a row or column.<br>
+<a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/df/drop">drop</a>: drop rows or columns.<br>
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/df/wr">wr</a>: (over)write a row or column.<br>
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/df/sz">sz</a>: return the shape of a CSV data frame.<br>
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/df/add">add</a>: add an element to a CSV list.<br>
