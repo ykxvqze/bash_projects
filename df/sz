@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+<< 'EOF'
+Return shape of a CSV file
+
+USAGE:
+    sz [CSV list]
+
+INPUT:
+    - A CSV file provided directly or piped via stdin
+
+OUTPUT:
+    - Size of data frame given as number_of_rows x number_of_columns
+
+EXAMPLES:
+    sz file.csv
+    cat file.csv | sz
+
+J.A., ykxvqz@pm.me
+EOF
+
+#
+# print usage
+#
+
+print_usage() {
+    echo -e "
+    return shape of CSV data
+
+    USAGE:
+
+        sz file.csv \n"
+}
+
+#
+# size: number_of_rows x number_of_columns
+#
+
+sz() {
+    f="${1}"
+    n_col="$(echo "${f}" | head -1 | tr ',' '\n' | wc -l)"
+    n_row="$(echo "${f}" | tp | head -1 | tr ',' '\n' | wc -l)"
+    echo "${n_row}"x"${n_col}"
+}
+
+#
+# main()
+#
+
+main() {
+    while getopts 'h' option; do
+        case $option in
+            h) print_usage; exit 0;;
+            *) echo 'Unknown option. Exiting ...'; exit 1;;
+        esac
+    done
+
+    argf="${1}"
+    if [ -n "${argf}" ]; then
+        f="$(cat "${argf}")"
+    else
+        f="$(</dev/stdin)"
+    fi
+
+    sz "${f}"
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    main "$@"
+fi
