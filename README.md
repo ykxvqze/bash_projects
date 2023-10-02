@@ -133,20 +133,13 @@ Maximum : 100
 
 ### Data toolkit
 
-A data toolkit for processing CSV files written in Bash. The tools can be passed a CSV file or CSV data piped via stdin.
+A data toolkit for processing CSV files written in Bash. The tools can be passed a file or data piped via stdin.
 
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/df/tp">tp</a>: transpose a CSV data frame.
-
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/df/sl">sl</a>: slice a CSV data frame.
-
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/df/ins">ins</a>: insert a row or column.
-
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/df/drop">drop</a>: drop a row or column.
-
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/df/wr">wr</a>: (over)write a row or column.
-
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/df/sz">sz</a>: return the shape of a CSV data frame.
-
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/df/add">add</a>: add an element to a CSV list.
-
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/df/del">del</a>: delete an element from a CSV list.
