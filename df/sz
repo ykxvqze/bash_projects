@@ -19,6 +19,15 @@ J.A., ykxvqz@pm.me
 EOF
 
 #
+# locate script dependencies
+#
+
+src_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+src_dir="$(readlink -f "$src_dir/sz")"
+src_dir=$(dirname "$src_dir")
+tp="${src_dir}/tp"
+
+#
 # print usage
 #
 
@@ -38,7 +47,7 @@ print_usage() {
 sz() {
     f="${1}"
     n_col="$(echo "${f}" | head -1 | tr ',' '\n' | wc -l)"
-    n_row="$(echo "${f}" | tp | head -1 | tr ',' '\n' | wc -l)"
+    n_row="$(echo "${f}" | "${tp}" | head -1 | tr ',' '\n' | wc -l)"
     echo "${n_row}"x"${n_col}"
 }
 

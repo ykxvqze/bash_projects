@@ -23,6 +23,15 @@ J.A., ykxvqz@pm.me
 EOF
 
 #
+# locate script dependencies
+#
+
+src_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+src_dir="$(readlink -f "$src_dir/ins")"
+src_dir=$(dirname "$src_dir")
+tp="${src_dir}/tp"
+
+#
 # print usage
 #
 
@@ -72,7 +81,7 @@ ins_col() {
     local f="${2}"
 
     # check number of items
-    n_row=$(echo "${f}" | tp | head -1 | tr ',' '\n' | wc -l)
+    n_row=$(echo "${f}" | "${tp}" | head -1 | tr ',' '\n' | wc -l)
     n_data=$(echo "${data_csv}" | tr ',' '\n' | wc -l)
 
     if [ "${n_data}" -ne "${n_row}" ]; then
@@ -81,9 +90,9 @@ ins_col() {
     fi
 
     {
-    echo "${f}" | tp
+    echo "${f}" | "${tp}"
     echo "${data_csv}"
-    } | tp
+    } | "${tp}"
 }
 
 #

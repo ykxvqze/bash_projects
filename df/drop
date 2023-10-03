@@ -31,6 +31,8 @@ src_dir="$(readlink -f "$src_dir/drop")"
 src_dir=$(dirname "$src_dir")
 . "${src_dir}/utils.sh"
 
+tp="${src_dir}/tp"
+
 #
 # print usage
 #
@@ -81,8 +83,8 @@ deselect_row() {
     local row_list="$1"
     local f="$2"
 
-    f_temp=$(echo "${f}" | tp)
-    deselect_col "${row_list}" "${f_temp}" | tp
+    f_temp=$(echo "${f}" | "${tp}")
+    deselect_col "${row_list}" "${f_temp}" | "${tp}"
 }
 
 #

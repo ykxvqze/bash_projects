@@ -51,6 +51,8 @@ src_dir="$(readlink -f "$src_dir/sl")"
 src_dir=$(dirname "$src_dir")
 . "${src_dir}/utils.sh"
 
+tp="${src_dir}/tp"
+
 #
 # select columns
 #
@@ -78,7 +80,7 @@ select_col() {
     # cut one column at a time to preserve desired order
     for i in $(echo "${col_list}" | tr ',' ' '); do
         echo "${f}" | cut -d ',' -f "$i" | tr '\n' ',' | rev | cut -c 2- | rev
-    done | tp
+    done | "${tp}"
 }
 
 #
@@ -91,8 +93,8 @@ select_row() {
     local row_list="${1}"
     local f="${2}"
 
-    f_temp="$(echo "${f}" | tp)"
-    select_col "${row_list}" "${f_temp}" | tp
+    f_temp="$(echo "${f}" | "${tp}")"
+    select_col "${row_list}" "${f_temp}" | "${tp}"
 }
 
 main() {

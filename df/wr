@@ -32,6 +32,11 @@ src_dir="$(readlink -f "$src_dir/wr")"
 src_dir=$(dirname "$src_dir")
 . "${src_dir}/utils.sh"
 
+tp="${src_dir}/tp"
+sl="${src_dir}/sl"
+drop="${src_dir}/drop"
+ins="${src_dir}/ins"
+
 #
 # print usage
 #
@@ -58,9 +63,9 @@ write_row() {
     local row_data="${2}"
     local f="${3}"
 
-    row_indices="$(echo "${f}" | tp | head -1)"
+    row_indices="$(echo "${f}" | "${tp}" | head -1)"
     row_number="$(str2num "${row_number}" "${row_indices}")"
-    n_row="$(echo "${f}" | tp | head -1 | tr ',' '\n' | wc -l)"
+    n_row="$(echo "${f}" | "${tp}" | head -1 | tr ',' '\n' | wc -l)"
 
     # check row number is valid
     if [ "${row_number}" -gt "${n_row}" -o "${row_number}" -lt 1 ]; then
@@ -77,10 +82,10 @@ write_row() {
         return 1
     fi
 
-    f_temp1="$(echo "${f}" | drop -r "${row_number}")"
-    f_temp2="$(echo "${f_temp1}" | ins -r "${row_data}")"
+    f_temp1="$(echo "${f}" | "${drop}" -r "${row_number}")"
+    f_temp2="$(echo "${f_temp1}" | "${ins}" -r "${row_data}")"
 
-    n_row=$(echo "${f_temp2}" | tp | head -1 | tr ',' '\n' | wc -l)
+    n_row=$(echo "${f_temp2}" | "${tp}" | head -1 | tr ',' '\n' | wc -l)
     if [ "${row_number}" -eq 1 ]; then
         echo "${f_temp2}" | sl -r "${n_row}",1-"$((n_row-1))"
     elif [ "${row_number}" -eq "${n_row}" ]; then
@@ -114,15 +119,15 @@ write_col() {
 
     # check number of data items is valid
     n_data="$(echo "${col_data}" | tr ',' '\n' | wc -l)"
-    n_row="$(echo "${f}" | tp | head -1 | tr ',' '\n' | wc -l)"
+    n_row="$(echo "${f}" | "${tp}" | head -1 | tr ',' '\n' | wc -l)"
 
     if [ "${n_data}" -ne "${n_row}" ]; then
         echo 'Invalid number of elements.'
         return 1
     fi
 
-    f_temp1="$(echo "${f}" | drop -c "${col_number}")"
-    f_temp2="$(echo "${f_temp1}" | ins -c "${col_data}")"
+    f_temp1="$(echo "${f}" | "${drop}" -c "${col_number}")"
+    f_temp2="$(echo "${f_temp1}" | "${ins}" -c "${col_data}")"
 
     n_col=$(echo "${f_temp2}" | head -1 | tr ',' '\n' | wc -l)
     if [ "${col_number}" -eq 1 ]; then
