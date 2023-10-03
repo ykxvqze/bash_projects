@@ -54,6 +54,7 @@ echo "$(date +'%F %T')" >> "${src_dir}"/log_csvchk.txt
 #
 
 result="$("${csvchk}" "${src_dir}"/file_standard.csv)"
+
 expected=""
 
 [ "${result}" == "${expected}" ] && log '[v] passed: file_standard via file' || log '[x] failed: file_standard via file'
@@ -63,6 +64,7 @@ expected=""
 #
 
 result="$(cat "${src_dir}"/file_standard.csv | "${csvchk}")"
+
 expected=""
 
 [ "${result}" == "${expected}" ] && log '[v] passed: file_standard via stdin' || log '[x] failed: file_standard via stdin'
