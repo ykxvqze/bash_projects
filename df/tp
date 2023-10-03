@@ -25,6 +25,16 @@ J.A., ykxvqz@pm.me
 EOF
 
 #
+# source utility functions
+#
+
+src_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+src_dir="$(readlink -f "$src_dir/tp")"
+src_dir=$(dirname "$src_dir")
+
+csvchk="${src_dir}/csvchk"
+
+#
 # print usage
 #
 
@@ -70,6 +80,8 @@ main() {
     else
         f="$(</dev/stdin)"
     fi
+
+    echo "${f}" | "${csvchk}" || return 1
 
     transpose "${f}"
 }
