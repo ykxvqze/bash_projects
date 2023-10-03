@@ -32,6 +32,7 @@ src_dir=$(dirname "$src_dir")
 . "${src_dir}/utils.sh"
 
 tp="${src_dir}/tp"
+csvchk="${src_dir}/csvchk"
 
 #
 # print usage
@@ -114,6 +115,8 @@ main() {
     else
         f="$(</dev/stdin)"
     fi
+
+    echo "${f}" | "${csvchk}" || return 1
     
     # row deselect
     if [ -z "${col_list}" ] && [ -n "${row_list}" ]; then

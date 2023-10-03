@@ -36,6 +36,7 @@ tp="${src_dir}/tp"
 sl="${src_dir}/sl"
 drop="${src_dir}/drop"
 ins="${src_dir}/ins"
+csvchk="${src_dir}/csvchk"
 
 #
 # print usage
@@ -177,6 +178,8 @@ main() {
     else
         f="$(</dev/stdin)"
     fi
+
+    echo "${f}" | "${csvchk}" || return 1
 
     if [ -z "${col_number}" -a -n "${row_number}" ]; then
         write_row "${row_number}" "${data}" "${f}"
