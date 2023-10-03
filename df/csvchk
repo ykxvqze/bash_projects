@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+<< 'EOF'
+Validate CSV data
+
+USAGE:
+    csvchk [file]
+
+INPUT:
+    CSV data in a file or piped via stdin
+
+OUTPUT:
+    - N/A (prints error message and exits if not valid csv data)
+
+EXAMPLES:
+    echo 'col1,col2,col3,col4,col5,col6,col7,col8,col9,col10' >> file.csv
+    echo '1,2,3,4,5,6,7,8,9,10'                               >> file.csv
+    echo '11,12,13,14,15,16,17,18,19,20'                      >> file.csv
+    echo '21,22,23,24,25,26,27,28,29,30'                      >> file.csv
+
+    csvchk file.csv
+    cat file.csv | csvchk
+
+J.A., ykxvqz@pm.me
+EOF
+
+#
+# usage
+#
+
+print_usage(){
+    echo -e "
+    check csv data
+
+    USAGE:
+
+        csvchk file.csv
+        cat file.csv | csvchk \n"
+}
+
+#
+# check row lengths
+#
+
+check_rows() {
+    local f="${1}"
+
+    header="$(echo "${f}" | head -1)"
+    n_col_header="$(echo "${header}" | tr ',' '\n' | wc -l)"
+
+    row_header="$(echo "${f}" | cut -d ',' -f 1)"
+    n_row_header="$(echo "${row_header}" | wc -l)"
+
+    for i in $(seq 1 "${n_col_header}"); do
+        line="$(echo "${f}" | cut -d ',' -f "${i}")"
+        n="$(echo "${line}" | tr ',' '\n' | wc -l)"
+        if [ "$n" -ne "${n_row_header}" ]; then
+            echo 'Invalid csv data.'
+            exit 1
+        fi
+    done
+}
+
+
+#
+# check column lengths
+#
+
+check_cols() {
+    local f="${1}"
+
+    header="$(echo "${f}" | head -1)"
+    n_col_header="$(echo "${header}" | tr ',' '\n' | wc -l)"
+
+    row_header="$(echo "${f}" | cut -d ',' -f 1)"
+    n_row_header="$(echo "${row_header}" | wc -l)"
+
+    while read -r line; do
+        n="$(echo "${line}" | tr ',' '\n' | wc -l)"
+        if [ "$n" -ne "${n_col_header}" ]; then
+            echo 'Invalid csv data.'
+            exit 1
+        fi
+    done <<< "${f}"
+}
+
+#
+# main()
+#
+
+main() {
+    args=()
+    while [ "$#" -gt 0 ]; do
+        case "${1}" in
+            -h ) print_usage; exit 0;;
+            -* ) echo "Unknown option ${1}. Exiting ..."; exit 1;;
+             * ) args+=("${1}"); shift;;
+        esac
+    done
+
+    argf="${args[0]}"
+    if [ -n "${argf}" ]; then
+        f="$(cat "${argf}")"
+    else
+        f="$(</dev/stdin)"
+    fi
+
+    check_rows "${f}"
+    check_cols "${f}"
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    main "$@"
+fi
