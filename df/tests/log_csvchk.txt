@@ -1,7 +1,10 @@
-2023-10-03 14:09:32
-[v] passed: file_standard via file
-[v] passed: file_standard via stdin
-[v] passed: file_space_in_element
-[v] passed: file_space_long_row
-[v] passed: file_space_short_row
-[v] passed: file_empty_value
+2023-10-04 10:39:43
+[v] passed: file_standard.csv
+[v] passed: file_standard.csv
+[v] passed: file_space_in_element.csv
+[v] passed: file_long_row.csv
+[v] passed: file_short_row.csv
+[v] passed: file_empty_value.csv
+[v] passed: file_one_row.csv
+[v] passed: file_one_column.csv
+[v] passed: file_one_element.csv

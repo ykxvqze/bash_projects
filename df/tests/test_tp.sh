@@ -43,6 +43,22 @@ ID,Name,Mark,Grade
 4,Kal,29,3
 EOF
 
+cat << EOF > "${src_dir}"/file_one_row.csv
+ID,Name,Mark,Grade
+EOF
+
+cat << EOF > "${src_dir}"/file_one_column.csv
+ID
+1
+2
+3
+4
+EOF
+
+cat << EOF > "${src_dir}"/file_one_element.csv
+ID
+EOF
+
 log() {
     echo "${1}" >> "${src_dir}"/log_tp.txt
 }
@@ -53,73 +69,126 @@ echo "$(date +'%F %T')" >> "${src_dir}"/log_tp.txt
 # test: standard
 #
 
-result="$(tp "${src_dir}"/file_standard.csv)"
+f='file_standard.csv'
+
+result="$("${tp}" "${src_dir}"/"${f}")"
 
 expected="ID,1,2,3,4
 Name,Mal,Sal,Val,Kal
 Mark,99,82,78,29
 Grade,10,9,8,3"
 
-[ "${result}" == "${expected}" ] && log '[v] passed: file_standard via file' || log '[x] failed: file_standard via file'
+[ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
 
 #
 # test: standard via stdin
 #
 
-result="$(cat "${src_dir}"/file_standard.csv | tp)"
+f='file_standard.csv'
+
+result="$(cat "${src_dir}"/"${f}" | "${tp}")"
 
 expected="ID,1,2,3,4
 Name,Mal,Sal,Val,Kal
 Mark,99,82,78,29
 Grade,10,9,8,3"
 
-[ "${result}" == "${expected}" ] && log '[v] passed: file_standard via stdin' || log '[x] failed: file_standard via stdin'
+[ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
 
 #
 # test: space in element
 #
 
-result="$(tp "${src_dir}"/file_space_in_element.csv)"
+f='file_space_in_element.csv'
+
+result="$("${tp}" "${src_dir}"/file_space_in_element.csv)"
 
 expected="ID,1,2,3,4
 Name,Mal,Sal,Val,Kal
 Final Mark,99,82,78,29
 Grade,10,9,8,3"
 
-[ "${result}" == "${expected}" ] && log '[v] passed: file_space_in_element' || log '[x] failed: file_space_in_element'
+[ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
 
 #
 # test: long row
 #
 
-result="$(tp "${src_dir}"/file_long_row.csv)"
+f='file_long_row.csv'
+
+result="$("${tp}" "${src_dir}"/"${f}")"
 
 expected="Invalid csv data."
 
-[ "${result}" == "${expected}" ] && log '[v] passed: file_space_long_row' || log '[x] failed: file_space_long_row'
+[ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
 
 #
 # test: short row
 #
 
-result="$(tp "${src_dir}"/file_short_row.csv)"
+f='file_short_row.csv'
+
+result="$("${tp}" "${src_dir}"/"${f}")"
 
 expected="Invalid csv data."
 
-[ "${result}" == "${expected}" ] && log '[v] passed: file_space_short_row' || log '[x] failed: file_space_short_row'
+[ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
 
 #
 # test: empty value
 #
 
-result="$(tp "${src_dir}"/file_empty_value.csv)"
+f='file_empty_value.csv' 
+
+result="$("${tp}" "${src_dir}"/"${f}")"
 
 expected="ID,1,2,3,4
 Name,Mal,Sal,Val,Kal
 Mark,99,82,,29
 Grade,10,9,8,3"
 
-[ "${result}" == "${expected}" ] && log '[v] passed: file_empty_value' || log '[x] failed: file_empty_value'
+[ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
+
+#
+# test: one row
+#
+
+f='file_one_row.csv'
+
+result="$("${tp}" "${src_dir}"/"${f}")"
+
+expected="ID
+Name
+Mark
+Grade"
+
+[ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
+
+
+#
+# test: one column
+#
+
+f='file_one_column.csv'
+
+result="$("${tp}" "${src_dir}"/file_one_column.csv)"
+
+expected="ID,1,2,3,4"
+
+[ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
+
+
+#
+# test: one element
+#
+
+f='file_one_element.csv'
+
+result="$("${tp}" "${src_dir}"/"${f}")"
+
+expected="ID"
+
+[ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
 
 #
 # cleanup

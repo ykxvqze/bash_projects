@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 src_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-csvchk="${src_dir}/../csvchk"
+sz="${src_dir}/../sz"
 
 cat << EOF > "${src_dir}"/file_standard.csv
 ID,Name,Mark,Grade
@@ -60,10 +60,10 @@ ID
 EOF
 
 log() {
-    echo "${1}" >> "${src_dir}"/log_csvchk.txt
+    echo "${1}" >> "${src_dir}"/log_sz.txt
 }
 
-echo "$(date +'%F %T')" >> "${src_dir}"/log_csvchk.txt
+echo "$(date +'%F %T')" >> "${src_dir}"/log_sz.txt
 
 #
 # test: standard
@@ -71,9 +71,9 @@ echo "$(date +'%F %T')" >> "${src_dir}"/log_csvchk.txt
 
 f='file_standard.csv'
 
-result="$("${csvchk}" "${src_dir}"/"${f}")"
+result="$("${sz}" "${src_dir}"/"${f}")"
 
-expected=""
+expected="5x4"
 
 [ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
 
@@ -83,9 +83,9 @@ expected=""
 
 f='file_standard.csv'
 
-result="$(cat "${src_dir}"/"${f}" | "${csvchk}")"
+result="$(cat "${src_dir}"/"${f}" | "${sz}")"
 
-expected=""
+expected="5x4"
 
 [ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
 
@@ -95,9 +95,9 @@ expected=""
 
 f='file_space_in_element.csv'
 
-result="$("${csvchk}" "${src_dir}"/"${f}")"
+result="$("${sz}" "${src_dir}"/"${f}")"
 
-expected=""
+expected="5x4"
 
 [ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
 
@@ -107,7 +107,7 @@ expected=""
 
 f='file_long_row.csv'
 
-result="$("${csvchk}" "${src_dir}"/"${f}")"
+result="$("${sz}" "${src_dir}"/"${f}")"
 
 expected="Invalid csv data."
 
@@ -119,7 +119,7 @@ expected="Invalid csv data."
 
 f='file_short_row.csv'
 
-result="$("${csvchk}" "${src_dir}"/"${f}")"
+result="$("${sz}" "${src_dir}"/"${f}")"
 
 expected="Invalid csv data."
 
@@ -131,9 +131,9 @@ expected="Invalid csv data."
 
 f='file_empty_value.csv'
 
-result="$("${csvchk}" "${src_dir}"/"${f}")"
+result="$("${sz}" "${src_dir}"/"${f}")"
 
-expected=""
+expected="5x4"
 
 [ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
 
@@ -143,9 +143,9 @@ expected=""
 
 f='file_one_row.csv'
 
-result="$("${csvchk}" "${src_dir}"/"${f}")"
+result="$("${sz}" "${src_dir}"/"${f}")"
 
-expected=""
+expected="1x4"
 
 [ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
 
@@ -156,9 +156,9 @@ expected=""
 
 f='file_one_column.csv'
 
-result="$("${csvchk}" "${src_dir}"/"${f}")"
+result="$("${sz}" "${src_dir}"/"${f}")"
 
-expected=""
+expected="5x1"
 
 [ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
 
@@ -169,9 +169,9 @@ expected=""
 
 f='file_one_element.csv'
 
-result="$("${csvchk}" "${src_dir}"/"${f}")"
+result="$("${sz}" "${src_dir}"/"${f}")"
 
-expected=""
+expected="1x1"
 
 [ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
 
