@@ -61,7 +61,7 @@ ins_row() {
     n_data=$(echo "${data_csv}" | tr ',' '\n' | wc -l)
 
     if [ "${n_data}" -ne "${n_col}" ]; then
-        echo 'invalid number of elements'
+        echo 'Invalid number of elements.'
         return 1
     fi
 
@@ -86,7 +86,7 @@ ins_col() {
     n_data=$(echo "${data_csv}" | tr ',' '\n' | wc -l)
 
     if [ "${n_data}" -ne "${n_row}" ]; then
-        echo 'Invalid number of elements'
+        echo 'Invalid number of elements.'
         return 1
     fi
 
@@ -130,11 +130,8 @@ main() {
         ins_row "$row_data" "$f"
     elif [ -z "$row_data" -a -n "$col_data" ]; then
         ins_col "$col_data" "$f"
-    elif [ -z "$col_data" -a -z "$row_data" ]; then
-        echo 'no input provided'
-        return 1
     else
-        echo 'provide either row or column data, not both'
+        echo 'Provide either row or column data, not both.'
         return 1
     fi
 }
