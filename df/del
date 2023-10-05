@@ -77,14 +77,14 @@ main() {
         return 1 
     fi
 
-    if [ "$(echo "${index}" | wc -l)" -ne 1 ]; then
-        echo 'Index can only be one element.'
-        return 1
+    if [[ ! "${index}" =~ ^[1-9][0-9]*$ ]]; then
+        echo 'Index should be an integer.'
+        return
     fi
 
     argf="${args[0]}"
     if [ -n "${argf}" ]; then
-        f="$(echo "${argf}")"  # argf is a csv list
+        f="$(echo "${argf}")"
     else
         f="$(</dev/stdin)"
     fi

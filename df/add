@@ -75,9 +75,14 @@ main() {
         esac
     done
 
-    if [ -z "$index" -o -z "$data" ]; then
+    if [ -z "${index}" -o -z "${data}" ]; then
         echo 'Incomplete input provided.'
         return 1 
+    fi
+
+    if [[ ! "${index}" =~ ^[1-9][0-9]*$ ]]; then
+        echo 'Index should be an integer.'
+        return
     fi
 
     if [ "$(echo "${data}" | wc -l)" -ne 1 ]; then
@@ -85,14 +90,9 @@ main() {
         return 1
     fi
 
-    if [ "$(echo "${index}" | wc -l)" -ne 1 ]; then
-        echo 'Index can only be one element.'
-        return 1
-    fi
-
     argf="${args[0]}"
     if [ -n "${argf}" ]; then
-        f="$(echo "${argf}")"  # argf is a csv list
+        f="$(echo "${argf}")"
     else
         f="$(</dev/stdin)"
     fi

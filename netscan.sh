@@ -35,7 +35,7 @@ the system pinged other devices during the nmap and arp-scan procedures.
 Finally, an entry for localhost IP and MAC address is appended and the
 result is displayed in tabular format. Note: all devices on the LAN,
 including routers, will show in the table, except those whose iptables
-are set not to respond to ICMPs.
+are configured not to respond to ICMPs.
 
 ADDITIONAL NOTES:
 
