@@ -100,7 +100,6 @@ valid_cidr() {
 # Example: 110 --> 00000110
 zero_pad() {
     local input="${1}"
-    local z
     n="$(expr length "${input}")"
 
     if [ "${n}" -lt 8 ]; then
