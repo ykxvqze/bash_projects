@@ -91,7 +91,6 @@ valid_cidr() {
     local status=1
     if [[ "${ip_cidr}" =~ ^[^/]*/([0-9]|[1-2][0-9]|3[0-2])$ ]]; then
         ip=$(echo "${ip_cidr}" | cut -d '/' -f 1)
-        netmask_length=$(echo "${ip_cidr}" | cut -d '/' -f 2)
         valid_ipv4 "${ip}" && status=0
     fi 
     return "${status}"
