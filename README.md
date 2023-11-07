@@ -96,6 +96,10 @@ auditscan.sh
 ```
 -->
 
+### Deployment script
+
+<a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/deploy.sh">deploy.sh</a>: deploy a project to a remote server via SSH. Deployments are specified in a configuration file, e.g. <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/deploy.conf">deploy.conf</a>.
+
 ### Android cleanup
 
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/android_cleanup.sh">android_cleanup.sh</a>: brute-force uninstall extraneous android apps (disallowing automatic reactivation) and replace preinstalled ones with open source apps. The list of packages to install/uninstall can be modified prior script execution.
