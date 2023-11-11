@@ -2,7 +2,7 @@
 : '
 A script to deploy a project to a remote server via SSH
 
-USAGE: ./.deploy.sh [ -p <dir> ] [ -c <file> ] 
+USAGE: ./.deploy.sh [ -p <dir> ] [ -c <file> ]
 
 OPTIONS:
        [ -h ]           Print usage and exit
@@ -82,10 +82,20 @@ main() {
         printf '%s\n' "Project   : ${dir_project}"
         printf '%s\n' "Host      : ${host}"
         printf '%s\n' "Local Dir : ${dir_local}"
-        printf '%s\n' "Remote dir: ${dir_remote}"
+        printf '%s\n' "Remote Dir: ${dir_remote}"
 
         if [ -z "${dir_local}" ]; then
             echo 'No directory to deploy'
+            exit
+        fi
+
+	if [ -z "${dir_remote}" ]; then
+            echo 'No remote directory specified'
+            exit
+        fi
+
+        if [ -z "${host}" ]; then
+            echo 'No host specified'
             exit
         fi
 
@@ -94,9 +104,9 @@ main() {
         tar -C "${dir_project}/${dir_local}" -czf "${file_archive}" .
 
         # copy tar file to remote system
-        echo -n "Transfering ... "
+        echo -n "Transferring ... "
         scp -i ~/.ssh/id_rsa "${file_archive}" "$host:/tmp/file.tgz"
-        echo "transfered"
+        echo "transferred"
 
         # unpack and delete tar file
         echo -n "Unpacking ... "
