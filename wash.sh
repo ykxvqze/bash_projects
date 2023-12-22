@@ -12,12 +12,12 @@ OUTPUT:
 
 DESCRIPTION:
 
-A script that can be set as cron job for browser and other cache cleanup.
+A script that can be set as a cron job for browser and other cache cleanup.
 It iterates over existent Firefox profiles and recursively clears cache
 and other files within target directories. Patterns sought include:
 `cookies`, `places`, `history`, `webappsstore`, and `bookmarks`,
-`datareporting`, `bookmarkbackups`. Also system thumbnail cache located
-in ~/.cache/thumbnails is cleared and removed.
+`datareporting`, `bookmarkbackups`. System thumbnail cache located at
+~/.cache/thumbnails is also cleared.
 
 J.A., ykxvqz@pm.me
 '
@@ -26,14 +26,15 @@ trap 'echo error on line: $LINENO' ERR
 
 print_usage() {
     echo -e "wash.sh: clear Firefox cache, cookies, and other files.
-    Usage: ./${0##*/}
-    [ -h ]              Print usage and exit\n"
+    Usage:
+          ./${0##*/}
+          ./${0##*/} [ -h ]    Print usage and exit\n"
 }
 
 while getopts 'h' option; do
     case $option in
         h) print_usage;  exit 0 ;;
-        *) echo -e 'Incorrect usage! See below:\n'; 
+        *) echo -e 'Incorrect usage. See below:\n'; 
            print_usage;  exit 1 ;;
     esac
 done
