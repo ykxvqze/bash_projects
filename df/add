@@ -3,10 +3,10 @@
 Add an element to a CSV list
 
 USAGE:
-    add [-i index] [-d data] [CSV list]
+    add <-i index> <-d data> <CSV list>
 
 INPUT:
-    - A CSV list provided directly or piped via stdin
+    - A CSV list provided as argument or piped via stdin
 
 OUTPUT:
     - A CSV list that include an additional element added at the specified index
@@ -25,7 +25,7 @@ EOF
 
 print_usage() {
     echo -e "
-    add an element to a csv list
+    Add an element to a csv list
 
     USAGE:
 

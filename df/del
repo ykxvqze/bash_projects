@@ -3,10 +3,10 @@
 Delete an element from a CSV list
 
 USAGE:
-    del [-i index] [CSV list]
+    del <-i index> <CSV list>
 
 INPUT:
-    - A CSV list provided directly or piped via stdin
+    - A CSV list provided as argument or piped via stdin
 
 OUTPUT:
     - A CSV list that excludes the element at the specified index
@@ -25,7 +25,7 @@ EOF
 
 print_usage() {
     echo -e "
-    delete an element from a csv list
+    Delete an element from a CSV list
 
     USAGE:
 

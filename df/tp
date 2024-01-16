@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 << 'EOF'
-Transpose a CSV data frame
+Transpose CSV data
 
 USAGE:
     tp file.csv
@@ -13,10 +13,10 @@ OUTPUT:
     - Transposed data
 
 EXAMPLES:
-    echo 'col1,col2,col3,col4,col5,col6,col7,col8,col9,col10' >> file.csv
-    echo '1,2,3,4,5,6,7,8,9,10'                               >> file.csv
-    echo '11,12,13,14,15,16,17,18,19,20'                      >> file.csv
-    echo '21,22,23,24,25,26,27,28,29,30'                      >> file.csv
+    echo col{1..10} | tr ' ' ',' >> file.csv
+    echo {1..10}    | tr ' ' ',' >> file.csv
+    echo {11..20}   | tr ' ' ',' >> file.csv
+    echo {21..30}   | tr ' ' ',' >> file.csv
 
     tp file.csv
     cat file.csv | tp
@@ -40,7 +40,7 @@ csvchk="${src_dir}/csvchk"
 
 print_usage(){
     echo -e "
-    transpose csv input
+    Transpose CSV data
 
     USAGE:
     

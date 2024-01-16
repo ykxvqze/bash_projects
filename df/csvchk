@@ -3,19 +3,20 @@
 Validate CSV data
 
 USAGE:
-    csvchk [file]
+    csvchk file.csv
+    cast file.csv | csvchk
 
 INPUT:
     CSV data in a file or piped via stdin
 
 OUTPUT:
-    - N/A (prints error message and exits if not valid csv data)
+    - N/A (prints error message and exits in case of invalid csv data)
 
 EXAMPLES:
-    echo 'col1,col2,col3,col4,col5,col6,col7,col8,col9,col10' >> file.csv
-    echo '1,2,3,4,5,6,7,8,9,10'                               >> file.csv
-    echo '11,12,13,14,15,16,17,18,19,20'                      >> file.csv
-    echo '21,22,23,24,25,26,27,28,29,30'                      >> file.csv
+    echo col{1..10} | tr ' ' ',' >> file.csv
+    echo {1..10}    | tr ' ' ',' >> file.csv
+    echo {11..20}   | tr ' ' ',' >> file.csv
+    echo {21..30}   | tr ' ' ',' >> file.csv
 
     csvchk file.csv
     cat file.csv | csvchk
@@ -29,7 +30,7 @@ EOF
 
 print_usage(){
     echo -e "
-    check csv data
+    Check CSV data
 
     USAGE:
 
@@ -54,7 +55,7 @@ check_rows() {
         line="$(echo "${f}" | cut -d ',' -f "${i}")"
         n="$(echo "${line}" | tr ',' '\n' | wc -l)"
         if [ "$n" -ne "${n_row_header}" ]; then
-            echo 'Invalid csv data.'
+            echo 'Invalid CSV data.'
             exit 1
         fi
     done
@@ -77,7 +78,7 @@ check_cols() {
     while read -r line; do
         n="$(echo "${line}" | tr ',' '\n' | wc -l)"
         if [ "$n" -ne "${n_col_header}" ]; then
-            echo 'Invalid csv data.'
+            echo 'Invalid CSV data.'
             exit 1
         fi
     done <<< "${f}"
@@ -88,16 +89,14 @@ check_cols() {
 #
 
 main() {
-    args=()
-    while [ "$#" -gt 0 ]; do
-        case "${1}" in
-            -h ) print_usage; exit 0;;
-            -* ) echo "Unknown option ${1}. Exiting ..."; exit 1;;
-             * ) args+=("${1}"); shift;;
+    while getopts 'h' option; do
+        case $option in
+            h) print_usage; exit 0;;
+            *) echo 'Unknown option. Exiting ...'; exit 1;;
         esac
     done
 
-    argf="${args[0]}"
+    argf="${1}"
     if [ -n "${argf}" ]; then
         f="$(cat "${argf}")"
     else

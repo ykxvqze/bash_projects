@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 << 'EOF'
-Return shape of a CSV file
+Return dimensions of a CSV file, i.e., number of rows and columns
 
 USAGE:
-    sz [CSV list]
+    sz file.csv
+    cat file.csv | sz
 
 INPUT:
-    - A CSV file provided directly or piped via stdin
+    - A CSV file provided as argument or piped via stdin
 
 OUTPUT:
-    - Size of data frame given as number_of_rows x number_of_columns
+    - Dimensions of CSV data given as number_of_rows x number_of_columns
 
 EXAMPLES:
     sz file.csv
@@ -25,6 +26,7 @@ EOF
 src_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 src_dir="$(readlink -f "$src_dir/sz")"
 src_dir=$(dirname "$src_dir")
+
 tp="${src_dir}/tp"
 csvchk="${src_dir}/csvchk"
 
@@ -34,18 +36,19 @@ csvchk="${src_dir}/csvchk"
 
 print_usage() {
     echo -e "
-    return shape of CSV data
+    Return shape of CSV data
 
     USAGE:
 
-        sz file.csv \n"
+        sz file.csv
+        cat file.csv | sz \n"
 }
 
 #
-# size: number_of_rows x number_of_columns
+# output: number_of_rows x number_of_columns
 #
 
-sz() {
+size() {
     f="${1}"
     n_col="$(echo "${f}" | head -1 | tr ',' '\n' | wc -l)"
     n_row="$(echo "${f}" | "${tp}" | head -1 | tr ',' '\n' | wc -l)"
@@ -73,7 +76,7 @@ main() {
 
     echo "${f}" | "${csvchk}" || return 1
 
-    sz "${f}"
+    size "${f}"
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then

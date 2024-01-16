@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 << 'EOF'
-Utility functions for data toolkit
+Utility functions for the data toolkit
 
 J.A., ykxvqz@pm.me
 EOF
