@@ -106,11 +106,11 @@ auditscan.sh
 
 ### Linecutter tool
 
-<a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/linecutter.sh">linecutter.sh</a>: Insert line breaks in a text file at a limit of 72 characters but without breaking any word.
+<a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/linecutter.sh">linecutter.sh</a>: Insert line breaks in a text file at a limit of 72 characters without breaking any word.
 
 ### Scrape image files from xkcd site
 
-<a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/scrapexkcd.sh">scrapexkcd.sh</a>: scrape cartoon images from an inaccessible xkcd directory. The script keeps a log of the last page scraped from any previous execution and will start fetching images from where it left off (i.e. adding only new images to a designated directory).
+<a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/scrapexkcd.sh">scrapexkcd.sh</a>: scrape images from an inaccessible xkcd directory. The script keeps a log of the last page scraped from any previous execution and will start fetching images from where it left off (i.e. adding only new images to a designated directory).
 
 ### CLI plot
 
