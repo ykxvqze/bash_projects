@@ -1,6 +1,6 @@
 ### Network scanner
 
-<a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/netscan.sh">netscan.sh</a>: A method for discovering devices connected to a network. The script is based on _nmap_ and _arp-scan_. IP and MAC addresses are extracted and summarized in tabular format.
+<a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/netscan.sh">netscan.sh</a>: a script for discovering devices connected to a network. The script is based on _nmap_ and _arp-scan_. IP and MAC addresses are extracted and summarized in tabular format.
 
 ### IPv4 networking
 
@@ -19,9 +19,9 @@
 
 ### One-time pad encryption
 
-<a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/otpcrypt.sh">otpcrypt.sh</a>: Implementation of a one-time pad encryption/decryption method: includes utility functions and a demo. <br>
+<a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/otpcrypt.sh">otpcrypt.sh</a>: implementation of a one-time pad encryption/decryption method (utility functions and demo). <br>
 
-<a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/cryptinfo.md">cryptinfo.md</a>: A summary on public-key encryption and OTP symmetric-key encryption.
+<a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/cryptinfo.md">cryptinfo.md</a>: a summary on public-key encryption and OTP symmetric-key encryption.
 
 ### Delete metadata
 
@@ -106,7 +106,7 @@ auditscan.sh
 
 ### Linecutter tool
 
-<a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/linecutter.sh">linecutter.sh</a>: Insert line breaks in a text file at a limit of 72 characters without breaking any word.
+<a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/linecutter.sh">linecutter.sh</a>: insert line breaks in a text file at a limit of 72 characters without breaking any word.
 
 ### Scrape image files from xkcd site
 
