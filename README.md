@@ -137,7 +137,7 @@ Maximum : 100
 
 ### Data toolkit
 
-A data toolkit for processing CSV files written in Bash. The tools can be passed a file or data piped via stdin.
+A data toolkit written in Bash for processing CSV files. The tools accept a CSV file or data piped via stdin.
 
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/df/tp">tp</a>: transpose a CSV data frame.<br>
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/df/sl">sl</a>: slice a CSV data frame.<br>
