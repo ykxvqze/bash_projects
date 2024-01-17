@@ -9,13 +9,12 @@ OPTIONS:
 
 EXAMPLES:
          . ./sysutil.sh
-         battery_status      # battery percentage charge remaining
          userinfo            # call a utility function
 
 J.A., ykxvqz@pm.me
 '
 
-usage(){
+usage() {
     echo -e "sysutil.sh: utility functions for daily sysops.
     Usage:
 
@@ -30,26 +29,26 @@ usage(){
     log_rotate <file>        # Split file if > 100mB into smaller ones (<= 100mB), gzip
                              # them and store as <file>.<i>.gz
     mysql_backup [ -r ]      # Backup all mysql databases into ~/backup/mysql/ and optionally
-                             # use switch -r for sending the backup to remote server over rsync;
+                             # use switch -r for sending the backup to a remote server over rsync;
                              # (backups older than 1 week are automatically deleted afterwards).
     debugmode [ -s | -u ]    # Set an informative PS4 (debug) prompt and enable xtrace via -s;
                              # reset PS4 to default prompt (+) and disable xtrace mode via -u\n"
 }
 
-log_message(){
-    echo `date +'%Y-%m-%d %T'` "$@"
+log_message() {
+    echo $(date +'%Y-%m-%d %T') "$@"
 }
 
-battery_status(){
-    percent_charge=`acpi | cut -d ' ' -f 4`
+battery_status() {
+    percent_charge=$(acpi | cut -d ' ' -f 4)
     log_message "Battery currently at ${percent_charge}"
 }
 
-userinfo(){
-    self=`whoami`
-    users_all=`who | cut -d ' ' -f 1 | sort -u`
-    n_users=`who | cut -d ' ' -f 1 | sort -u | wc -l`
-    n_sessions=`w -h | wc -l`
+userinfo() {
+    self=$(whoami)
+    users_all=$(who | cut -d ' ' -f 1 | sort -u)
+    n_users=$(who | cut -d ' ' -f 1 | sort -u | wc -l)
+    n_sessions=$(w -h | wc -l)
 
     echo "Users currently logged in (self = *):"
     echo "$users_all" | sed "s/$self/& (*)/"
@@ -58,8 +57,9 @@ userinfo(){
     echo "Number of sessions: $n_sessions"
 }
 
-ports_open(){
-    netstat -atn              |  # tcp ports open on host
+# tcp ports open on host
+ports_open() {
+    netstat -atn              |
     grep '^tcp'               |
     tr -s ' '                 |
     cut -d ' ' -f 4           |
@@ -68,58 +68,58 @@ ports_open(){
     xargs
 }
 
-sysinfo(){
-    superuser=`grep ':x:0:' /etc/passwd | cut -d ':' -f 1`
+sysinfo() {
+    superuser=$(grep ':x:0:' /etc/passwd | cut -d ':' -f 1)
 
-    ip_public=`wget -q -O - 'ipinfo.io/ip'`
+    ip_public=$(wget -q -O - 'ipinfo.io/ip')
 
-    ip_private=`ip -o -4 address    |
-                tr -s ' '           |
-                grep -v '127.0.0.1' |
-                cut -d ' ' -f 4     |
-                sed 's/\/.*//'`
+    ip_private=$(ip -o -4 address    |
+                 tr -s ' '           |
+                 grep -v '127.0.0.1' |
+                 cut -d ' ' -f 4     |
+                 sed 's/\/.*//')
 
-    ip_gateway=`ip route            |
-                grep '^default via' |
-                head -1             |
-                cut -d ' ' -f 3`
+    ip_gateway=$(ip route            |
+                 grep '^default via' |
+                 head -1             |
+                 cut -d ' ' -f 3)
 
     echo "
-    Username     : `whoami`
-    User groups  : `groups $(whoami) | cut -d ':' -f 2- | sed 's/^ //'`
+    Username     : $(whoami)
+    User groups  : $(groups $(whoami) | cut -d ':' -f 2- | sed 's/^ //')
     Superuser    : ${superuser}
-    Hostname     : `hostname`
-    OS           : `uname -mrs`
-    Kernel       : `uname -r`
-    Arch         : `uname -m`
-    No. of CPUs  : `cat /proc/cpuinfo | grep -c 'processor'`
+    Hostname     : $(hostname)
+    OS           : $(uname -mrs)
+    Kernel       : $(uname -r)
+    Arch         : $(uname -m)
+    No. of CPUs  : $(cat /proc/cpuinfo | grep -c 'processor')
     IP (WAN)     : ${ip_public}
     IP (LAN)     : ${ip_private}
     IP (gateway) : ${ip_gateway}
-    Ports open   : `ports_open`
+    Ports open   : $(ports_open)
     RAM
-     - MemTotal  : `free -m | grep '^Mem:'  | tr -s ' ' | cut -d ' ' -f 2` mB
-     - MemFree   : `free -m | grep '^Mem:'  | tr -s ' ' | cut -d ' ' -f 4` mB
-     - SwapTotal : `free -m | grep '^Swap:' | tr -s ' ' | cut -d ' ' -f 2` mB "
+     - MemTotal  : $(free -m | grep '^Mem:'  | tr -s ' ' | cut -d ' ' -f 2) mB
+     - MemFree   : $(free -m | grep '^Mem:'  | tr -s ' ' | cut -d ' ' -f 4) mB
+     - SwapTotal : $(free -m | grep '^Swap:' | tr -s ' ' | cut -d ' ' -f 2) mB "
 }
 
-geodata(){
-    ip_public=`wget -q -O - ipinfo.io/ip`
+geodata() {
+    ip_public=$(wget -q -O - ipinfo.io/ip)
 
-    ip_private=`ip -o -4 address    |
-                tr -s ' '           |
-                grep -v '127.0.0.1' |
-                cut -d ' ' -f 4     |
-                sed 's/\/.*//'`
+    ip_private=$(ip -o -4 address    |
+                 tr -s ' '           |
+                 grep -v '127.0.0.1' |
+                 cut -d ' ' -f 4     |
+                 sed 's/\/.*//')
 
-    ip_gateway=`ip route            |
-                grep '^default via' |
-                head -1             |
-                cut -d ' ' -f 3`
+    ip_gateway=$(ip route            |
+                 grep '^default via' |
+                 head -1             |
+                 cut -d ' ' -f 3)
 
-    country=`wget -q -O - ipinfo.io/country`
-    city=`wget -q -O - ipinfo.io/city`
-    loc=`wget -q -O - ipinfo.io/loc`
+    country=$(wget -q -O - ipinfo.io/country)
+    city=$(wget -q -O - ipinfo.io/city)
+    loc=$(wget -q -O - ipinfo.io/loc)
 
     echo "
     IP (WAN)       : $ip_public
@@ -131,14 +131,14 @@ geodata(){
      - Coordinates : $loc "
 }
 
-getmac(){
-    iface="$1"
+getmac() {
+    iface="${1}"
     ip link show $iface |
     grep 'ether'        |
     awk '{print $2}'
 }
 
-config_files(){
+config_files() {
     files=('/etc/group' '/etc/hosts' '/etc/login.defs' '/etc/crontab' '/etc/sysctl.conf'
            '/etc/ssh/ssh_config' '/etc/ssh/sshd_config' '/etc/resolv.conf' '/etc/syslog.conf'
            '/etc/samba/smb.conf' '/etc/ldap/ldap.conf' '/etc/fstab' '/etc/fuse.conf'
@@ -156,21 +156,21 @@ config_files(){
     fi
 }
 
-log_rotate(){
-    logfile="$1"
+log_rotate() {
+    logfile="${1}"
     filesize_max='100M'
     rm "$logfile".* 2> /dev/null
     split -b "$filesize_max" "$logfile" "${logfile}."  # ordered alphabetically: ${logfile}.a...
 
     i=1
-    for file_ in `ls "$logfile".*`; do
+    for file_ in $(ls "$logfile".*); do
         cat "$file_" | gzip > "${logfile}".$i.gz
         rm "$file_"
         let i++
     done
 }
 
-mysql_backup(){
+mysql_backup() {
     # USAGE:
     #   mysql_backup
     #   mysql_backup -r  # i.e. also rsync the backup to remote server
@@ -193,27 +193,27 @@ mysql_backup(){
     sudo mysql -V 2> /dev/null
 
     # ignore system dbs
-    dbs=`sudo mysql -Bse 'show databases'`
+    dbs=$(sudo mysql -Bse 'show databases')
     dbs_ignore='information_schema mysql performance_schema'
 
     for i in $dbs_ignore; do
-        dbs=`echo $dbs | sed "s/\b${i}\b//g"`
+        dbs=$(echo $dbs | sed "s/\b${i}\b//g")
     done
     dbs=($dbs)
 
     # do backups
     for db in "${dbs[@]}"; do
         echo "Dumping $db ..."
-        sudo mysqldump --opt --skip-add-locks $db | bzip2 > ${path_to_backup}${db}_`date +'%Y-%m-%d'`.sql.bz2
+        sudo mysqldump --opt --skip-add-locks $db | bzip2 > ${path_to_backup}${db}_$(date +'%Y-%m-%d').sql.bz2
     done
 
-    # Delete old backups
+    # delete old backups
     echo "------------------------------------"
     echo "Deleting old backups ..."
     find $path_to_backup -type f -name '*.sql.bz2' -mtime +$n_to_keep                   # show in stdout
     find $path_to_backup -type f -name '*.sql.bz2' -mtime +$n_to_keep -exec rm -f {} +  # delete backups older than 'n_to_keep' days
     echo "------------------------------------"
-    echo "Backup complete: `date`"
+    echo "Backup complete: $(date)"
 
     # rsync backups to another server
     if [ "$1" == '-r' ]; then
@@ -223,7 +223,7 @@ mysql_backup(){
     fi
 }
 
-debugmode(){
+debugmode() {
     # PS1 is default (normal) prompt
     # PS2 is displayed when a command extends beyond 1 line as more keystrokes are awaited
     # PS3 is displayed when the 'select' command is used
