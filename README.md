@@ -4,7 +4,7 @@
 
 ### IPv4 networking
 
-<a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/iptx.sh">iptx.sh</a>: utility functions for transforming IPv4 addresses from decimal-dotted notation into binary and vice versa, in addition to transforming CIDR notation into a network address, broadcast address, netmask, etc. <br>
+<a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/iptx.sh">iptx.sh</a>: utility functions for transforming IPv4 addresses from dotted-decimal notation into binary and vice versa, in addition to transforming CIDR notation into a network address, broadcast address, netmask, etc. <br>
 
 <!--a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/ipv4.md">ipv4.md</a>: short summary on IPv4 addresses.
 -->

@@ -26,8 +26,8 @@ DESCRIPTION:
 
 * valid_ipv4() - check if an IPv4 address is valid or not.
 * valid_cidr() - check if CIDR notation is valid or not.
-* ip2bin() - convert an IPv4 address from decimal-dotted notation to binary.
-* bin2ip() - convert an IPv4 address from binary to decimal-dotted notation.
+* ip2bin() - convert an IPv4 address from dotted-decimal notation to binary.
+* bin2ip() - convert an IPv4 address from binary to dotted-decimal notation.
 * cidr2netmask() - extract the netmask from an IPv4 address given in CIDR notation.
 * cidr2network() - extract the network address from a CIDR IPv4 address.
 * cidr2broadcast() - extract the broadcast address from a CIDR IPv4 address.
@@ -96,7 +96,7 @@ valid_cidr() {
     return "${status}"
 }
 
-# Example: 110 --> 00000110
+# example: 110 --> 00000110
 zero_pad() {
     local input="${1}"
     n="$(expr length "${input}")"
@@ -108,7 +108,7 @@ zero_pad() {
     echo "${z}${input}"
 }
 
-# Example: 128.42.5.4 --> 10000000 00101010 00000101 00000100
+# example: 128.42.5.4 --> 10000000 00101010 00000101 00000100
 ip2bin() {
     local ip="${1}"
     x="$(echo "${ip}" | tr '.' ';')"
@@ -116,13 +116,13 @@ ip2bin() {
     for i in $r; do zero_pad "${i}"; done | xargs
 }
 
-# Example: '10000000 00101010 00000101 00000100' --> 128.42.5.4
+# example: '10000000;00101010;00000101;00000100' --> 128.42.5.4
 bin2ip() {
     local binary_sequence="${1}"
     echo "obase=10; ibase=2; ${binary_sequence}" | bc | xargs | tr ' ' '.'
 }
 
-# Example: 128.42.5.4/21 --> 255.255.248.0
+# example: 128.42.5.4/21 --> 255.255.248.0
 cidr2netmask() {
     local ip_cidr="${1}"
     valid_cidr "${ip_cidr}" || return 1
@@ -134,7 +134,7 @@ cidr2netmask() {
     bin2ip "${sequence}"
 }
 
-# Example: 128.42.5.4/21 -->  128.42.0.0
+# example: 128.42.5.4/21 -->  128.42.0.0
 cidr2network() {
     local ip_cidr="${1}"
     valid_cidr "${ip_cidr}" || return 1
@@ -149,7 +149,7 @@ cidr2network() {
     bin2ip "${sequence}"
 }
 
-# Example: 128.42.5.4/21 --> 128.42.7.255
+# example: 128.42.5.4/21 --> 128.42.7.255
 cidr2broadcast() {
     local ip_cidr="${1}"
     valid_cidr "${ip_cidr}" || return 1
@@ -164,7 +164,7 @@ cidr2broadcast() {
     bin2ip "${sequence}"
 }
 
-# Example: 128.42.5.4/21 --> 2046 (number of usable hosts)
+# example: 128.42.5.4/21 --> 2046 (number of usable hosts)
 cidr2numhosts() {
     local ip_cidr="${1}"
     valid_cidr "${ip_cidr}" || return 1
@@ -177,7 +177,7 @@ cidr2numhosts() {
     fi
 }
 
-# Example: 128.42.5.4/21 --> 128.42.0.1 (first usable IP address)
+# example: 128.42.5.4/21 --> 128.42.0.1 (first usable IP address)
 cidr2ipfirst() {
     local ip_cidr="${1}"
     valid_cidr "${ip_cidr}" || return 1
@@ -196,7 +196,7 @@ cidr2ipfirst() {
     fi
 }
 
-# Example: 128.42.5.4/21 --> 128.42.7.254 (last usable IP address)
+# example: 128.42.5.4/21 --> 128.42.7.254 (last usable IP address)
 cidr2iplast() {
     local ip_cidr="${1}"
     valid_cidr "${ip_cidr}" || return 1
@@ -215,7 +215,7 @@ cidr2iplast() {
     fi
 }
 
-main(){
+main() {
     while getopts 'h' option; do
         case $option in
             h) print_usage;  exit 0 ;;
