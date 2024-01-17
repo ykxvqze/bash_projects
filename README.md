@@ -36,7 +36,7 @@
 
 ### Sysops utility functions
 
-<a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/sysutil.sh">sysutil.sh</a>: Utility functions for sysops.
+<a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/sysutil.sh">sysutil.sh</a>: utility functions for sysops.
 <!--```
 . ./sysutil.sh                    # Source the script; internal functions include:
     |
