@@ -42,7 +42,7 @@ ADDITIONAL NOTES:
 If you control the gateway router on your LAN, you can check its ARP or
 DHCP table by accessing the router menu via browser. The entries for the
 DHCP leases given to various devices reveal their IP and MAC addresses
-(note: some leases may be expired). The ARP table will also show all
+(note: some leases may have expired). The ARP table will also show all
 devices the router has communicated with. Listings will be similar to
 the result you get from running this script except that you do not need
 to control or check the gateway itself - you only need to be connected
@@ -93,31 +93,31 @@ get_all_ifaces(){
 }
 
 get_mac(){
-    local interface="$1"
-    ip link show "$interface" |
-    grep 'ether'              |
+    local interface="${1}"
+    ip link show "${interface}" |
+    grep 'ether'                |
     awk '{print $2}'
 }
 
 get_ips(){
-    local interface="$1"
-    ip -o -4 address show "$interface" |
-    tr -s ' '                          |
+    local interface="${1}"
+    ip -o -4 address show "${interface}" |
+    tr -s ' '                            |
     cut -d ' ' -f 4
 }
 
 run_nmap(){
-    local interface="$1"
-    local ip_cidr="$2"
-    nmap -e "$interface" -sn "$ip_cidr" |
+    local interface="${1}"
+    local ip_cidr="${2}"
+    nmap -e "${interface}" -sn "${ip_cidr}" |
     grep -Eo "([0-9]{1,3}\.){3}[0-9]{1,3}$"
 }
 
 run_arpscan(){
-    local interface="$1"
-    local ip_cidr="$2"
-    arp-scan -I "$interface" "$ip_cidr" 2> /dev/null |
-    grep -E '^[0-9]{1,3}\.'                          |
+    local interface="${1}"
+    local ip_cidr="${2}"
+    arp-scan -I "${interface}" "${ip_cidr}" 2> /dev/null |
+    grep -E '^[0-9]{1,3}\.'                              |
     cut -f 1,2
 }
 
@@ -147,7 +147,7 @@ main(){
     fi
 
     # install nmap or exit
-    if [ -z "`which nmap`" ]; then
+    if [ -z "$(which nmap)" ]; then
         echo "nmap not found. Script will exit unless you allow installing nmap."
         read -p "Install nmap? (y/n): " -n 1 x
         if [ "${x,,}" == 'y' ]; then
@@ -162,7 +162,7 @@ main(){
     fi
 
     # install arp-scan or exit
-    if [ -z "`which arp-scan`" ]; then
+    if [ -z "$(which arp-scan)" ]; then
         echo "arp-scan not found. Script will exit unless you allow installing arp-scan."
         read -p "Install arp-scan? (y/n): " -n 1 x
         if [ "${x,,}" == 'y' ]; then
@@ -177,13 +177,13 @@ main(){
     fi
 
     # temporary files
-    file_nmap=`mktemp /tmp/file_nmap.XXXXXX`
-    file_arp=`mktemp /tmp/file_arp.XXXXXX`
+    file_nmap=$(mktemp /tmp/file_nmap.XXXXXX)
+    file_arp=$(mktemp /tmp/file_arp.XXXXXX)
     PID_FILE="/tmp/${0##*/}.pid"
 
     # avoid concurrent executions
     if [ -f "${PID_FILE}" ]; then
-        echo "A concurrent execution is already running: PID `cat ${PID_FILE}`"
+        echo "A concurrent execution is already running: PID $(cat ${PID_FILE})"
         echo "If not, delete ${PID_FILE}"
         exit 1
     fi
@@ -192,27 +192,27 @@ main(){
     trap 'rm ${PID_FILE} ${file_nmap} ${file_arp}' SIGINT SIGTERM EXIT
     trap 'echo error on line: $LINENO' ERR
 
-    iface_default=`get_default_iface`
-    ifaces_list=`get_all_ifaces`
-    if [ -z "$iface" -o -z "$(grep "$iface" <<< "$ifaces_list")" ]; then
+    iface_default=$(get_default_iface)
+    ifaces_list=$(get_all_ifaces)
+    if [ -z "${iface}" -o -z "$(grep "${iface}" <<< "${ifaces_list}")" ]; then
         echo "Supplied network interface does not exist. Reverting to default ${iface_default}"
         iface="${iface_default}"
     fi
 
-    MAC=`get_mac "$iface"`
-    IPs=`get_ips "$iface"`
+    MAC=$(get_mac "${iface}")
+    IPs=$(get_ips "${iface}")
 
     n_repeat=2
-    for i in `seq 1 "$n_repeat"`; do
+    for i in $(seq 1 "${n_repeat}"); do
         echo "running nmap scan: round ${i} of ${n_repeat}..."
-        run_nmap "$iface" "$IPs" >> ${file_nmap}
+        run_nmap "${iface}" "${IPs}" >> "${file_nmap}"
 
         echo "running arp scan: round ${i} of ${n_repeat}..."
-        run_arpscan "$iface" "$IPs" >> ${file_arp}
+        run_arpscan "${iface}" "${IPs}" >> "${file_arp}"
     done
 
     # IP addresses detected by nmap but not by arp-scan
-    IP_plus=`comm -13 <(cut -f 1 "${file_arp}" | sort -u) <(cat "${file_nmap}" | sort -u)`
+    IP_plus=$(comm -13 <(cut -f 1 "${file_arp}" | sort -u) <(cat "${file_nmap}" | sort -u))
 
     # construct results table
     for i in ${IP_plus}; do
