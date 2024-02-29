@@ -147,3 +147,11 @@ A data toolkit written in Bash for processing CSV files. The tools accept a CSV 
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/df/sz">sz</a>: return the dimensions of a CSV file<br>
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/df/add">add</a>: add an element to a CSV list<br>
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/df/del">del</a>: delete an element from a CSV list<br>
+
+## SQL Queries
+
+<a class="external reference" href="https://github.com/ykxvqze/data_projects/blob/master/queries.sql">queries.sql</a>: nested SQL queries.
+
+## PL/SQL
+
+<a class="external reference" href="https://github.com/ykxvqze/data_projects/blob/master/plsql.sql">plsql.sql</a>: PL/SQL procedures, cursors, etc.
