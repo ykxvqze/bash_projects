@@ -1,40 +1,40 @@
-### Network scanner
+## Network scanner
 
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/netscan.sh">netscan.sh</a>: a script for discovering devices connected to a network. The script is based on _nmap_ and _arp-scan_. IP and MAC addresses are extracted and summarized in tabular format.
 
-### IPv4 networking
+## IPv4 networking
 
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/iptx.sh">iptx.sh</a>: utility functions for transforming IPv4 addresses from dotted-decimal notation into binary and vice versa, in addition to transforming CIDR notation into a network address, broadcast address, netmask, etc. <br>
 
 <!--a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/ipv4.md">ipv4.md</a>: short summary on IPv4 addresses.
 -->
 
-### Set up s-nail (send/receive mail via CLI)
+## Set up s-nail (send/receive mail via CLI)
 
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/snail.sh">snail.sh</a>: script for installing and configuring s-nail. The script allows interactively adding/removing IMAP/SMTP configurations for mail accounts. Mail can then be fetched and sent in ASCII format via CLI.
 
-### SSH ban
+## SSH ban
 
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/sshban.sh">sshban.sh</a>: script for processing _/var/log/auth.log_, alerting via mail, and automatically logging and banning IP addresses that have multiple failed SSH login attempts.
 
-### One-time pad encryption
+## One-time pad encryption
 
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/otpcrypt.sh">otpcrypt.sh</a>: implementation of a one-time pad encryption/decryption method (utility functions and demo). <br>
 
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/cryptinfo.md">cryptinfo.md</a>: a summary on public-key encryption and OTP symmetric-key encryption.
 
-### Delete metadata
+## Delete metadata
 
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/delmeta.sh">delmeta.sh</a>: script for deleting metadata (author name; date timestamps) from a docx document. Metadata in the output file will appear empty, including comments in the margin.
 
 <!--a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/delmeta.py">delmeta.py</a>: Python script that does the same as above, however with an additional (mask) option for modifying timestamps of comments using numpy. If the mask option is specified, then timestamps of comments in the margin will be changed through randomization where timestamps are assigned with an incremental component drawn from a uniform distribution.
 -->
 
-### Apache2 setup
+## Apache2 setup
 
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/apache2.sh">apache2.sh</a>: script for installing Apache2 httpd server and setting up a password-protected virtual host via .htaccess and .htpasswd files.
 
-### Sysops utility functions
+## Sysops utility functions
 
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/sysutil.sh">sysutil.sh</a>: utility functions for sysops.
 <!--```
@@ -56,7 +56,7 @@
 ```
 -->
 
-### Security auditing/hardening
+## Security auditing/hardening
 
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/auditscan.sh">auditscan.sh</a>: interactive script for server security auditing and hardening.
 
@@ -96,15 +96,15 @@ auditscan.sh
 ```
 -->
 
-### Deployment script
+## Deployment script
 
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/deploy.sh">deploy.sh</a>: deploy a project to a remote server via SSH. Deployments are specified in a configuration file, e.g. <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/deploy.conf">deploy.conf</a>.
 
-### Android cleanup
+## Android cleanup
 
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/android_cleanup.sh">android_cleanup.sh</a>: brute-force uninstall extraneous android apps (disallowing automatic reactivation) and replace preinstalled ones with open source apps. The list of packages to install/uninstall can be modified prior script execution.
 
-### Linecutter tool
+## Linecutter tool
 
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/linecutter.sh">linecutter.sh</a>: insert line breaks in a text file at a limit of 72 characters without breaking any word.
 
@@ -112,7 +112,7 @@ auditscan.sh
 
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/scrapexkcd.sh">scrapexkcd.sh</a>: scrape images from an inaccessible xkcd directory. The script keeps a log of the last page scraped from any previous execution and will start fetching images from where it left off (i.e. adding only new images to a designated directory).
 
-### CLI plot
+## CLI plot
 
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/cliplot.sh">cliplot.sh</a>: tool for plotting a numeric sequence within the CLI without needing an X window system to view the plot. The plot is painted top-level down in the CLI, line-by-line. This tool is useful for quick assessment of values such as CPU or memory usage over time (see 'Examples' in script).
 
@@ -135,7 +135,7 @@ Minimum : 1
 Maximum : 100
 ```
 
-### Data toolkit
+## Data toolkit
 
 A data toolkit written in Bash for processing CSV files. The tools accept a CSV file or data piped via stdin.
 
@@ -148,10 +148,10 @@ A data toolkit written in Bash for processing CSV files. The tools accept a CSV 
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/df/add">add</a>: add an element to a CSV list<br>
 <a class="external reference" href="https://github.com/ykxvqze/bash_projects/blob/master/df/del">del</a>: delete an element from a CSV list<br>
 
-### SQL Queries
+## SQL Queries
 
 <a class="external reference" href="https://github.com/ykxvqze/data_projects/blob/master/queries.sql">queries.sql</a>: nested SQL queries.
 
-### PL/SQL
+## PL/SQL
 
 <a class="external reference" href="https://github.com/ykxvqze/data_projects/blob/master/plsql.sql">plsql.sql</a>: PL/SQL procedures, cursors, etc.
