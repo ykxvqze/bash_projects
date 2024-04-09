@@ -56,10 +56,15 @@ transpose() {
     # f: string containing file content or stdin content
     local f="${1}"
 
-    n_col=$(echo "$f" | head -1 | tr ',' '\n' | wc -l)
-    for i in $(seq 1 "${n_col}"); do
-        echo "${f}" | cut -d ',' -f "$i" | tr '\n' ',' | rev | cut -c 2- | rev 
-    done
+    n_row="$(echo "${f}" | wc -l)"
+    if [ "$n_row" -eq 1 ]; then
+        echo "${f}" | tr ',' '\n'
+    else   
+        n_col=$(echo "$f" | head -1 | tr ',' '\n' | wc -l)
+        for i in $(seq 1 "${n_col}"); do
+            echo "${f}" | cut -d ',' -f "$i" | tr '\n' ',' | rev | cut -c 2- | rev 
+        done
+    fi
 }
 
 #
@@ -81,7 +86,7 @@ main() {
         f="$(</dev/stdin)"
     fi
 
-    echo "${f}" | "${csvchk}" || return 1
+    # echo "${f}" | "${csvchk}" || return 1
 
     transpose "${f}"
 }

@@ -124,7 +124,7 @@ main() {
         f="$(</dev/stdin)"
     fi
 
-    echo "${f}" | "${csvchk}" || return 1
+    # echo "${f}" | "${csvchk}" || return 1
 
     if [ -z "$col_data" -a -n "$row_data" ]; then
         ins_row "$row_data" "$f"

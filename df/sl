@@ -122,7 +122,7 @@ main() {
         f="$(</dev/stdin)"
     fi
 
-    echo "${f}" | "${csvchk}" || return 1
+    # echo "${f}" | "${csvchk}" || return 1
 
     # row select
     if [ -z "${col_list}" -a -n "${row_list}" ]; then

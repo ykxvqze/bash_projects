@@ -179,7 +179,7 @@ main() {
         f="$(</dev/stdin)"
     fi
 
-    echo "${f}" | "${csvchk}" || return 1
+    # echo "${f}" | "${csvchk}" || return 1
 
     if [ -z "${col_number}" -a -n "${row_number}" ]; then
         write_row "${row_number}" "${data}" "${f}"

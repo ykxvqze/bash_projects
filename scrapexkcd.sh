@@ -9,7 +9,7 @@ OPTIONS:
 
 OUTPUT:
         * Image files (e.g. *.jpg or *.png) saved in ./xkcd/ directory.
-        * A file named `log_counter` containing a single integer, useful
+        * A file named log_counter containing a single integer, useful
           for keeping track of the last page scraped so that re-runs of the
           script begin from where it left off (instead of from first page).
 
@@ -24,18 +24,18 @@ The Nginx web server directory holding the images has no read permission
 
 The image files however can still be downloaded if their filenames are
 known; hence, the filenames would first need to be discovered (i.e.
-scraped from `index.html` files).
+scraped from index.html files).
 
-This script fetches each `index.html` file by looping over <i> and then
+This script fetches each index.html file by looping over <i> and then
 detects a URL pattern in the file pointing to the main cartoon image
 presented. The loop increments indefinitely until it fails to find an
-`index.html` file for some <i>. The images are stored in a specific
+index.html file for some <i>. The images are stored in a specific
 directory under the current directory from which the script is executed
 (./xkcd/). If the directory does not already exist, it will be created
 and fetching will begin at i=1. The script will also save a file named
-`log_counter` in the mentioned directory to keep track of the counter <i>.
+log_counter in the mentioned directory to keep track of the counter <i>.
 This way, if the script is re-run some other time, it will start
-scraping from the last `index.html` file it already scraped in the
+scraping from the last index.html file it already scraped in the
 previous execution. Hence, it will fetch only new images adding them to
 ./xkcd/
 

@@ -116,7 +116,7 @@ main() {
         f="$(</dev/stdin)"
     fi
 
-    echo "${f}" | "${csvchk}" || return 1
+    # echo "${f}" | "${csvchk}" || return 1
     
     # row deselect
     if [ -z "${col_list}" ] && [ -n "${row_list}" ]; then
