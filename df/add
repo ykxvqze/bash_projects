@@ -16,7 +16,6 @@ EXAMPLES:
     add -i 2 -d 99 1,2,3,4,5         # result: 1,99,2,3,4,5
     echo 1,2,3,4,5 | add -i 2 -d 99  # result: 1,99,2,3,4,5
 
-J.A., ykxvqz@pm.me
 EOF
 
 #

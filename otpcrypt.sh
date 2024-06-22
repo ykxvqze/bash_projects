@@ -42,14 +42,14 @@ Ciphertext (binary)      1111101011110001111111001101010001101011001010011110001
 Decrypted msg (binary)   010010010010000001100001011011010010000001000010011011110110001000101110
 Decrypted msg (ASCII)    I am Bob.
 
-J.A., ykxvqz@pm.me
 '
 
 set -Eeo pipefail
 
 print_usage() {
-    echo -e "otpcrypt.sh: demo and utility functions for one-time pad encryption/decryption.
-    Usage:
+    echo
+    echo -e "otpcrypt.sh: demo and utility functions for one-time pad encryption/decryption.\n
+    Usage:\n
     ./${0##*/}             Execute demo
     ./${0##*/} [ -h ]      Print usage and exit\n"
 }

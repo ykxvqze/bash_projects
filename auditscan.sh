@@ -57,8 +57,6 @@ EXAMPLES:
 
 ./auditscan
 ./auditscan -a
-
-J.A., ykxvqz@pm.me
 '
 
 print_usage(){

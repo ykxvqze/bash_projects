@@ -38,8 +38,6 @@ The Save As step is mandatory; other attempts may corrupt the original
 script execution). Save As leaves the original file intact. Now you
 may run ./delmeta.sh on the new file. The resulting formatted file will
 be readable in both libreoffice and Word and will be stripped of metadata.
-
-J.A., ykxvqz@pm.me
 '
 
 trap 'echo error on line: $LINENO' ERR

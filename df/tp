@@ -21,7 +21,6 @@ EXAMPLES:
     tp file.csv
     cat file.csv | tp
 
-J.A., ykxvqz@pm.me
 EOF
 
 #

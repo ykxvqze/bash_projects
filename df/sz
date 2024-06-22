@@ -16,7 +16,6 @@ EXAMPLES:
     sz file.csv
     cat file.csv | sz
 
-J.A., ykxvqz@pm.me
 EOF
 
 #

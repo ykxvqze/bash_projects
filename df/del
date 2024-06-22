@@ -16,7 +16,6 @@ EXAMPLES:
     del -i 2 1,2,3,4,5         # result: 1,3,4,5
     echo 1,2,3,4,5 | del -i 2  # result: 1,3,4,5
 
-J.A., ykxvqz@pm.me
 EOF
 
 #

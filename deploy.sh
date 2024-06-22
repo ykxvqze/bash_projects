@@ -24,8 +24,6 @@ ADDITIONAL NOTES:
 The host, the local directory of the project, and the remote directory are
 specified in the configuration file (e.g. deploy.conf). Each line in the
 file corresponds to a single deployment.
-
-J.A., ykxvqz@pm.me
 '
 
 dir_temp="$(mktemp -d /tmp/deploy.XXXXXX)"

@@ -10,8 +10,6 @@ OPTIONS:
 EXAMPLES:
          . ./sysutil.sh
          userinfo            # call a utility function
-
-J.A., ykxvqz@pm.me
 '
 
 usage() {

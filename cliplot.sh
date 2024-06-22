@@ -33,8 +33,6 @@ EXAMPLES:
         pid=807
         top -b -n 8 | grep -E "^ *$pid" | awk '{print $9}' | ./cliplot.sh
 
-J.A., ykxvqz@pm.me
-
 EOF
 
 set -eo pipefail

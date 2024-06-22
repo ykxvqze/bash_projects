@@ -21,7 +21,6 @@ EXAMPLES:
     csvchk file.csv
     cat file.csv | csvchk
 
-J.A., ykxvqz@pm.me
 EOF
 
 #

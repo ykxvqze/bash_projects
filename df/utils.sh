@@ -2,7 +2,6 @@
 << 'EOF'
 Utility functions for the data toolkit
 
-J.A., ykxvqz@pm.me
 EOF
 
 #

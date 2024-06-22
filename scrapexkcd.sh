@@ -38,8 +38,6 @@ This way, if the script is re-run some other time, it will start
 scraping from the last index.html file it already scraped in the
 previous execution. Hence, it will fetch only new images adding them to
 ./xkcd/
-
-J.A., ykxvqz@pm.me
 '
 
 trap 'echo error on line: $LINENO' ERR

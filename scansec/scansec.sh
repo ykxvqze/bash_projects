@@ -25,8 +25,6 @@ remediation step is listed in such a case). In this design, the test
 files can be expanded independently to include more rules as these are
 not hard-coded into the main script itself, which only handles the
 display.
-
-J.A., ykxvqz@pm.me
 '
 
 print_usage(){

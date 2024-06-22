@@ -38,7 +38,7 @@ end-of-file marker is reached.
 Why 72 characters? Because it ensures readability on most screens.
 
 Note-1: linecutter.sh will not do anything special to lines that
-originally contain indentations. 
+originally contain indentations.
 
 Note-2: filenames normally must not contain any space characters.
 
@@ -65,8 +65,6 @@ nisi ut aliquid ex ea commodi consequatur. Quis aute iure reprehenderit
 in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
 Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui
 officia deserunt mollit anim id est laborum.
-
-J.A., ykxvqz@pm.me
 '
 
 print_usage() {
@@ -81,7 +79,7 @@ cut_lines() {
     local file="${1}"
     local marker='!EOF'
     echo "$marker" >> "$file"
-    
+
     i=1
     while [ "$(head -n $i "$file" | tail -1)" != "$marker" ]; do
         if [ "$(sed -n "$i p" "$file" | wc -c)" -gt 72 ]; then

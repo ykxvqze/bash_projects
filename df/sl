@@ -25,7 +25,6 @@ EXAMPLES:
     sl -c 1,3 -r 2- file.csv      # select first and third columns, second till last row
     sl -c 1 -r 2 file.csv         # select an element (first column, second row)
 
-J.A., ykxvqz@pm.me
 EOF
 
 print_usage(){

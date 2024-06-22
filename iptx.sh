@@ -55,12 +55,11 @@ First usable address     128.42.0.1
 Last usable address      128.42.7.254
 Number of usable hosts   2046
 
-J.A., ykxvqz@pm.me
 EOF
 
 print_usage    () { :; }  # print usage
 valid_ipv4     () { :; }  # Is IPv4 address valid?
-valid_cidr     () { :; }  # Is CIDR address valid? 
+valid_cidr     () { :; }  # Is CIDR address valid?
 ip2bin         () { :; }  # IPv4 (decimal-dotted) to binary
 bin2ip         () { :; }  # binary to IPv4 (decimal-dotted)
 cidr2netmask   () { :; }  # CIDR to netmask address
@@ -92,7 +91,7 @@ valid_cidr() {
     if [[ "${ip_cidr}" =~ ^[^/]*/([0-9]|[1-2][0-9]|3[0-2])$ ]]; then
         ip=$(echo "${ip_cidr}" | cut -d '/' -f 1)
         valid_ipv4 "${ip}" && status=0
-    fi 
+    fi
     return "${status}"
 }
 
@@ -134,7 +133,7 @@ cidr2netmask() {
     bin2ip "${sequence}"
 }
 
-# example: 128.42.5.4/21 -->  128.42.0.0
+# example: 128.42.5.4/21 --> 128.42.0.0
 cidr2network() {
     local ip_cidr="${1}"
     valid_cidr "${ip_cidr}" || return 1
@@ -172,7 +171,7 @@ cidr2numhosts() {
     host_length="$((32-netmask_length))"
     if [ "${host_length}" -eq 0 ]; then
         echo '0'
-    else 
+    else
         echo "$((2**host_length-2))"
     fi
 }
@@ -189,7 +188,7 @@ cidr2ipfirst() {
     host_length="$((32-netmask_length))"
     if [ "${host_length}" -le 1 ]; then
         echo 'None'
-    else 
+    else
         zeros="$(head -c "$((host_length-1))" /dev/zero | tr '\0' '0')"
         sequence="$(sed -E 's/(.{8})(.{8})(.{8})(.{8})/\1;\2;\3;\4/' <<< "${network_part}${zeros}1")"
         bin2ip "${sequence}"
@@ -208,7 +207,7 @@ cidr2iplast() {
     host_length="$((32-netmask_length))"
     if [ "${host_length}" -le 1 ]; then
         echo 'None'
-    else 
+    else
         ones="$(head -c "$((host_length-1))" /dev/zero | tr '\0' '1')"
         sequence="$(sed -E 's/(.{8})(.{8})(.{8})(.{8})/\1;\2;\3;\4/' <<< "${network_part}${ones}0")"
         bin2ip "${sequence}"
