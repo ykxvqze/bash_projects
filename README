@@ -2,7 +2,7 @@ Bash Projects
 =============
 
 * Network scanner: netscan.sh
-* IPv4 Networking: iptx.sh, ipv4.md
+* IPv4 Networking: iptx.sh
 * S-nail setup: snail.sh
 * SSH: sshban.sh
 * OTP encryption: otpcrypt.sh, cryptinfo.md
