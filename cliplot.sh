@@ -26,8 +26,24 @@ The result is a stem plot showing the sequence to be plotted.
 
 EXAMPLES:
          ./cliplot.sh 1 4 9 16 25 36 49 64 81 100
-         echo '1 30 0 4 8 10' | ./cliplot.sh
-         seq 1 5 | ./cliplot.sh
+
+            |                   |
+            |                 | |
+            |               | | |
+         y  |               | | |
+            |             | | | |
+            |           | | | | |
+            |       | | | | | | |
+            | | | | | | | | | | |
+             --------------------
+              1                 10
+
+        Count   : 10
+        Minimum : 1
+        Maximum : 100
+
+        echo '1 30 0 4 8 10' | ./cliplot.sh
+        seq 1 5 | ./cliplot.sh
 
         # run `top` in batch mode 8 times and plot CPU usage for the process with PID 807.
         pid=807
