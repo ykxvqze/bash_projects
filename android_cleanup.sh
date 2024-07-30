@@ -5,12 +5,10 @@ Uninstall and replace extraneous apps in Android with open-source ones.
 USAGE:  ./android_cleanup.sh  [ -h ]
 
                 Phone must be connected by USB with Debug mode enabled
-                (under `Developer` options). File "packages_to_remove.txt"
-                lists applications to remove (1 per line) and can be
-                modified as needed. Packages to install are listed in
-                the file "package_urls.txt" and can be modified by
-                removing/adding URLs of open-source apps to install as
-                replacement (e.g. from `f-droid.org`).
+                under `Developer` options. File "packages_to_remove.txt"
+                lists applications to remove (1-per-line). Packages to
+                install are listed in the file "package_urls.txt" as
+                URLs of open-source apps (e.g. from `f-droid.org`).
 
 OPTIONS:
         [ -h ]  Print usage
@@ -20,14 +18,12 @@ OUTPUT:
 
 DESCRIPTION:
 
-A script for uninstalling apps on an Android device via adb shell
-(disallows automatic reactivation). The script removes a list of
-preinstalled apps from Google, Facebook, etc. without breaking the
+A script for uninstalling apps on an Android device via adb shell.
+The script removes a list of preinstalled apps without breaking the
 system. Additionally, basic apps like Contacts, Dialer, Keyboard,
 File Manager, Gallery, Browser, Notes, etc. are replaced by open-source
-ones (`simplemobiletools` available on F-Droid). Change these if you
-prefer other apps or update the current versions in the file
-"package_urls.txt".
+ones (`simplemobiletools` available on F-Droid). These can be modified
+in the file "package_urls.txt".
 '
 
 trap 'echo error on line: $LINENO' ERR

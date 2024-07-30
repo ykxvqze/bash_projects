@@ -45,10 +45,6 @@ Note-2: filenames normally must not contain any space characters.
 Note-3: In Vim, the same can be done internally via:
 :setl tw=72 followed by the key sequence: gg gq G
 
-EXAMPLE:
-
-Below is a sample text from an input file and the resulting output.
-
 Input:
 
 Lorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim

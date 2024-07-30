@@ -61,7 +61,7 @@ s-nail -A outlook        # run this in shell to get into interactive mode
 > exit                   # exit session
 
 Note: mail will be in plaintext (ASCII); attachments and inline images
-included in the mail may appear as base64-encoded. You can copy the encoded
+included in the mail appear as base64-encoded. You can copy the encoded
 text to a separate file (e.g. file1) and decode it like this:
 
 base64 -d file1

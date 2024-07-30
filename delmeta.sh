@@ -19,24 +19,21 @@ OUTPUT:
 
 DESCRIPTION:
 
-Delete metadata (author name and date/timestamps) from a docx (Word)
-document (which is basically a zip file of XML documents). The script
-modifies document.xml and comments.xml (if latter is present).
-Metadata in the output file will appear empty i.e. (no author), (no date),
-including any comments in the margin which will now appear with no author
-and no timestamps.
+Delete metadata (author name and date/timestamps) from a docx document
+which is basically a zip file of XML documents. The script modifies
+document.xml and comments.xml (if latter is present). Metadata in the
+output file will appear empty i.e. (no author), (no date), including any
+comments in the margin, which will appear with no author and no timestamps.
 
 Note: the script automatically checks for the .docx extension at the end
 of a filename or path and will not format a file if it lacks the extension.
 
-Note: do the below _before_ running this script on any *.docx file.
-Open the .docx file (in libreoffice) and Save As (not Save) a .docx
-file to obtain a libreoffice-based version, then Close the files. Open
-the new file and Save it.
-The Save As step is mandatory; other attempts may corrupt the original
-.docx file (such as opening and saving the original in libreoffice prior
-script execution). Save As leaves the original file intact. Now you
-may run ./delmeta.sh on the new file. The resulting formatted file will
+Note: do the below _before_ running this script on a *.docx file.
+Open the .docx file in libreoffice and "Save As" a .docx file to obtain a
+libreoffice-based version, then "Close" the files. Open the new file and
+"Save" it. The "Save As" step is important as other attempts may corrupt
+the original .docx file. "Save As" leaves the original file intact. Now you
+can run ./delmeta.sh on the new file. The resulting formatted file will
 be readable in both libreoffice and Word and will be stripped of metadata.
 '
 
@@ -68,7 +65,7 @@ main() {
     while getopts 'h' option; do
         case "$option" in
             h) print_usage;  exit 0 ;;
-            *) echo -e 'Incorrect usage! See below:\n'; 
+            *) echo -e 'Incorrect usage! See below:\n';
                print_usage;  exit 1 ;;
         esac
     done
@@ -104,7 +101,7 @@ main() {
                        s/w:date="[^"]*"/w:date=""/g')
         echo "$data" > word/document.xml
         zip --update "$file_renamed" "word/document.xml"
-        
+
         if [ -f word/comments.xml ]; then
             data=$(cat word/comments.xml |
                    sed -e 's/w:author="[^"]*"/w:author=""/g;

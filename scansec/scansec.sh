@@ -16,9 +16,9 @@ DESCRIPTION:
 
 scansec.sh will check for several configuration settings relating to
 system files and network. The main audit rules are separated into files
-and listed under the directory ./tests. More rules can be easily added
-to the files which are made separate from the display. The script will
-audit each entry appearing in the files by testing against an expected
+and listed under the directory ./tests. More rules can be added to the
+files which are made separate from the display. The script will audit
+each entry appearing in the files by testing against an expected
 output listed there. If there is a match with the expected output, the
 test is marked as OK, otherwise it is marked with a WARNING (and a
 remediation step is listed in such a case). In this design, the test

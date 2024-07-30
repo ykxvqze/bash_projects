@@ -26,14 +26,14 @@ DESCRIPTION:
     (pointing to the .htpasswd file).
   - Reload apache2 server to update configurations.
 
-One can verify in browser that the site is accessible and that a username
-("user_guest") and password are required to access the site:
+Verify in browser that the site is accessible and that a username ("user_guest")
+and password are required to access the site:
 
     localhost/${virtual_host}
     localhost:8080
     localhost:443
 
-Note: Port 8080 (instead of 80) is used as a non-default port.
+Note: Port 8080 (instead of 80) is used as non-default port.
 The script must run with privilege (see usage).
 '
 
