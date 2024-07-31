@@ -26,7 +26,7 @@ output file will appear empty i.e. (no author), (no date), including any
 comments in the margin, which will appear with no author and no timestamps.
 
 Note: the script automatically checks for the .docx extension at the end
-of a filename or path and will not format a file if it lacks the extension.
+of a filename or path and will not process a file if it lacks the extension.
 
 Note: do the below _before_ running this script on a *.docx file.
 Open the .docx file in libreoffice and "Save As" a .docx file to obtain a

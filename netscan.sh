@@ -41,7 +41,7 @@ ADDITIONAL NOTES:
 If you control the gateway router on your LAN, you can check its ARP or
 DHCP table by accessing the router menu via browser. The entries for the
 DHCP leases given to various devices reveal their IP and MAC addresses.
-The ARP table will also show all devices the router has communicated with.
+The ARP table will show all devices the router has communicated with.
 Listings will be similar to the result you get from running this script,
 except that you do not need to control or check the gateway itself - you
 only need to be connected to the network as any other device.

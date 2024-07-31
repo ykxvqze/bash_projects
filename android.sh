@@ -2,13 +2,13 @@
 : '
 Uninstall and replace extraneous apps in Android with open-source ones.
 
-USAGE:  ./android_cleanup.sh  [ -h ]
+USAGE:  ./android.sh  [ -h ]
 
                 Phone must be connected by USB with Debug mode enabled
                 under `Developer` options. File "packages_to_remove.txt"
                 lists applications to remove (1-per-line). Packages to
                 install are listed in the file "package_urls.txt" as
-                URLs of open-source apps (e.g. from `f-droid.org`).
+                URLs of open-source apps, e.g. from `f-droid.org`.
 
 OPTIONS:
         [ -h ]  Print usage
@@ -29,7 +29,7 @@ in the file "package_urls.txt".
 trap 'echo error on line: $LINENO' ERR
 
 print_usage() {
-    echo -e "android_cleanup.sh:  uninstall and replace extraneous apps with open-source ones.
+    echo -e "android.sh:  uninstall and replace extraneous apps with open-source ones.
     Usage:
     ./${0##*/}        Install packages from package_urls.txt and uninstall those listed in packages_to_remove.txt
     ./${0##*/} -h     Print usage and exit\n"

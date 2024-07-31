@@ -18,7 +18,6 @@ Usage: bin2ip '10000000 00101010 00000101 00000100'
 
 cidr2netmask()
 --------------
-
 The netmask tells which part of the IP address is the network address (and which is host address).
 
 Netmask: 255.255.248.0
@@ -39,7 +38,6 @@ IP address: 128.42.5.4
 
 Netmask: 255.255.248.0
 
-
 IP binary: 10000000 00101010 00000101 00000100
 
 Netmask: 11111111 11111111 11111000 00000000
@@ -47,6 +45,8 @@ Netmask: 11111111 11111111 11111000 00000000
 Logical AND: 10000000 00101010 00000000 00000000
 
 i.e. network address: 128.42.0.0
+
+Usage: cidr2network 128.42.5.4/21  # returns 128.42.0.0
 
 cidr2broadcast()
 ----------------
@@ -107,4 +107,4 @@ IP header
 |--- ...  (IP header has more room for options, however such options are rarely used since many routers ignore them)
 ```
 
-* IPv6 has no checksum. The argument against checksums is that any application that really cares about data integrity has to have a checksum in the transport layer, so having another one in the IP layer is an overkill. Moreover, experience with IPv4 has shown that computing an IP checksum was a major expense, hence it was dropped in IPv6.
+* IPv6 has no checksum. The argument against checksums is that any application that really cares about data integrity has to have a checksum in the transport layer, so having another one in the IP layer is overkill. Moreover, experience with IPv4 has shown that computing an IP checksum was a major expense, hence it was dropped in IPv6.

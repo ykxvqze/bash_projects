@@ -2,7 +2,7 @@
 : '
 Create line breaks at a limit of 72 characters without breaking any word
 
-USAGE:  ./linecutter.sh [ -r | --rm ] <filename(s)>
+USAGE:  ./linecut.sh [ -r | --rm ] <filename(s)>
 
 ARGS:
         input file(s): ASCII text file(s)
@@ -27,7 +27,7 @@ stops when the marker is reached, allowing the script to end.
 line is greater than 72 characters, then the pattern consisting of at
 most 72 characters followed by whitespace will be replaced by those same
 characters, plus a newline appended. The file will have now increased by
-1 line, and the result is saved _in-place_ in the file.
+1 line, and the result is saved in-place.
 
 3. The line counter is incremented, and the previous condition is
 checked again for the next line. This is repeated line-by-line until the
@@ -37,8 +37,8 @@ end-of-file marker is reached.
 
 Why 72 characters? Because it ensures readability on most screens.
 
-Note-1: linecutter.sh will not do anything special to lines that
-originally contain indentations.
+Note-1: linecut.sh will not do anything special to lines that originally
+contain indentations.
 
 Note-2: filenames normally must not contain any space characters.
 
@@ -64,10 +64,10 @@ officia deserunt mollit anim id est laborum.
 '
 
 print_usage() {
-    echo -e "linecutter.sh: cut lines at 72 characters w/o breaking words.
+    echo -e "linecut.sh: cut lines at 72 characters w/o breaking words.
     Usage:
-        ./${0##*/} <filename(s)>                keep original file(s) intact
-        ./${0##*/} [ -r | --rm ] <filename(s)>  remove original file(s)
+        ./${0##*/} <filename(s)>                Keep original file(s) intact
+        ./${0##*/} [ -r | --rm ] <filename(s)>  Remove original file(s)
         ./${0##*/} [ -h | --help ]              Print usage and exit\n"
 }
 
