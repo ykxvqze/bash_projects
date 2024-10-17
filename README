@@ -12,7 +12,7 @@ Bash Projects
 * Security auditing: scansec/, auditscan.sh
 * Deployment: deploy.sh, deploy.conf
 * Android: android.sh, packages_to_remove.txt, package_urls.txt
-* Content folding: linecut.sh
+* Content folding: cutline.sh
 * Web scraping: scrapexkcd.sh
 * CLI plotting: cliplot.sh
 * Data toolkit: df/
