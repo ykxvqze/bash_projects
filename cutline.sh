@@ -2,7 +2,7 @@
 : '
 Create line breaks at a limit of 72 characters without breaking any word
 
-USAGE:  ./linecut.sh [ -r | --rm ] <filename(s)>
+USAGE:  ./cutline.sh [ -r | --rm ] <filename(s)>
 
 ARGS:
         input file(s): ASCII text file(s)
@@ -11,39 +11,37 @@ OUTPUT:
         file(s): If -r or --rm switch is specified anywhere, the original
                  file(s) will be overwritten. Otherwise, the result(s)
                  will be saved as new file(s) with prefix __ i.e.
-                 <__filename>, and the original files remain intact.
+                 <__filename>, so the original files remain intact.
 
 DESCRIPTION:
 
-If a line happens to extend beyond 72 characters, a newline character is
-added at a position that is possibly lower but closest to the 72nd
-character in such a way as not to break any words. Internal steps of the
-method:
+If a line extends beyond 72 characters, a newline character is added at
+the highest position that breaks the line, leaving at most 72 characters.
+Also, this is done in such a way as not to break any individual words.
 
-1. Append a string marker to the file so that line-by-line processing
-stops when the marker is reached, allowing the script to end.
+Internal steps:
 
-2. Starting with the first line of the document, if the length of the
-line is greater than 72 characters, then the pattern consisting of at
-most 72 characters followed by whitespace will be replaced by those same
-characters, plus a newline appended. The file will have now increased by
-1 line, and the result is saved in-place.
+1. Starting with the first line of the file, if the length of the line
+is greater than 72 characters, then the pattern consisting of at most
+72 characters followed by whitespace will be replaced by those same
+characters, plus a newline appended. The file will have now increased
+by 1 line, and the result is saved in-place.
 
-3. The line counter is incremented, and the previous condition is
-checked again for the next line. This is repeated line-by-line until the
-end-of-file marker is reached.
+2. Step 1 is repeated line-by-line until the end of the file is reached.
 
-4. The last line of the document (containing the marker) is removed.
+Why 72 characters? ... because it ensures readability on most screens.
 
-Why 72 characters? Because it ensures readability on most screens.
+Notes:
 
-Note-1: linecut.sh will not do anything special to lines that originally
+- The script will not do anything special to lines that originally
 contain indentations.
 
-Note-2: filenames normally must not contain any space characters.
+- Filenames normally must not contain any space characters.
 
-Note-3: In Vim, the same can be done internally via:
+- In Vim, the same can be done internally via:
 :setl tw=72 followed by the key sequence: gg gq G
+
+- The script is similar to: fold -w 72 -s <filename>
 
 Input:
 
@@ -57,14 +55,14 @@ Output:
 Lorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod
 tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim
 veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam,
-nisi ut aliquid ex ea commodi consequatur. Quis aute iure reprehenderit
-in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui
-officia deserunt mollit anim id est laborum.
+nisi ut aliquid ex ea commodi consequatur. Quis aute iure
+reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in
+culpa qui officia deserunt mollit anim id est laborum.
 '
 
 print_usage() {
-    echo -e "linecut.sh: cut lines at 72 characters w/o breaking words.
+    echo -e "cutline.sh: cut lines at 72 characters without breaking words.
     Usage:
         ./${0##*/} <filename(s)>                Keep original file(s) intact
         ./${0##*/} [ -r | --rm ] <filename(s)>  Remove original file(s)
@@ -74,16 +72,16 @@ print_usage() {
 cut_lines() {
     local file="${1}"
     local marker='!EOF'
-    echo "$marker" >> "$file"
+    local n_lines="$(cat "$file" | wc -l)"
+    local i=1
 
-    i=1
-    while [ "$(head -n $i "$file" | tail -1)" != "$marker" ]; do
+    while [ "$i" -le "$n_lines" ]; do
         if [ "$(sed -n "$i p" "$file" | wc -c)" -gt 72 ]; then
             sed -Ei "$i s/^(.{0,72})\s/\1\n/" "$file"
         fi
         let i++
+        n_lines="$(cat "$file" | wc -l)"
     done
-    sed -i '$ d' "$file"
 }
 
 main() {
@@ -103,14 +101,16 @@ main() {
         esac
     done
 
-    for f in "${args[@]}"; do
-        if [ "$keep" != 'off' ]; then
+    if [ "$keep" != 'off' ]; then
+        for f in "${args[@]}"; do
             cp "$f" $(dirname "$f")/__$(basename "$f")
             cut_lines $(dirname "$f")/__$(basename "$f")
-        else
+        done
+    else
+        for f in "${args[@]}"; do
             cut_lines "$f"
-        fi
-    done
+        done
+    fi
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
