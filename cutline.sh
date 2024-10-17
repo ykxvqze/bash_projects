@@ -71,7 +71,6 @@ print_usage() {
 
 cut_lines() {
     local file="${1}"
-    local marker='!EOF'
     local n_lines="$(cat "$file" | wc -l)"
     local i=1
 
