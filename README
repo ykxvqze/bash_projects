@@ -15,6 +15,6 @@ Bash Projects
 * Content folding: cutline.sh
 * Web scraping: scrapexkcd.sh
 * CLI plotting: cliplot.sh
-* Data toolkit: df/
+* Data toolkit: datakit/
 * CF computations: finbot.sh
 * Traffic generator: tg.sh, config.json
