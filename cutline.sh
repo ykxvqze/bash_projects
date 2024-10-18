@@ -8,10 +8,10 @@ ARGS:
         input file(s): ASCII text file(s)
 
 OUTPUT:
-        file(s): If -r or --rm switch is specified anywhere, the original
-                 file(s) will be overwritten. Otherwise, the result(s)
-                 will be saved as new file(s) with prefix __ i.e.
-                 <__filename>, so the original files remain intact.
+        file(s): If -r or --remove switch is specified anywhere, the
+                 original file(s) will be overwritten. Otherwise, the
+                 result(s) will be saved as new file(s) with prefix __
+                 i.e. <__filename>, so the original files remain intact.
 
 DESCRIPTION:
 
@@ -24,8 +24,8 @@ Internal steps:
 1. Starting with the first line of the file, if the length of the line
 is greater than 72 characters, then the pattern consisting of at most
 72 characters followed by whitespace will be replaced by those same
-characters, plus a newline appended. The file will have now increased
-by 1 line, and the result is saved in-place.
+characters (without whitespace), plus a newline appended. The file will
+have now increased by 1 line, and the result is saved in-place.
 
 2. Step 1 is repeated line-by-line until the end of the file is reached.
 
@@ -36,12 +36,10 @@ Notes:
 - The script will not do anything special to lines that originally
 contain indentations.
 
-- Filenames normally must not contain any space characters.
-
 - In Vim, the same can be done internally via:
 :setl tw=72 followed by the key sequence: gg gq G
 
-- The script is similar to: fold -w 72 -s <filename>
+- The script does similar to: fold -w 72 -s <filename>
 
 Input:
 
@@ -64,9 +62,9 @@ culpa qui officia deserunt mollit anim id est laborum.
 print_usage() {
     echo -e "cutline.sh: cut lines at 72 characters without breaking words.
     Usage:
-        ./${0##*/} <filename(s)>                Keep original file(s) intact
-        ./${0##*/} [ -r | --rm ] <filename(s)>  Remove original file(s)
-        ./${0##*/} [ -h | --help ]              Print usage and exit\n"
+        ./${0##*/} <filename(s)>                    Keep original file(s) intact
+        ./${0##*/} [ -r | --remove ] <filename(s)>  Remove original file(s)
+        ./${0##*/} [ -h | --help ]                  Print usage and exit\n"
 }
 
 cut_lines() {
@@ -93,17 +91,21 @@ main() {
     args=()
     while [ "$#" -gt 0 ]; do
         case "${1}" in
-            -h | --help ) print_usage                 ; exit 0 ;;
-            -r | --rm   ) keep='off'                  ; shift  ;;
-            -*          ) echo "Unknown option: ${1}" ; exit 1 ;;
-             *          ) args+=("${1}")              ; shift  ;;
+            -h | --help   ) print_usage                 ; exit 0 ;;
+            -r | --remove ) keep='off'                  ; shift  ;;
+            -*            ) echo "Unknown option: ${1}" ; exit 1 ;;
+             *            ) args+=("${1}")              ; shift  ;;
         esac
+    done
+
+    for f in "${args[@]}"; do
+        [ -f "$f" ] || { echo "file $f does not exist. Exiting ..."; exit 1; }
     done
 
     if [ "$keep" != 'off' ]; then
         for f in "${args[@]}"; do
-            cp "$f" $(dirname "$f")/__$(basename "$f")
-            cut_lines $(dirname "$f")/__$(basename "$f")
+            cp "$f" "$(dirname "$f")/__$(basename "$f")"
+            cut_lines "$(dirname "$f")/__$(basename "$f")"
         done
     else
         for f in "${args[@]}"; do
