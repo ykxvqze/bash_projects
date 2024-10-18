@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 src_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ins="${src_dir}/../ins"
+insert="${src_dir}/../insert"
 
 cat << EOF > "${src_dir}"/file_standard.csv
 ID,Name,Mark,Grade
@@ -60,10 +60,10 @@ ID
 EOF
 
 log() {
-    echo "${1}" >> "${src_dir}"/log_ins.txt
+    echo "${1}" >> "${src_dir}"/log_insert.txt
 }
 
-echo "$(date +'%F %T')" >> "${src_dir}"/log_ins.txt
+echo "$(date +'%F %T')" >> "${src_dir}"/log_insert.txt
 
 #
 # test: insert a column
@@ -71,7 +71,7 @@ echo "$(date +'%F %T')" >> "${src_dir}"/log_ins.txt
 
 f='file_standard.csv'
 
-result="$("${ins}" -c 'col 5',1,2,3,4 "${src_dir}"/"${f}")"
+result="$("${insert}" -c 'col 5',1,2,3,4 "${src_dir}"/"${f}")"
 
 expected="ID,Name,Mark,Grade,col 5
 1,Mal,99,10,1
@@ -87,7 +87,7 @@ expected="ID,Name,Mark,Grade,col 5
 
 f='file_standard.csv'
 
-result="$(cat "${src_dir}"/"${f}" | "${ins}" -c 'col 5',1,2,3,4)"
+result="$(cat "${src_dir}"/"${f}" | "${insert}" -c 'col 5',1,2,3,4)"
 
 expected="ID,Name,Mark,Grade,col 5
 1,Mal,99,10,1
@@ -103,7 +103,7 @@ expected="ID,Name,Mark,Grade,col 5
 
 f='file_standard.csv'
 
-result="$("${ins}" -r 5,Wal,34,4 "${src_dir}"/"${f}")"
+result="$("${insert}" -r 5,Wal,34,4 "${src_dir}"/"${f}")"
 
 expected="ID,Name,Mark,Grade
 1,Mal,99,10
@@ -120,7 +120,7 @@ expected="ID,Name,Mark,Grade
 
 f='file_standard.csv'
 
-result="$("${ins}" -r 5,Wal,34,4,5 "${src_dir}"/"${f}")"
+result="$("${insert}" -r 5,Wal,34,4,5 "${src_dir}"/"${f}")"
 
 expected="Invalid number of elements."
 
@@ -132,7 +132,7 @@ expected="Invalid number of elements."
 
 f='file_standard.csv'
 
-result="$("${ins}" -r 5,Wal,34 "${src_dir}"/"${f}")"
+result="$("${insert}" -r 5,Wal,34 "${src_dir}"/"${f}")"
 
 expected="Invalid number of elements."
 
@@ -145,7 +145,7 @@ expected="Invalid number of elements."
 
 f='file_standard.csv'
 
-result="$("${ins}" -c col,1,2,3,4,5 "${src_dir}"/"${f}")"
+result="$("${insert}" -c col,1,2,3,4,5 "${src_dir}"/"${f}")"
 
 expected="Invalid number of elements."
 
@@ -157,7 +157,7 @@ expected="Invalid number of elements."
 
 f='file_standard.csv'
 
-result="$("${ins}" -c col,1,2,3 "${src_dir}"/"${f}")"
+result="$("${insert}" -c col,1,2,3 "${src_dir}"/"${f}")"
 
 expected="Invalid number of elements."
 
@@ -169,7 +169,7 @@ expected="Invalid number of elements."
 
 f='file_standard.csv'
 
-result="$("${ins}" -c col,1,2,3,4 -r 5,Wal,34,4 "${src_dir}"/"${f}")"
+result="$("${insert}" -c col,1,2,3,4 -r 5,Wal,34,4 "${src_dir}"/"${f}")"
 
 expected="Provide either row or column data, not both."
 
@@ -181,7 +181,7 @@ expected="Provide either row or column data, not both."
 
 f='file_one_column.csv'
 
-result="$("${ins}" -c col,10,20,30,40 "${src_dir}"/file_one_column.csv)"
+result="$("${insert}" -c col,10,20,30,40 "${src_dir}"/file_one_column.csv)"
 
 expected="ID,col
 1,10
@@ -198,7 +198,7 @@ expected="ID,col
 
 f='file_one_element.csv'
 
-result="$("${ins}" -r 99 "${src_dir}"/"${f}")"
+result="$("${insert}" -r 99 "${src_dir}"/"${f}")"
 
 expected="ID
 99"
@@ -211,14 +211,14 @@ expected="ID
 
 f='file_one_element.csv'
 
-result="$("${ins}" -c 99 "${src_dir}"/"${f}")"
+result="$("${insert}" -c 99 "${src_dir}"/"${f}")"
 
 expected="ID,99"
 
 [ "${result}" == "${expected}" ] && log "[v] passed: ${f}: add column" || log "[x] failed: ${f}: add column"
 
 #
-# cleanup
+# clean up
 #
 
 rm "${src_dir}"/file_*

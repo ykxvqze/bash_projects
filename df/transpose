@@ -3,8 +3,8 @@
 Transpose CSV data
 
 USAGE:
-    tp file.csv
-    cat file.csv | tp
+    ./transpose file.csv
+    cat file.csv | ./transpose
 
 INPUT:
     - CSV file or input piped via stdin
@@ -18,8 +18,8 @@ EXAMPLES:
     echo {11..20}   | tr ' ' ',' >> file.csv
     echo {21..30}   | tr ' ' ',' >> file.csv
 
-    tp file.csv
-    cat file.csv | tp
+    ./transpose file.csv
+    cat file.csv | ./transpose
 
 EOF
 
@@ -28,10 +28,7 @@ EOF
 #
 
 src_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-src_dir="$(readlink -f "$src_dir/tp")"
-src_dir=$(dirname "$src_dir")
-
-csvchk="${src_dir}/csvchk"
+checkcsv="${src_dir}/checkcsv"
 
 #
 # print usage
@@ -43,15 +40,15 @@ print_usage(){
 
     USAGE:
     
-        tp file.csv
-        cat file.csv | tp \n"
+        ./transpose file.csv
+        cat file.csv | ./transpose \n"
 }
 
 #
 # transpose csv content
 #
 
-transpose() {
+tp() {
     # f: string containing file content or stdin content
     local f="${1}"
 
@@ -85,9 +82,9 @@ main() {
         f="$(</dev/stdin)"
     fi
 
-    # echo "${f}" | "${csvchk}" || return 1
+    echo "${f}" | "${checkcsv}" || return 1
 
-    transpose "${f}"
+    tp "${f}"
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then

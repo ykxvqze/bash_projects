@@ -3,18 +3,15 @@
 Delete an element from a CSV list
 
 USAGE:
-    del <-i index> <CSV list>
-
-INPUT:
-    - A CSV list provided as argument or piped via stdin
+    ./delete <-i index> <CSV list>
 
 OUTPUT:
     - A CSV list that excludes the element at the specified index
     - Note: index count starts at 1
 
 EXAMPLES:
-    del -i 2 1,2,3,4,5         # result: 1,3,4,5
-    echo 1,2,3,4,5 | del -i 2  # result: 1,3,4,5
+    ./delete -i 2 1,2,3,4,5           # result: 1,3,4,5
+    echo 1,2,3,4,5 | ./delete -i 2    # result: 1,3,4,5
 
 EOF
 
@@ -28,8 +25,8 @@ print_usage() {
 
     USAGE:
 
-        del -i 2 1,2,3,4,5
-        echo 1,2,3,4,5 | del -i 2 \n"
+        ./delete -i 2 1,2,3,4,5
+        echo 1,2,3,4,5 | ./delete -i 2 \n"
 }
 
 #
@@ -90,7 +87,7 @@ main() {
 
     n_list="$(echo "${f}" | tr ',' '\n' | wc -l)"
     if [ "${index}" -lt 1 -o "${index}" -gt "${n_list}" ]; then
-        echo 'Index outside range!'
+        echo 'Index out of range!'
         return 1
     fi
 

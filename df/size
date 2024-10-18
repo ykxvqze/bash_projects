@@ -3,8 +3,8 @@
 Return dimensions of a CSV file, i.e., number of rows and columns
 
 USAGE:
-    sz file.csv
-    cat file.csv | sz
+    ./size file.csv
+    cat file.csv | ./size
 
 INPUT:
     - A CSV file provided as argument or piped via stdin
@@ -13,8 +13,8 @@ OUTPUT:
     - Dimensions of CSV data given as number_of_rows x number_of_columns
 
 EXAMPLES:
-    sz file.csv
-    cat file.csv | sz
+    ./size file.csv
+    cat file.csv | ./size
 
 EOF
 
@@ -23,11 +23,7 @@ EOF
 #
 
 src_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-src_dir="$(readlink -f "$src_dir/sz")"
-src_dir=$(dirname "$src_dir")
-
-tp="${src_dir}/tp"
-csvchk="${src_dir}/csvchk"
+checkcsv="${src_dir}/checkcsv"
 
 #
 # print usage
@@ -35,19 +31,19 @@ csvchk="${src_dir}/csvchk"
 
 print_usage() {
     echo -e "
-    Return shape of CSV data
+    Return dimensions of CSV data
 
     USAGE:
 
-        sz file.csv
-        cat file.csv | sz \n"
+        ./size file.csv
+        cat file.csv | ./size \n"
 }
 
 #
 # output: number_of_rows x number_of_columns
 #
 
-size() {
+getsize() {
     f="${1}"
     n_col="$(echo "${f}" | head -1 | tr ',' '\n' | wc -l)"
     n_row="$(echo "${f}" | wc -l)"
@@ -73,9 +69,9 @@ main() {
         f="$(</dev/stdin)"
     fi
 
-    # echo "${f}" | "${csvchk}" || return 1
+    echo "${f}" | "${checkcsv}" || return 1
 
-    size "${f}"
+    getsize "${f}"
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then

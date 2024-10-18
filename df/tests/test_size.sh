@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 src_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-tp="${src_dir}/../tp"
+size="${src_dir}/../size"
 
 cat << EOF > "${src_dir}"/file_standard.csv
 ID,Name,Mark,Grade
@@ -60,10 +60,10 @@ ID
 EOF
 
 log() {
-    echo "${1}" >> "${src_dir}"/log_tp.txt
+    echo "${1}" >> "${src_dir}"/log_size.txt
 }
 
-echo "$(date +'%F %T')" >> "${src_dir}"/log_tp.txt
+echo "$(date +'%F %T')" >> "${src_dir}"/log_size.txt
 
 #
 # test: standard
@@ -71,12 +71,9 @@ echo "$(date +'%F %T')" >> "${src_dir}"/log_tp.txt
 
 f='file_standard.csv'
 
-result="$("${tp}" "${src_dir}"/"${f}")"
+result="$("${size}" "${src_dir}"/"${f}")"
 
-expected="ID,1,2,3,4
-Name,Mal,Sal,Val,Kal
-Mark,99,82,78,29
-Grade,10,9,8,3"
+expected="5x4"
 
 [ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
 
@@ -86,12 +83,9 @@ Grade,10,9,8,3"
 
 f='file_standard.csv'
 
-result="$(cat "${src_dir}"/"${f}" | "${tp}")"
+result="$(cat "${src_dir}"/"${f}" | "${size}")"
 
-expected="ID,1,2,3,4
-Name,Mal,Sal,Val,Kal
-Mark,99,82,78,29
-Grade,10,9,8,3"
+expected="5x4"
 
 [ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
 
@@ -101,12 +95,9 @@ Grade,10,9,8,3"
 
 f='file_space_in_element.csv'
 
-result="$("${tp}" "${src_dir}"/file_space_in_element.csv)"
+result="$("${size}" "${src_dir}"/"${f}")"
 
-expected="ID,1,2,3,4
-Name,Mal,Sal,Val,Kal
-Final Mark,99,82,78,29
-Grade,10,9,8,3"
+expected="5x4"
 
 [ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
 
@@ -116,9 +107,9 @@ Grade,10,9,8,3"
 
 f='file_long_row.csv'
 
-result="$("${tp}" "${src_dir}"/"${f}")"
+result="$("${size}" "${src_dir}"/"${f}")"
 
-expected="Invalid csv data."
+expected="Invalid CSV data."
 
 [ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
 
@@ -128,9 +119,9 @@ expected="Invalid csv data."
 
 f='file_short_row.csv'
 
-result="$("${tp}" "${src_dir}"/"${f}")"
+result="$("${size}" "${src_dir}"/"${f}")"
 
-expected="Invalid csv data."
+expected="Invalid CSV data."
 
 [ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
 
@@ -138,14 +129,11 @@ expected="Invalid csv data."
 # test: empty value
 #
 
-f='file_empty_value.csv' 
+f='file_empty_value.csv'
 
-result="$("${tp}" "${src_dir}"/"${f}")"
+result="$("${size}" "${src_dir}"/"${f}")"
 
-expected="ID,1,2,3,4
-Name,Mal,Sal,Val,Kal
-Mark,99,82,,29
-Grade,10,9,8,3"
+expected="5x4"
 
 [ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
 
@@ -155,12 +143,9 @@ Grade,10,9,8,3"
 
 f='file_one_row.csv'
 
-result="$("${tp}" "${src_dir}"/"${f}")"
+result="$("${size}" "${src_dir}"/"${f}")"
 
-expected="ID
-Name
-Mark
-Grade"
+expected="1x4"
 
 [ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
 
@@ -171,9 +156,9 @@ Grade"
 
 f='file_one_column.csv'
 
-result="$("${tp}" "${src_dir}"/file_one_column.csv)"
+result="$("${size}" "${src_dir}"/"${f}")"
 
-expected="ID,1,2,3,4"
+expected="5x1"
 
 [ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
 
@@ -184,11 +169,12 @@ expected="ID,1,2,3,4"
 
 f='file_one_element.csv'
 
-result="$("${tp}" "${src_dir}"/"${f}")"
+result="$("${size}" "${src_dir}"/"${f}")"
 
-expected="ID"
+expected="1x1"
 
 [ "${result}" == "${expected}" ] && log "[v] passed: ${f}" || log "[x] failed: ${f}"
+
 
 #
 # cleanup

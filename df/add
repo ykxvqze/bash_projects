@@ -3,18 +3,15 @@
 Add an element to a CSV list
 
 USAGE:
-    add <-i index> <-d data> <CSV list>
-
-INPUT:
-    - A CSV list provided as argument or piped via stdin
+    ./add <-i index> <-d data> <CSV list>
 
 OUTPUT:
     - A CSV list that include an additional element added at the specified index
     - Note: index count starts at 1
 
 EXAMPLES:
-    add -i 2 -d 99 1,2,3,4,5         # result: 1,99,2,3,4,5
-    echo 1,2,3,4,5 | add -i 2 -d 99  # result: 1,99,2,3,4,5
+    ./add -i 2 -d 99 1,2,3,4,5           # result: 1,99,2,3,4,5
+    echo 1,2,3,4,5 | ./add -i 2 -d 99    # result: 1,99,2,3,4,5
 
 EOF
 
@@ -28,15 +25,15 @@ print_usage() {
 
     USAGE:
 
-        add -i 2 -d 99 1,2,3,4,5
-        echo 1,2,3,4,5 | add -i 2 -d 99 \n"
+        ./add -i 2 -d 99 1,2,3,4,5
+        echo 1,2,3,4,5 | ./add -i 2 -d 99 \n"
 }
 
 #
 # add an element
 #
 
-add() {
+__add() {
     # index: integer
     # data : single value
     # list : csv list
@@ -102,7 +99,7 @@ main() {
         return 1
     fi
 
-    add "${index}" "${data}" "${f}"
+    __add "${index}" "${data}" "${f}"
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then

@@ -3,10 +3,11 @@
 Write to a row or a column of CSV data
 
 USAGE:
-    wr < -c column | -r row > < -d data > < file >
+    ./write <-c column | -r row> <data> <file>
 
 INPUT:
-    - CSV data in a file, or via stdin
+    - CSV data to write
+    - CSV file, or contents via stdin
 
 OUTPUT:
     - CSV data of same dimensions as the original but with a row or column overwritten
@@ -17,8 +18,8 @@ EXAMPLES:
     echo {11..20}   | tr ' ' ',' >> file.csv
     echo {21..30}   | tr ' ' ',' >> file.csv
 
-    wr -r 2 -d 31,32,33,34,35,36,37,38,39,40 file.csv  # overwrite row 2
-    wr -c 2 -d a,b,c,d file.csv                        # overwrite col 2
+    ./write -r 2 31,32,33,34,35,36,37,38,39,40 file.csv    # overwrite row 2
+    ./write -c 2 a,b,c,d file.csv                          # overwrite col 2
 
 EOF
 
@@ -27,15 +28,13 @@ EOF
 #
 
 src_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-src_dir="$(readlink -f "$src_dir/wr")"
-src_dir=$(dirname "$src_dir")
-. "${src_dir}/utils.sh"
+source "${src_dir}/utils.sh"
 
-tp="${src_dir}/tp"
-sl="${src_dir}/sl"
+transpose="${src_dir}/transpose"
+slice="${src_dir}/slice"
 drop="${src_dir}/drop"
-ins="${src_dir}/ins"
-csvchk="${src_dir}/csvchk"
+insert="${src_dir}/insert"
+checkcsv="${src_dir}/checkcsv"
 
 #
 # print usage
@@ -47,8 +46,9 @@ print_usage(){
 
     USAGE:
 
-        wr -r 2 -d 31,32,33,34,35,36,37,38,39,40 file.csv
-        wr -c 2 -d a,b,c,d file.csv \n"
+        ./write -r 2 31,32,33,34,35,36,37,38,39,40 file.csv
+        ./write -c 2 a,b,c,d file.csv
+        cat file.csv | ./write -c 2 a,b,c,d \n"
 }
 
 #
@@ -63,9 +63,9 @@ write_row() {
     local row_data="${2}"
     local f="${3}"
 
-    row_indices="$(echo "${f}" | "${tp}" | head -1)"
+    row_indices="$(echo "${f}" | "${transpose}" | head -1)"
     row_number="$(str2num "${row_number}" "${row_indices}")"
-    n_row="$(echo "${f}" | "${tp}" | head -1 | tr ',' '\n' | wc -l)"
+    n_row="$(echo "${f}" | "${transpose}" | head -1 | tr ',' '\n' | wc -l)"
 
     # check row number is valid
     if [ "${row_number}" -gt "${n_row}" -o "${row_number}" -lt 1 ]; then
@@ -83,15 +83,15 @@ write_row() {
     fi
 
     f_temp1="$(echo "${f}" | "${drop}" -r "${row_number}")"
-    f_temp2="$(echo "${f_temp1}" | "${ins}" -r "${row_data}")"
+    f_temp2="$(echo "${f_temp1}" | "${insert}" -r "${row_data}")"
 
-    n_row=$(echo "${f_temp2}" | "${tp}" | head -1 | tr ',' '\n' | wc -l)
+    n_row=$(echo "${f_temp2}" | "${transpose}" | head -1 | tr ',' '\n' | wc -l)
     if [ "${row_number}" -eq 1 ]; then
-        echo "${f_temp2}" | sl -r "${n_row}",1-"$((n_row-1))"
+        echo "${f_temp2}" | "${slice}" -r "${n_row}",1-"$((n_row-1))"
     elif [ "${row_number}" -eq "${n_row}" ]; then
-        echo "${f_temp2}" | sl -r 1-"${n_row}"
+        echo "${f_temp2}" | "${slice}" -r 1-"${n_row}"
     else
-        echo "${f_temp2}" | sl -r 1-"$((row_number-1))","${n_row}","$((row_number))"-"$((n_row-1))"
+        echo "${f_temp2}" | "${slice}" -r 1-"$((row_number-1))","${n_row}","$((row_number))"-"$((n_row-1))"
     fi
 }
 
@@ -119,7 +119,7 @@ write_col() {
 
     # check number of data items is valid
     n_data="$(echo "${col_data}" | tr ',' '\n' | wc -l)"
-    n_row="$(echo "${f}" | "${tp}" | head -1 | tr ',' '\n' | wc -l)"
+    n_row="$(echo "${f}" | "${transpose}" | head -1 | tr ',' '\n' | wc -l)"
 
     if [ "${n_data}" -ne "${n_row}" ]; then
         echo 'Invalid number of elements.'
@@ -127,15 +127,15 @@ write_col() {
     fi
 
     f_temp1="$(echo "${f}" | "${drop}" -c "${col_number}")"
-    f_temp2="$(echo "${f_temp1}" | "${ins}" -c "${col_data}")"
+    f_temp2="$(echo "${f_temp1}" | "${insert}" -c "${col_data}")"
 
     n_col=$(echo "${f_temp2}" | head -1 | tr ',' '\n' | wc -l)
     if [ "${col_number}" -eq 1 ]; then
-        echo "${f_temp2}" | sl -c "${n_col}",1-"$((n_col-1))"
+        echo "${f_temp2}" | "${slice}" -c "${n_col}",1-"$((n_col-1))"
     elif [ "${col_number}" -eq "${n_col}" ]; then
-        echo "${f_temp2}" | sl -c 1-"${n_col}"
+        echo "${f_temp2}" | "${slice}" -c 1-"${n_col}"
     else
-        echo "${f_temp2}" | sl -c 1-"$((col_number-1))","${n_col}","$((col_number))"-"$((n_col-1))"
+        echo "${f_temp2}" | "${slice}" -c 1-"$((col_number-1))","${n_col}","$((col_number))"-"$((n_col-1))"
     fi
 }
 
@@ -150,7 +150,7 @@ main() {
             -h ) print_usage; exit 0;;
             -c ) col_number="${2}"; shift; shift ;;
             -r ) row_number="${2}"; shift; shift ;;
-            -d ) data="${2}"      ; shift; shift ;;
+            # -d ) data="${2}"      ; shift; shift ;;
             -* ) echo "Unknown option ${1}. Exiting ..."; exit 1;;
              * ) args+=("${1}"); shift;;
         esac
@@ -166,19 +166,21 @@ main() {
         return 1
     fi
 
+    data="${args[0]}"
+
     if [ -z "${data}" ]; then
         echo 'No data provided!'
         return 1
     fi
 
-    argf="${args[0]}"
-    if [ -n "{argf}" ]; then
+    argf="${args[1]}"
+    if [ -n "${argf}" ]; then
         f="$(cat "${argf}")"
     else
         f="$(</dev/stdin)"
     fi
 
-    # echo "${f}" | "${csvchk}" || return 1
+    echo "${f}" | "${checkcsv}" || return 1
 
     if [ -z "${col_number}" -a -n "${row_number}" ]; then
         write_row "${row_number}" "${data}" "${f}"

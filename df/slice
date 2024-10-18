@@ -3,7 +3,7 @@
 Slice a CSV data frame
 
 USAGE:
-    sl [ -c column_list | -r row_list ] file
+    ./slice <-c column_list | -r row_list> <file>
 
 INPUT:
     CSV data in a file, or via stdin
@@ -17,28 +17,28 @@ EXAMPLES:
     echo {11..20}   | tr ' ' ',' >> file.csv
     echo {21..30}   | tr ' ' ',' >> file.csv
 
-    sl -c 2 file.csv              # select second column
-    sl -c 3,1 file.csv            # select third column then first column
-    sl -c 1-3 file.csv            # select first till third column
-    sl -c 3-1 file.csv            # select third column back till first
-    sl -c 4,col2-col3 file.csv    # select fourth column, then columns col2 till col3.
-    sl -c 1,3 -r 2- file.csv      # select first and third columns, second till last row
-    sl -c 1 -r 2 file.csv         # select an element (first column, second row)
+    ./slice -c 2 file.csv              # select second column
+    ./slice -c 3,1 file.csv            # select third column then first column
+    ./slice -c 1-3 file.csv            # select first till third column
+    ./slice -c 3-1 file.csv            # select third column back till first
+    ./slice -c 4,col2-col3 file.csv    # select fourth column, then columns col2 till col3.
+    ./slice -c 1,3 -r 2- file.csv      # select first and third columns, second till last row
+    ./slice -c 1 -r 2 file.csv         # select an element (first column, second row)
 
 EOF
 
 print_usage(){
     echo -e "
-    Subset slice a CSV file
+    Slice a CSV file
 
     USAGE:
 
-        sl -c 2 file.csv              # select second column
-        sl -c 1,3 file.csv            # select first and third columns
-        sl -c 1-3 file.csv            # select first till third column
-        sl -c 1,3 -r 2- file.csv      # select first and third columns, second till last row
-        sl -c 1 -r 2 file.csv         # select an element (first column, second row)
-        sl -c 4,col2-col3 file.csv    # select fourth column, then columns col2 till col3 \n"
+        ./slice -c 2 file.csv              # select second column
+        ./slice -c 1,3 file.csv            # select first and third columns
+        ./slice -c 1-3 file.csv            # select first till third column
+        ./slice -c 1,3 -r 2- file.csv      # select first and third columns, second till last row
+        ./slice -c 1 -r 2 file.csv         # select an element (first column, second row)
+        ./slice -c 4,col2-col3 file.csv    # select fourth column, then columns col2 till col3 \n"
 }
 
 #
@@ -46,12 +46,10 @@ print_usage(){
 #
 
 src_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-src_dir="$(readlink -f "$src_dir/sl")"
-src_dir=$(dirname "$src_dir")
-. "${src_dir}/utils.sh"
+source "${src_dir}/utils.sh"
 
-tp="${src_dir}/tp"
-csvchk="${src_dir}/csvchk"
+transpose="${src_dir}/transpose"
+checkcsv="${src_dir}/checkcsv"
 
 #
 # select columns
@@ -80,7 +78,7 @@ select_col() {
     # cut one column at a time to preserve desired order
     for i in $(echo "${col_list}" | tr ',' ' '); do
         echo "${f}" | cut -d ',' -f "$i" | tr '\n' ',' | rev | cut -c 2- | rev
-    done | "${tp}"
+    done | "${transpose}"
 }
 
 #
@@ -93,8 +91,8 @@ select_row() {
     local row_list="${1}"
     local f="${2}"
 
-    f_temp="$(echo "${f}" | "${tp}")"
-    select_col "${row_list}" "${f_temp}" | "${tp}"
+    f_temp="$(echo "${f}" | "${transpose}")"
+    select_col "${row_list}" "${f_temp}" | "${transpose}"
 }
 
 main() {
@@ -121,7 +119,7 @@ main() {
         f="$(</dev/stdin)"
     fi
 
-    # echo "${f}" | "${csvchk}" || return 1
+    echo "${f}" | "${checkcsv}" || return 1
 
     # row select
     if [ -z "${col_list}" -a -n "${row_list}" ]; then

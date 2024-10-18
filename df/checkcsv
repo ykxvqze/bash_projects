@@ -3,14 +3,14 @@
 Validate CSV data
 
 USAGE:
-    csvchk file.csv
-    cast file.csv | csvchk
+    ./checkcsv file.csv
+    cat file.csv | ./checkcsv
 
 INPUT:
     CSV data in a file or piped via stdin
 
 OUTPUT:
-    - N/A (prints error message and exits in case of invalid csv data)
+    - N/A (prints error message and exits in case of invalid CSV data)
 
 EXAMPLES:
     echo col{1..10} | tr ' ' ',' >> file.csv
@@ -18,8 +18,8 @@ EXAMPLES:
     echo {11..20}   | tr ' ' ',' >> file.csv
     echo {21..30}   | tr ' ' ',' >> file.csv
 
-    csvchk file.csv
-    cat file.csv | csvchk
+    ./checkcsv file.csv
+    cat file.csv | ./checkcsv
 
 EOF
 
@@ -33,36 +33,12 @@ print_usage(){
 
     USAGE:
 
-        csvchk file.csv
-        cat file.csv | csvchk \n"
+        ./checkcsv file.csv
+        cat file.csv | ./checkcsv \n"
 }
 
 #
-# check row lengths
-#
-
-check_rows() {
-    local f="${1}"
-
-    header="$(echo "${f}" | head -1)"
-    n_col_header="$(echo "${header}" | tr ',' '\n' | wc -l)"
-
-    row_header="$(echo "${f}" | cut -d ',' -f 1)"
-    n_row_header="$(echo "${row_header}" | wc -l)"
-
-    for i in $(seq 1 "${n_col_header}"); do
-        line="$(echo "${f}" | cut -d ',' -f "${i}")"
-        n="$(echo "${line}" | tr ',' '\n' | wc -l)"
-        if [ "$n" -ne "${n_row_header}" ]; then
-            echo 'Invalid CSV data.'
-            exit 1
-        fi
-    done
-}
-
-
-#
-# check column lengths
+# check column count per line
 #
 
 check_cols() {
@@ -102,7 +78,6 @@ main() {
         f="$(</dev/stdin)"
     fi
 
-    check_rows "${f}"
     check_cols "${f}"
 }
 
