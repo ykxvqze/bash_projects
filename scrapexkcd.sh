@@ -15,28 +15,28 @@ OUTPUT:
 
 DESCRIPTION:
 
-Comic cartoons on xkcd.com can be viewed with URL: https://xkcd.com/<i>/index.html
-where <i> is an integer from 1 to some number (which increases as more
-cartoons are added with time).
+Images on xkcd.com can be viewed with URL: https://xkcd.com/<i>/index.html
+where <i> is an integer from 1 to some number which increases as more
+images are added with time.
 
 The Nginx web server directory holding the images has no read permission
 (403 forbidden): https://imgs.xkcd.com/comics/
 
-The image files however can still be downloaded if their filenames are
-known; hence, the filenames would first need to be discovered (i.e.
-scraped from index.html files).
+The image files, however, can still be downloaded if their filenames are
+known. Hence, the filenames would first need to be discovered, i.e.,
+scraped from index.html file on each page.
 
 This script fetches each index.html file by looping over <i> and then
-detects a URL pattern in the file pointing to the main cartoon image
-presented. The loop increments indefinitely until it fails to find an
-index.html file for some <i>. The images are stored in a specific
-directory under the current directory from which the script is executed
+detects a URL pattern in the file pointing to the main image presented.
+The loop increments indefinitely until it fails to find an
+index.html file for some <i>. The images are stored in a directory
+named xkcd under the current directory from where the script is executed
 (./xkcd/). If the directory does not already exist, it will be created
 and fetching will begin at i=1. The script will also save a file named
 log_counter in the mentioned directory to keep track of the counter <i>.
 This way, if the script is re-run some other time, it will start
-scraping from the last index.html file it already scraped in the
-previous execution. Hence, it will fetch only new images adding them to
+scraping based on the last index.html file it already scraped in the
+previous execution. Hence, it will fetch only new images, adding them to
 ./xkcd/
 '
 

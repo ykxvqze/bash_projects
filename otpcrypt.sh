@@ -12,18 +12,21 @@ OUTPUT:
 
 DESCRIPTION:
 
-- ascii_to_binary() accepts plaintext input (e.g. "I am Bob.") and
-converts it into a binary string containing no spaces.
-- binary_to_ascii() accepts a binary string input (without spaces) and
-converts it to plaintext by parsing and transforming every 8 bits into a
-character.
-- generate_otp() accepts a binary string input as returned by
+- ascii_to_binary() takes a plaintext input (e.g. "I am Bob.") and
+converts it into a continuous binary string not containing any space.
+
+- binary_to_ascii() takes a binary string input and converts it to
+plaintext by parsing and transforming every 8 bits into a character.
+
+- generate_otp() takes a binary string input as returned by
 ascii_to_binary() and generates a _random_ binary string of the same
 length, L. It works by randomly shuffling the sequence of integers from
 1 to L and then applying modulo 2 on each, effectively transforming even
 numbers to 0 and odd numbers to 1.
-- xor() requires two binary strings as input and computes their XOR
-(bitwise), i.e. if bits are matching, the result is 0, otherwise 1.
+
+- xor() requires two binary strings as input and applies a XOR operation
+(bitwise), i.e., if bits are matching, the result is 0, otherwise 1.
+
 - main() runs a demo of the encryption/decryption procedure.
 
 EXAMPLE:
@@ -48,9 +51,9 @@ set -Eeo pipefail
 
 print_usage() {
     echo
-    echo -e "otpcrypt.sh: demo and utility functions for one-time pad encryption/decryption.\n
+    echo -e "otpcrypt.sh: utility functions for one-time pad encryption/decryption.\n
     Usage:\n
-    ./${0##*/}             Execute demo
+    ./${0##*/}             Run demo
     ./${0##*/} [ -h ]      Print usage and exit\n"
 }
 

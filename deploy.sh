@@ -19,7 +19,7 @@ the local directory into a gzipped tarball, copies it to the /tmp directory
 of the remote host via scp, and unpacks the tar file to the remote directory
 specified in the configuration file.
 
-ADDITIONAL NOTES:
+NOTE:
 
 The host, the local directory of the project, and the remote directory are
 specified in the configuration file (e.g. deploy.conf). Each line in the
@@ -45,6 +45,7 @@ cleanup() {
         rm -rf "${dir_temp}"
     fi
 }
+
 trap "cleanup" EXIT SIGINT SIGTERM
 
 main() {

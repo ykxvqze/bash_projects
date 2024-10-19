@@ -8,23 +8,22 @@ OPTIONS:
         [ -h ]    Print usage and exit
 
 OUTPUT:
-         "OK" or "WARNING"/remediation results in stdout, in addition to
+         "OK" or "FAILED"/remediation results in stdout, in addition to
          an audit report saved in the current work directory. The report
          includes OS/kernel information and the audit results.
 
 DESCRIPTION:
 
 scansec.sh will check for several configuration settings relating to
-system files and network. The main audit rules are separated into files
-and listed under the directory ./tests. More rules can be added to the
-files which are made separate from the display. The script will audit
-each entry appearing in the files by testing against an expected
-output listed there. If there is a match with the expected output, the
-test is marked as OK, otherwise it is marked with a WARNING (and a
-remediation step is listed in such a case). In this design, the test
-files can be expanded independently to include more rules as these are
-not hard-coded into the main script itself, which only handles the
-display.
+system files and the network. The main audit rules are separated into
+files and listed under the ./tests directory. More rules can be added to
+the files. The script will audit each entry appearing in the files by
+testing against an expected output listed there. If there is a match
+with the expected output, the test is marked as OK, otherwise it is
+marked as FAILED (and a remediation step is listed in such a case).
+In this design, the test files can be expanded independently to include
+more rules as these are not hard-coded into the main script itself,
+which only handles the display.
 '
 
 print_usage(){
@@ -40,7 +39,7 @@ if [ "$1" == '-h' ]; then
 fi
 
 if [ $EUID -ne 0 ]; then
-    echo -e '\nPlease run this script as a privileged user, e.g.'
+    echo -e '\nPlease run this script as a privileged user:'
     echo
     echo -e 'sudo ./scansec.sh\n'
     exit 1
@@ -68,7 +67,8 @@ printf "%s\n" "Hardware Platform        : `uname -m`"                         | 
 printf "%s\n" "Hostname                 : `hostname`"                         | tee -a "${audit_report}"
 
 # test files
-includedir='./tests'
+src_directory="$(dirname ${BASH_SOURCE[0]})"
+includedir="${src_directory}/tests"
 testfiles=$(ls "$includedir")
 
 n_pass=0
@@ -96,18 +96,18 @@ for testfile in $testfiles; do
             ((n_fail+=1))
 
             # stdout
-            echo -e "[ ${RED}WARNING!${DEFAULT} ] $title"
-            printf "%11s ${YELLOW}%s${DEFAULT}\n" "" ">> Remediation: ${remediation}"
+            echo -e "[  ${RED}FAILED${DEFAULT}  ] $title"
+            printf "%12s ${YELLOW}%s${DEFAULT}\n" "" "Remediation: ${remediation}"
 
             # report
-            printf "\n%s %s\n" "[ WARNING! ]" "$title" >> "${audit_report}"
-            printf "%s %s\n"   "            " ">> Remediation : $remediation" >> "${audit_report}"
+            printf "\n%s %s\n" "[  FAILED  ]" "$title" >> "${audit_report}"
+            printf "%s %s\n"   "            " "Remediation : $remediation" >> "${audit_report}"
         else
             ((n_pass+=1))
 
             # stdout
             echo -e "[ ${GREEN}   OK   ${DEFAULT} ] $title"
-        
+
             # report
             printf "\n%s %s\n" "[    OK    ]" "$title" >> "${audit_report}"
         fi
