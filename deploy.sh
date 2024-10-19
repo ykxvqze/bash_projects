@@ -88,7 +88,7 @@ main() {
             exit
         fi
 
-	if [ -z "${dir_remote}" ]; then
+        if [ -z "${dir_remote}" ]; then
             echo 'No remote directory specified'
             exit
         fi
