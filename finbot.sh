@@ -328,3 +328,30 @@ __fbt__compute '5000000[0];2000000[10];100000[11-10000]@[1-10000],i=10%'
 __fbt__compute '1000[0];1000[3];1000[6];1000[9];1000[12];1000[15]@[1-18],i=10%'
 __fbt__compute '-15000[0];-3500[1-6];1000[6]@[1-6],i=15%'
 EOF
+
+print_usage() {
+    echo -e "
+            USAGE:
+            
+            ./finbot '10[0];5[1-5]@5,i=4%'
+            ./finbot '-15000[0];-3500[1-6];1000[6]@[1-6],i=15%' \n"
+}
+
+main() {
+    
+    if [ "$#" -ne 1 ]; then
+        echo 'The number of arguments should be 1.'
+        print_usage
+        return 1
+    elif [ "$1" == "-h" ]; then
+        print_usage
+        return 0
+    else
+        __fbt__compute "${1}"
+    fi
+}
+
+if [ "${BASH_SOURCE[0]}" == "${0}" ]; then
+    main "$@"
+fi
+
