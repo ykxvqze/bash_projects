@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+<< 'EOF'
+Validate CSV data
+
+USAGE:
+    ./checkcsv file.csv
+    cat file.csv | ./checkcsv
+
+INPUT:
+    CSV data in a file or piped via stdin
+
+OUTPUT:
+    - N/A (prints error message and exits in case of invalid CSV data)
+
+EXAMPLES:
+    echo col{1..10} | tr ' ' ',' >> file.csv
+    echo {1..10}    | tr ' ' ',' >> file.csv
+    echo {11..20}   | tr ' ' ',' >> file.csv
+    echo {21..30}   | tr ' ' ',' >> file.csv
+
+    ./checkcsv file.csv
+    cat file.csv | ./checkcsv
+
+EOF
+
+#
+# usage
+#
+
+print_usage(){
+    echo -e "
+    Check CSV data
+
+    USAGE:
+
+        ./checkcsv file.csv
+        cat file.csv | ./checkcsv \n"
+}
+
+#
+# check column count per line
+#
+
+check_cols() {
+    local f="${1}"
+
+    header="$(echo "${f}" | head -1)"
+    n_col_header="$(echo "${header}" | tr ',' '\n' | wc -l)"
+
+    row_header="$(echo "${f}" | cut -d ',' -f 1)"
+    n_row_header="$(echo "${row_header}" | wc -l)"
+
+    while read -r line; do
+        n="$(echo "${line}" | tr ',' '\n' | wc -l)"
+        if [ "$n" -ne "${n_col_header}" ]; then
+            echo 'Invalid CSV data.'
+            exit 1
+        fi
+    done <<< "${f}"
+}
+
+#
+# main()
+#
+
+main() {
+    while getopts 'h' option; do
+        case $option in
+            h) print_usage; exit 0;;
+            *) echo 'Unknown option. Exiting ...'; exit 1;;
+        esac
+    done
+
+    argf="${1}"
+    if [ -n "${argf}" ]; then
+        f="$(cat "${argf}")"
+    else
+        f="$(</dev/stdin)"
+    fi
+
+    check_cols "${f}"
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    main "$@"
+fi

@@ -1,0 +1,21 @@
+Bash Projects
+=============
+
+* Security auditing: scansec/
+* System performance check: troubleshoot.sh
+* Network scanner: netscan.sh
+* IPv4 networking: iptx.sh
+* SSH: sshban.sh
+* S-nail setup: snail.sh
+* OTP encryption: otpcrypt.sh, cryptinfo.md
+* Metadata: delmeta.sh
+* Apache2 setup: apache2.sh
+* Sysops utilities: sysutil.sh
+* Deployment: deploy.sh, deploy.conf
+* Android: android.sh, packages_to_remove.txt, package_urls.txt
+* Text folding: cutline.sh
+* Web scraping: scrapexkcd.sh
+* CLI plotting: cliplot.sh
+* Data toolkit: datakit/
+* CF computations: finbot.sh
+* Traffic generator: tg.sh, config.json

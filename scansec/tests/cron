@@ -1,0 +1,10 @@
+Cron
+
+###
+
+title='Ensure cron daemon is enabled and running'
+test=$(systemctl is-enabled cron &> /dev/null && systemctl status cron | grep -o 'Active: active (running)')
+expected='Active: active (running)'
+remediation='systemctl --now enable cron'
+
+###

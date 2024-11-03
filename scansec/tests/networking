@@ -1,0 +1,199 @@
+Network configurations
+
+###
+
+title='Ensure that IPv4 forwarding is disabled on boot'
+test=$(grep -E '^net\.ipv4\.ip_forward=0' /etc/sysctl.conf &> /dev/null; echo $?)
+expected='0'
+remediation="sed -iE 's/^#net\.ipv4\.ip_forward=1/net.ipv4.ip_forward=0/' /etc/sysctl.conf"
+
+###
+
+title='Ensure that IPv4 forwarding is currently disabled'
+test=$(sysctl net.ipv4.ip_forward | grep '^net\.ipv4\.ip_forward\s=\s0$' &> /dev/null; echo $?)
+expected='0'
+remediation='sysctl -w net.ipv4.ip_forward=0'
+
+###
+
+title='Ensure that packet redirect sending is disabled on boot (for all interfaces)'
+test=$(grep -E '^net\.ipv4\.conf\.all\.send_redirects\s=\s0$' /etc/sysctl.conf &> /dev/null; echo $?)
+expected='0'
+remediation="sed -iE '/net.ipv4.conf.all.send_redirects.*/s/^#//g' /etc/sysctl.conf"
+
+###
+
+title='Ensure that packet redirect sending is disabled on boot (default for new interfaces)'
+test=$(grep -E '^net\.ipv4\.conf\.default\.send_redirects=0$' /etc/sysctl.conf &> /dev/null; echo $?)
+expected='0'
+remediation="echo 'net.ipv4.conf.default.send_redirects=0' >> /etc/sysctl.conf"
+
+###
+
+title='Ensure that packet redirect sending is currently disabled (for all interfaces)'
+test=$(sysctl net.ipv4.conf.all.send_redirects | grep -E '^net\.ipv4\.conf\.all\.send_redirects\s=\s0$' &> /dev/null; echo $?)
+expected='0'
+remediation='sysctl -w net.ipv4.conf.all.send_redirects=0'
+
+###
+
+title='Ensure that packet redirect sending is currently disabled (default for new interfaces)'
+test=$(sysctl net.ipv4.conf.default.send_redirects | grep -E '^net\.ipv4\.conf\.default\.send_redirects\s=\s0$' &> /dev/null; echo $?)
+expected='0'
+remediation='sysctl -w net.ipv4.conf.default.send_redirects=0'
+
+###
+
+title='Ensure that source routed packets are disabled on boot (for all interfaces)'
+test=$(grep -E '^net\.ipv4\.conf\.all\.accept_source_route\s=\s0$' /etc/sysctl.conf &> /dev/null; echo $?)
+expected='0'
+remediation="sed -iE '/net.ipv4.conf.all.accept_source_route.*/s/^#//g' /etc/sysctl.conf"
+
+###
+
+title='Ensure that source routed packets are disabled on boot (default for new interfaces)'
+test=$(grep -E '^net\.ipv4\.conf\.default\.accept_source_route=0$' /etc/sysctl.conf &> /dev/null; echo $?)
+expected='0'
+remediation="echo 'net.ipv4.conf.default.accept_source_route=0' >> /etc/sysctl.conf"
+
+###
+
+title='Ensure that source routed packets are currently disabled (for all interfaces)'
+test=$(sysctl net.ipv4.conf.all.accept_source_route | grep -E '^net\.ipv4\.conf\.all\.accept_source_route\s=\s0$' &> /dev/null; echo $?)
+expected='0'
+remediation='sysctl -w net.ipv4.conf.all.accept_source_route=0'
+
+###
+
+title='Ensure that source routed packets are currently disabled (default for new interfaces)'
+test=$(sysctl net.ipv4.conf.default.accept_source_route | grep -E '^net\.ipv4\.conf\.default\.accept_source_route\s=\s0$' &> /dev/null; echo $?)
+expected='0'
+remediation='sysctl -w net.ipv4.conf.default.accept_source_route=0'
+
+###
+
+title='Ensure that ICMP redirects are disabled on boot (for all interfaces)'
+test=$(grep -E '^net\.ipv4\.conf\.all\.accept_redirects\s=\s0$' /etc/sysctl.conf &> /dev/null; echo $?)
+expected='0'
+remediation="sed -iE '/net.ipv4.conf.all.accept_redirects.*/s/^#//g' /etc/sysctl.conf"
+
+###
+
+title='Ensure that ICMP redirects are disabled on boot (default for new interfaces)'
+test=$(grep -E '^net\.ipv4\.conf\.default\.accept_redirects=0$' /etc/sysctl.conf &> /dev/null; echo $?)
+expected='0'
+remediation="echo 'net.ipv4.conf.default.accept_redirects=0' >> /etc/sysctl.conf"
+
+###
+
+title='Ensure that ICMP redirects are currently disabled (for all interfaces)'
+test=$(sysctl net.ipv4.conf.all.accept_redirects | grep -E '^net\.ipv4\.conf\.all\.accept_redirects\s=\s0$' &> /dev/null; echo $?)
+expected='0'
+remediation='sysctl -w net.ipv4.conf.all.accept_redirects=0'
+
+###
+
+title='Ensure that ICMP redirects are currently disabled (default for new interfaces)'
+test=$(sysctl net.ipv4.conf.default.accept_redirects | grep -E '^net\.ipv4\.conf\.default\.accept_redirects\s=\s0$' &> /dev/null; echo $?)
+expected='0'
+remediation='sysctl -w net.ipv4.conf.default.accept_redirects=0'
+
+###
+
+title='Ensure that suspicious packets logging is enabled on boot (for all interfaces)'
+test=$(grep -E '^net\.ipv4\.conf\.all\.log_martians\s=\s1$' /etc/sysctl.conf &> /dev/null; echo $?)
+expected='0'
+remediation="sed -iE '/net.ipv4.conf.all.log_martians.*/s/^#//g' /etc/sysctl.conf"
+
+###
+
+title='Ensure that suspicious packets logging is enabled on boot (default for new interfaces)'
+test=$(grep -E '^net\.ipv4\.conf\.default\.log_martians=1$' /etc/sysctl.conf)
+expected='0'
+remediation="echo 'net.ipv4.conf.default.log_martians=1' >> /etc/sysctl.conf"
+
+###
+
+title='Ensure that suspicious packets logging is currently enabled (for all interfaces)'
+test=$(sysctl net.ipv4.conf.all.log_martians | grep -E '^net\.ipv4\.conf\.all\.log_martians\s=\s1$' &> /dev/null; echo $?)
+expected='0'
+remediation='sysctl -w net.ipv4.conf.all.log_martians=1'
+
+###
+
+title='Ensure that suspicious packets logging is currently enabled (default for new interfaces)'
+test=$(sysctl net.ipv4.conf.default.log_martians | grep -E '^net\.ipv4\.conf\.default\.log_martians\s=\s1$' &> /dev/null; echo $?)
+expected='0'
+remediation='sysctl -w net.ipv4.conf.default.log_martians=1'
+
+###
+
+title='Ensure that broadcast ICMP requests are ignored on boot'
+test=$(grep E '^net\.ipv4\.icmp_echo_ignore_broadcasts=1$' /etc/sysctl.conf &> /dev/null; echo $?)
+expected='0'
+remediation="echo 'net.ipv4.icmp_echo_ignore_broadcasts=1' >> /etc/sysctl.conf"
+
+###
+
+title='Ensure that broadcast ICMP requests are currently ignored'
+test=$(sysctl net.ipv4.icmp_echo_ignore_broadcasts | grep -E '^net\.ipv4\.icmp_echo_ignore_broadcasts\s=\s1$' &> /dev/null; echo $?)
+expected='0'
+remediation='sysctl -w net.ipv4.icmp_echo_ignore_broadcasts=1'
+
+###
+
+title='Ensure that bad error message protection is enabled on boot'
+test=$(grep -E '^net\.ipv4\.icmp_ignore_bogus_error_responses=1$' /etc/sysctl.conf &> /dev/null; echo $?)
+expected='0'
+remediation="echo 'net.ipv4.icmp_ignore_bogus_error_responses=1' >> /etc/sysctl.conf"
+
+###
+
+title='Ensure that bad error message protection is currently enabled'
+test=$(sysctl net.ipv4.icmp_ignore_bogus_error_responses | grep -E '^net\.ipv4\.icmp_ignore_bogus_error_responses\s=\s1$' &> /dev/null; echo $?)
+expected='0'
+remediation='sysctl -w net.ipv4.icmp_ignore_bogus_error_responses=1'
+
+###
+
+title='Ensure that source route validation (reverse path filter) is enabled on boot (for all interfaces)'
+test=$(grep -E '^net\.ipv4\.conf\.all\.rp_filter=1$' /etc/sysctl.conf &> /dev/null; echo $?)
+expected='0'
+remediation="sed -iE '/net.ipv4.conf.all.rp_filter.*/s/^#//g' /etc/sysctl.conf"
+
+###
+
+title='Ensure that source route validation (reverse path filter) is enabled on boot (default for new interfaces)'
+test=$(grep -cP '^net\.ipv4\.conf\.default\.rp_filter=1$' /etc/sysctl.conf &> /dev/null; echo $?)
+expected='0'
+remediation="sed -iE '/net.ipv4.conf.default.rp_filter.*/s/^#//g' /etc/sysctl.conf"
+
+###
+
+title='Ensure that source route validation (reverse path filter) is currently enabled (for all interfaces)'
+test=$(sysctl net.ipv4.conf.all.rp_filter | grep -E '^net\.ipv4\.conf\.all\.rp_filter\s=\s1$' &> /dev/null; echo $?)
+expected='0'
+remediation='sysctl -w net.ipv4.conf.all.rp_filter=1'
+
+###
+
+title='Ensure that source route validation (reverse path filter) is currently enabled (default for new interfaces)'
+test=$(sysctl net.ipv4.conf.default.rp_filter | grep -E '^net\.ipv4\.conf\.default\.rp_filter\s=\s1$' &> /dev/null; echo $?)
+expected='0'
+remediation='sysctl -w net.ipv4.conf.default.rp_filter=1'
+
+###
+
+title='Ensure that TCP SYN cookies are enabled on boot'
+test=$(grep -E '^net\.ipv4\.tcp_syncookies=1$' /etc/sysctl.conf &> /dev/null; echo $?)
+expected='0'
+remediation="sed -iE '/net.ipv4.tcp_syncookies.*/s/^#//g' /etc/sysctl.conf"
+
+###
+
+title='Ensure that TCP SYN cookies are currently enabled'
+test=$(sysctl net.ipv4.tcp_syncookies | grep -E '^net\.ipv4\.tcp_syncookies\s=\s1$' &> /dev/null; echo $?)
+expected='0'
+remediation='sysctl -w net.ipv4.tcp_syncookies=1'
+
+###

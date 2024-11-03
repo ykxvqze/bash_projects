@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+<< 'EOF'
+Add an element to a CSV list
+
+USAGE:
+    ./add <-i index> <-d data> <CSV list>
+
+OUTPUT:
+    - A CSV list that include an additional element added at the specified index
+    - Note: index count starts at 1
+
+EXAMPLES:
+    ./add -i 2 -d 99 1,2,3,4,5           # result: 1,99,2,3,4,5
+    echo 1,2,3,4,5 | ./add -i 2 -d 99    # result: 1,99,2,3,4,5
+
+EOF
+
+#
+# print usage
+#
+
+print_usage() {
+    echo -e "
+    Add an element to a csv list
+
+    USAGE:
+
+        ./add -i 2 -d 99 1,2,3,4,5
+        echo 1,2,3,4,5 | ./add -i 2 -d 99 \n"
+}
+
+#
+# add an element
+#
+
+__add() {
+    # index: integer
+    # data : single value
+    # list : csv list
+    index="${1}"
+    data="${2}"
+    list="${3}"
+
+    OFS="${IFS}"
+    IFS=','
+    arr=($list)
+
+    i="$((index-1))"
+    x=("${arr[@]::$i}" "$data" "${arr[@]:$i}")
+
+    for i in "${x[@]}"; do
+        echo -n "${i},"
+    done | rev | cut -c 2- | rev
+
+    IFS="${OFS}"
+}
+
+#
+# main()
+#
+
+main() {
+    args=()
+    while [ "$#" -gt 0 ]; do
+        case "${1}" in
+            -h ) print_usage; exit 0;;
+            -i ) index="${2}"; shift; shift ;;
+            -d ) data="${2}"; shift; shift ;;
+            -* ) echo "Unknown option ${1}. Exiting ..."; exit 1;;
+             * ) args+=("${1}"); shift;;
+        esac
+    done
+
+    if [ -z "${index}" -o -z "${data}" ]; then
+        echo 'Incomplete input provided.'
+        return 1 
+    fi
+
+    if [[ ! "${index}" =~ ^[1-9][0-9]*$ ]]; then
+        echo 'Index should be an integer.'
+        return
+    fi
+
+    if [ "$(echo "${data}" | wc -l)" -ne 1 ]; then
+        echo 'Data can only be one element.'
+        return 1
+    fi
+
+    argf="${args[0]}"
+    if [ -n "${argf}" ]; then
+        f="$(echo "${argf}")"
+    else
+        f="$(</dev/stdin)"
+    fi
+
+    n_list="$(echo "${f}" | tr ',' '\n' | wc -l)"
+    if [ "${index}" -lt 1 -o "${index}" -gt "$((n_list+1))" ]; then
+        echo 'Index outside range!'
+        return 1
+    fi
+
+    __add "${index}" "${data}" "${f}"
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    main "$@"
+fi

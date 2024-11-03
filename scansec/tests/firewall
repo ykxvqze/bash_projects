@@ -1,0 +1,38 @@
+Firewall settings
+
+###
+
+title='Ensure ufw is installed'
+test=$(dpkg-query -W -f='$Status' 'ufw' 2>/dev/null | grep -c 'ok installed')
+expected='1'
+remediation='apt install ufw'
+
+###
+
+title='Ensure iptables-persistent is not installed with ufw'
+test=$(dpkg-query -W -f='$Status' 'iptables-persistent' 2>/dev/null | grep -c 'ok installed')
+expected='0'
+remediation='apt purge iptables-persistent'
+
+###
+
+title='Ensure ufw service is enabled'
+test=$(systemctl is-enabled ufw 2>/dev/null && ufw status | grep Status)
+expected='enabled\nStatus: active'
+remediation='ufw allow proto tcp from any to any port 22 && ufw enable'
+
+###
+
+title='Ensure nftables is installed '
+test=$(dpkg-query -W -f='$Status' 'nftables' 2>/dev/null | grep -c 'ok installed')
+expected='1'
+remediation='apt install nftables'
+
+###
+
+title='Ensure nftables service is enabled'
+test=$(systemctl is-enabled nftables 2>/dev/null)
+expected='enabled'
+remediation='systemctl enable nftables'
+
+###

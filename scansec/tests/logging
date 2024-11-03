@@ -1,0 +1,19 @@
+Log files
+
+###
+
+title='Ensure journald is configured to compress large log files'
+test=$(grep -e Compress /etc/systemd/journald.conf)
+expected='Compress=yes'
+remediation="echo 'Compress=yes' >> /etc/systemd/journald.conf"
+
+###
+
+title='Ensure journald is configured to write logfiles to persistent disk'
+test=$(grep -e Storage /etc/systemd/journald.conf)
+expected='Storage=persistent'
+remediation="echo 'Storage=persistent' >> /etc/systemd/journald.conf"
+
+###
+
+

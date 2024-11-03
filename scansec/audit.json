@@ -1,0 +1,838 @@
+{
+    "/etc/login.defs" : [
+        {
+            "title": "Ensure default umask for users is 077",
+            "audit": "grep '^UMASK' /etc/login.defs | grep -oE '[0-9]+'",
+            "expected": "077",
+            "remediation": "sed -iE 's/(^UMASK\\s+)[0-9]+/\\1077/' /etc/login.defs"
+        },
+        {
+            "title": "Ensure maximum number of days a password may be used is 90 days (default: 99999)",
+            "audit": "grep '^PASS_MAX_DAYS' /etc/login.defs | grep -oE '[0-9]+'",
+            "expected": "90",
+            "remediation": "sed -iE 's/(^PASS_MAX_DAYS\\s+)[0-9]+/\\190/' /etc/login.defs"
+        },
+        {
+            "title": "Ensure minimum number of days allowed between password changes is 5 (default: 0)",
+            "audit": "grep '^PASS_MIN_DAYS' /etc/login.defs | grep -oE '[0-9]+'",
+            "expected": "5",
+            "remediation": "sed -iE 's/(^PASS_MIN_DAYS\\s+)[0-9]+/\\15/' /etc/login.defs"
+        },
+        {
+            "title": "Ensure number of days warning given before a password expires is 7 (default: 7)",
+            "audit": "grep '^PASS_WARN_AGE' /etc/login.defs | grep -oE '[0-9]+'",
+            "expected": "7",
+            "remediation": "sed -iE 's/(^PASS_WARN_AGE\\s+)[0-9]+/\\17/' /etc/login.defs"
+        },
+        {
+            "title": "Ensure inactive user accounts get locked after 30 days",
+            "audit": "useradd -D | grep '^INACTIVE' | sed 's/.*=//'",
+            "expected": "30",
+            "remediation": "useradd -D -f 30"
+        }
+    ],
+    "/root/.bashrc": [
+         {
+            "title": "Ensure default umask for root is 077",
+            "audit": "grep '^# umask' /root/.bashrc | grep -oE '[0-9]+'`",
+            "expected": "077",
+            "remediation": "sed -iE '/^# umask\\s+[0-9]+/a\\umask 077' /root/.bashrc"
+         }
+    ],
+    "/etc/issue.net" : [
+        {
+            "title": "Ensure user-owner of /etc/issue.net is root",
+            "audit": "stat -c '%U' /etc/issue.net",
+            "expected": "root",
+            "remediation": "chown root:root /etc/issue.net"
+        },
+        {
+            "title": "Ensure group-owner of /etc/issue.net is root",
+            "audit": "stat -c '%G' /etc/issue.net",
+            "expected": "root",
+            "remediation": "chown root:root /etc/issue.net"
+        },
+        {
+            "title": "Ensure permission for /etc/issue.net is 644",
+            "audit": "stat -c '%a' /etc/issue.net",
+            "expected": "644",
+            "remediation": "chmod 644 /etc/issue.net"
+        },
+        {
+            "title": "Ensure a non-informative banner is set",
+            "audit": "cat /etc/issue.net",
+            "expected": "Authorized use only. Actions will be logged",
+            "remediation": "echo 'Authorized use only. Actions will be logged.' > /etc/issue.net"
+        }
+        ],
+        "/etc/issue" : [
+        {
+            "title": "Ensure user-owner of /etc/issue is root",
+            "audit": "stat -c '%U' /etc/issue",
+            "expected": "root",
+            "remediation": "chown root:root /etc/issue"
+        },
+        {
+            "title": "Ensure group-owner of /etc/issue is root",
+            "audit": "stat -c '%G' /etc/issue",
+            "expected": "root",
+            "remediation": "chown root:root /etc/issue"
+        },
+        {
+            "title": "Ensure permission for /etc/issue is 644",
+            "audit": "stat -c '%a' /etc/issue",
+            "expected": "644",
+            "remediation": "chmod 644 /etc/issue"
+        },
+        {
+            "title": "Ensure a non-informative banner is set",
+            "audit": "cat /etc/issue",
+            "expected": "Authorized use only. Actions will be logged",
+            "remediation": "echo 'Authorized use only. Actions will be logged.' > /etc/issue"
+        }
+    ],
+    "/etc/motd" : [
+        {
+            "title": "Ensure user-owner of /etc/motd is root",
+            "audit": "stat -c '%U' /etc/motd",
+            "expected": "root",
+            "remediation": "chown root:root /etc/motd"
+        },
+        {
+            "title": "Ensure group-owner of /etc/motd is root",
+            "audit": "stat -c '%G' /etc/motd",
+            "expected": "root",
+            "remediation": "chown root:root /etc/motd"
+        },
+        {
+            "title": "Ensure permission for /etc/motd is 644",
+            "audit": "stat -c '%a' /etc/motd",
+            "expected": "644",
+            "remediation": "chmod 644 /etc/motd"
+        },
+        {
+            "title": "Ensure a non-informative banner is set",
+            "audit": "cat /etc/motd",
+            "expected": "Authorized use only. Actions will be logged",
+            "remediation": "echo 'Authorized use only. Actions will be logged.' > /etc/motd"
+        }
+    ],
+    "services" : [
+        {
+            "title": "Ensure time synchronization is in use",
+            "audit": "systemctl is-enabled systemd-timesyncd",
+            "expected": "enabled",
+            "remediation": ""
+        },
+        {
+            "title": "Ensure Avahi Server is not installed",
+            "audit": "dpkg-query -W -f='${Status}' 'avahi-daemon' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
+            "remediation": "sudo systemctl stop avahi-daaemon.service && systemctl stop avahi-daemon.socket && apt purge avahi-daemon"
+        },
+        {
+            "title": "Ensure CUPS is not installed",
+            "audit": "dpkg-query -W -f='${Status}' 'cups' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
+            "remediation": "sudo apt purge cups"
+        },
+        {
+            "title": "Ensure DHCP Server is not installed",
+            "audit": "dpkg-query -W -f='${Status}' 'isc-dhcp-server' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
+            "remediation": "sudo apt purge isc-dhcp-server"
+        },
+        {
+            "title": "Ensure LDAP Server is not installed",
+            "audit": "dpkg-query -W -f='${Status}' 'slapd' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
+            "remediation": "sudo apt purge slapd"
+        },
+        {
+            "title": "Ensure NFS is not installed",
+            "audit": "dpkg-query -W -f='${Status}' 'nfs-kernel-server' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
+            "remediation": "sudo apt purge nfs-kernel-server"
+        },
+        {
+            "title": "Ensure DNS Server is not installed",
+            "audit": "dpkg-query -W -f='${Status}' 'bind9' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
+            "remediation": "sudo apt purge bind9"
+        },
+        {
+            "title": "Ensure FTP Server is not installed",
+            "audit": "dpkg-query -W -f='${Status}' 'vsftpd' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
+            "remediation": "sudo apt purge vsftpd"
+        },
+        {
+            "title": "Ensure HTTP server is not installed",
+            "audit": "dpkg-query -W -f='${Status}' 'apache2' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
+            "remediation": "sudo apt purge apache2"
+        },
+        {
+            "title": "Ensure IMAP server is not installed",
+            "audit": "dpkg-query -W -f='${Status}' 'dovecot-impad' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
+            "remediation": "sudo apt purge dovecot-imapd"
+        },
+        {
+            "title": "Ensure POP3 server is not installed",
+            "audit": "dpkg-query -W -f='${Status}' 'dovecot-pop3d' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
+            "remediation": "sudo apt purge dovecot-pop3d"
+        },
+        {
+            "title": "Ensure Samba is not installed",
+            "audit": "dpkg-query -W -f='${Status}' 'samba' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
+            "remediation": "sudo apt purge samba"
+        },
+        {
+            "title": "Ensure HTTP Proxy Server is not installed",
+            "audit": "dpkg-query -W -f='${Status}' 'squid' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
+            "remediation": "sudo apt purge squid"
+        },
+        {
+            "title": "Ensure SNMP Server is not installed",
+            "audit": "dpkg-query -W -f='${Status}' 'snmpd' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
+            "remediation": "sudo apt purge snmpd"
+        },
+        {
+            "title": "Ensure mail transfer agent is configured for local-only mode",
+            "audit": "ss -lntu | grep -E ':25\\s' | grep -E -v '\\s(127.0.0.1|::1):25\\s'",
+            "expected": "",
+            "remediation": ""
+        },
+        {
+            "title": "Ensure rsync service is not installed",
+            "audit": "dpkg-query -W -f='${Status}' 'rsync' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
+            "remediation": "sudo apt purge rsync"
+        },
+        {
+            "title": "Ensure NIS server and client are not installed",
+            "audit": "dpkg-query -W -f='${Status}' 'nis' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
+            "remediation": "sudo apt purge nis"
+        },
+        {
+            "title": "Ensure rsh client is not installed",
+            "audit": "dpkg-query -W -f='${Status}' 'rsh-client' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
+            "remediation": "sudo apt purge rsh-client"
+        },
+        {
+            "title": "Ensure talk client is not installed",
+            "audit": "dpkg-query -W -f='${Status}' 'talk' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
+            "remediation": "sudo apt purge talk"
+        },
+        {
+            "title": "Ensure telnet client is not installed",
+            "audit": "dpkg-query -W -f='${Status}' 'telnet' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
+            "remediation": "sudo apt purge telnet"
+        },
+        {
+            "title": "Ensure LDAP client is not installed",
+            "audit": "dpkg-query -W -f='${Status}' 'ldap-utils' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
+            "remediation": "sudo apt purge ldap-utils"
+        },
+        {
+            "title": "Ensure RPC is not installed",
+            "audit": "dpkg-query -W -f='${Status}' 'rpcbind' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
+            "remediation": "sudo apt purge rpcbind"
+        },
+        {
+            "title": "Ensure ufw is installed",
+            "audit": "dpkg-query -W -f='${Status}' 'ufw' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "1",
+            "remediation": "apt install ufw"
+        },
+        {
+            "title": "Ensure iptables-persistent is not installed with ufw",
+            "audit": "dpkg-query -W -f='${Status}' 'iptables-persistent' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "0",
+            "remediation": "apt purge iptables-persistent"
+        },
+        {
+            "title": "Ensure ufw service is enabled",
+            "audit": "systemctl is-enabled ufw && ufw status | grep Status",
+            "expected": "enabled\\nStatus: active",
+            "remediation": "ufw allow proto tcp from any to any port 22 && ufw enable"
+        },
+        {
+            "title": "Ensure nftables is installed ",
+            "audit": "dpkg-query -W -f='${Status}' 'nftables' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "1",
+            "remediation": "apt install nftables"
+        },
+        {
+            "title": "Ensure nftables service is enabled",
+            "audit": "systemctl is-enabled nftables",
+            "expected": "enabled",
+            "remediation": "systemctl enable nftables"
+        },
+        {
+            "title": "Ensure rsyslog is installed",
+            "audit": "dpkg-query -W -f='${Status}' 'rsyslog' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "1",
+            "remediation": "apt install rsyslog"
+        },
+        {
+            "title": "Ensure rsyslog Service is enabled",
+            "audit": "systemctl is-enabled rsyslog",
+            "expected": "enabled",
+            "remediation": "systemctl --now enable rsyslog"
+        },
+        {
+            "title": "Ensure TCP wrappers are installed",
+            "audit": "dpkg-query -W -f='${Status}' 'tcpd' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "1",
+            "remediation": "apt -y install tcpd"
+        }
+    ],
+    "/etc/systemd/journald.conf" : [
+        {
+            "title": "Ensure journald is configured to compress large log files",
+            "audit": "grep -e Compress /etc/systemd/journald.conf",
+            "expected": "Compress=yes",
+            "remediation": "echo 'Compress=yes' >> /etc/systemd/journald.conf"
+        },
+        {
+            "title": "Ensure journald is configured to write logfiles to persistent disk",
+            "audit": "grep -e Storage /etc/systemd/journald.conf",
+            "expected": "Storage=persistent",
+            "remediation": "echo 'Storage=persistent' >> /etc/systemd/journald.conf"
+        }
+    ],
+    "cron" : [
+        {
+            "title": "Ensure cron daemon is enabled and running",
+            "audit": "systemctl is-enabled cron &> /dev/null && systemctl status cron | grep -o 'Active: active (running)'",
+            "expected": "Active: active (running)",
+            "remediation": "systemctl --now enable cron"
+        }
+    ],
+    "sudo" : [
+        {
+            "title": "Ensure sudo is installed",
+            "audit": "dpkg-query -W -f='${Status}' 'sudo' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "1",
+            "remediation": ""
+        }
+    ],
+    "/etc/passwd" : [
+        {
+            "title": "Ensure default group for the root account is GID 0",
+            "audit": "grep '^root:' /etc/passwd | cut -f4 -d:",
+            "expected": "0",
+            "remediation": "usermod -g 0 root"
+    },
+    {
+            "title": "Ensure user-owner of /etc/passwd is root",
+            "audit": "stat -c '%U' /etc/passwd",
+            "expected": "root",
+            "remediation": "chown root:root /etc/passwd"
+        },
+        {
+            "title": "Ensure group-owner of /etc/passwd is root",
+            "audit": "stat -c '%G' /etc/passwd",
+            "expected": "root",
+            "remediation": "chown root:root /etc/passwd"
+        },
+        {
+            "title": "Ensure permission for /etc/passwd is 644",
+            "audit": "stat -c '%a' /etc/passwd",
+            "expected": "644",
+            "remediation": "chmod 644 /etc/passwd"
+        }
+    ],
+    "/etc/shadow" : [
+        {
+            "title": "Ensure user-owner of /etc/shadow is root",
+            "audit": "stat -c '%U' /etc/shadow",
+            "expected": "root",
+            "remediation": "chown root:shadow /etc/shadow"
+        },
+        {
+            "title": "Ensure group-owner of /etc/shadow is shadow",
+            "audit": "stat -c '%G' /etc/shadow",
+            "expected": "shadow",
+            "remediation": "chown root:shadow /etc/shadow"
+        },
+        {
+            "title": "Ensure permission for /etc/shadow is 640",
+            "audit": "stat -c '%a' /etc/shadow",
+            "expected": "640",
+            "remediation": "chmod 640 /etc/shadow"
+        }
+    ],
+    "/etc/group" : [
+    {
+            "title": "Ensure user-owner of /etc/group is root",
+            "audit": "stat -c '%U' /etc/group",
+            "expected": "root",
+            "remediation": "chown root:root /etc/group"
+        },
+        {
+            "title": "Ensure group-owner of /etc/group is root",
+            "audit": "stat -c '%G' /etc/group",
+            "expected": "root",
+            "remediation": "chown root:root /etc/group"
+        },
+        {
+            "title": "Ensure permission for /etc/group is 644",
+            "audit": "stat -c '%a' /etc/group",
+            "expected": "644",
+            "remediation": "chmod 644 /etc/group"
+        }
+    ],
+    "/etc/gshadow" : [
+        {
+            "title": "Ensure user-owner of /etc/gshadow is root",
+            "audit": "stat -c '%U' /etc/gshadow",
+            "expected": "root",
+            "remediation": "chown root:shadow /etc/gshadow"
+        },
+        {
+            "title": "Ensure group-owner of /etc/gshadow is shadow",
+            "audit": "stat -c '%G' /etc/gshadow",
+            "expected": "shadow",
+            "remediation": "chown root:shadow /etc/gshadow"
+        },
+        {
+            "title": "Ensure permission for /etc/gshadow is 640",
+            "audit": "stat -c '%a' /etc/gshadow",
+            "expected": "640",
+            "remediation": "chmod 640 /etc/gshadow"
+        }
+    ],
+    "/etc/passwd-" : [
+        {
+            "title": "Ensure user-owner of /etc/passwd- is root",
+            "audit": "stat -c '%U' /etc/passwd-",
+            "expected": "root",
+            "remediation": "chown root:root /etc/passwd-"
+        },
+        {
+            "title": "Ensure group-owner of /etc/passwd- is root",
+            "audit": "stat -c '%G' /etc/passwd-",
+            "expected": "root",
+            "remediation": "chown root:root /etc/passwd-"
+        },
+        {
+            "title": "Ensure permission for /etc/passwd- is 600",
+            "audit": "stat -c '%a' /etc/passwd-",
+            "expected": "600",
+            "remediation": "chmod 600 /etc/passwd-"
+        }
+    ],
+    "/etc/shadow-" : [
+        {
+            "title": "Ensure user-owner of /etc/shadow- is root",
+            "audit": "stat -c '%U' /etc/shadow-",
+            "expected": "root",
+            "remediation": "chown root:root /etc/shadow-"
+        },
+        {
+            "title": "Ensure group-owner of /etc/shadow- is root",
+            "audit": "stat -c '%G' /etc/shadow-",
+            "expected": "root",
+            "remediation": "chown root:root /etc/shadow-"
+        },
+        {
+            "title": "Ensure permission for /etc/shadow- is 600",
+            "audit": "stat -c '%a' /etc/shadow-",
+            "expected": "600",
+            "remediation": "chmod 600 /etc/shadow-"
+        }
+    ],
+    "/etc/group-" : [
+        {
+            "title": "Ensure user-owner of /etc/group- is root",
+            "audit": "stat -c '%U' /etc/group-",
+            "expected": "root",
+            "remediation": "chown root:root /etc/group-"
+        },
+        {
+            "title": "Ensure group-owner of /etc/group- is root",
+            "audit": "stat -c '%G' /etc/group-",
+            "expected": "root",
+            "remediation": "chown root:root /etc/group-"
+        },
+        {
+            "title": "Ensure permission for /etc/group- is 600",
+            "audit": "stat -c '%a' /etc/group-",
+            "expected": "600",
+            "remediation": "chmod 600 /etc/group-"
+        }
+     ],
+     "/etc/gshadow-" : [
+        {
+            "title": "Ensure user-owner of /etc/gshadow- is root",
+            "audit": "stat -c '%U' /etc/gshadow-",
+            "expected": "root",
+            "remediation": "chown root:shadow /etc/gshadow-"
+        },
+        {
+            "title": "Ensure group-owner of /etc/gshadow- is shadow",
+            "audit": "stat -c '%G' /etc/gshadow-",
+            "expected": "shadow",
+            "remediation": "chown root:shadow /etc/gshadow-"
+        },
+        {
+            "title": "Ensure permission for /etc/gshadow- is 600",
+            "audit": "stat -c '%a' /etc/gshadow-",
+            "expected": "600",
+            "remediation": "chmod 600 /etc/gshadow-"
+        }
+    ],
+    "/etc/security/opasswd" : [
+        {
+            "title": "Ensure user-owner of etc/security/opasswd is root",
+            "audit": "stat -c '%U' /etc/security/opasswd",
+            "expected": "root",
+            "remediation": "chown root:root /etc/security/opasswd"
+        },
+        {
+            "title": "Ensure group-owner of /etc/security/opasswd is root",
+            "audit": "stat -c '%G' /etc/security/opasswd",
+            "expected": "root",
+            "remediation": "chown root:root /etc/security/opasswd"
+        },
+        {
+            "title": "Ensure permission for /etc/security/opasswd is 600",
+            "audit": "stat -c '%a' /etc/security/opasswd",
+            "expected": "600",
+            "remediation": "chmod 600 /etc/security/opasswd"
+        }
+     ],
+     "/etc/pam.d/common-password" : [
+        {
+            "title": "Ensure libpam-cracklib is installed",
+            "audit": "dpkg-query -W -f='${Status}' 'libpam-cracklib' 2>/dev/null | grep -c 'ok installed'",
+            "expected": "1",
+            "remediation": "apt -y install libpam-cracklib"
+        },
+        {
+            "title": "Ensure minimum password length is 14 characters",
+            "audit": "grep -E '.*minlen=14.*' /etc/pam.d/common-password &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE 's/minlen=[[:digit:]]\\+/minlen=14/' /etc/pam.d/common-password"
+        },
+        {
+            "title": "Ensure username (straight or reversed) contained password is rejected",
+            "audit": "grep -E '.*reject_username.*' /etc/pam.d/common-password &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -i 's/\\bdifok=3\\b/& reject_username/' /etc/pam.d/common-password"
+        },
+        {
+            "title": "Ensure password complexity class is 4 (digits, uppercase, lowecase, other symbols)",
+            "audit": "grep -E '.*minclass=4.*' /etc/pam.d/common-password &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -i 's/\\bpam_cracklib.so\\b/& minclass=4/' /etc/pam.d/common-password"
+        },
+        {
+            "title": "Ensure password contains at least 1 character of each class",
+            "audit": "grep -E '.*dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1.*' /etc/pam.d/common-password &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -i 's/\\breject_username\\b/& dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1/' /etc/pam.d/common-password"
+        },
+        {
+            "title": "Ensure passwords containing more than 2 identical consecutive characters are rejected",
+            "audit": "grep -E '.*maxrepeat=2.*' /etc/pam.d/common-password &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -i 's/\\bminclass=4\\b/& maxrepeat=2/' /etc/pam.d/common-password"
+        },
+        {
+            "title": "Ensure saving last 24 passwords to check against is enabled",
+            "audit": "grep -E '.*remember=24.*' /etc/pam.d/common-password &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -i 's/\\bpam_unix.so\\b/& remember=24/' /etc/pam.d/common-password"
+        }
+     ],
+    "/etc/pam.d/login" : [
+        {
+            "title": "Ensure lockout time after 5 unsuccessful login attempts is set to 20 minutes",
+            "audit": "grep -E '.*auth required pam_tally2\\.so onerr=fail audit silent deny=5 unlock_time=1200.*' /etc/pam.d/login &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/session\\s+optional\\s+pam_keyinit.so\\s+force\\s+revoke/a\\auth required pam_tally2\\.so onerr=fail audit silent deny=5 unlock_time=1200' /etc/pam.d/login"
+        },
+        {
+            "title": "Ensure delay time between login prompts is set to 10 seconds (default: 3 seconds)",
+            "audit": "grep -E '.*delay=.*' /etc/pam.d/login | grep -oE '[0-9]+'",
+            "expected": "10000000",
+            "remediation": "sed -iE 's/(delay=)[0-9]+/\\110000000/' /etc/pam.d/login"
+        }
+    ],
+    "/etc/security/access.conf" : [
+        {
+            "title": "Ensure that non-local logins to priviliged accounts are disallowed",
+            "audit": "grep -E '^-:wheel:ALL EXCEPT LOCAL.*' /etc/security/access.conf &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/^#-:wheel:ALL EXCEPT LOCAL.*/s/#//' /etc/security/access.conf"
+        }
+    ],
+    "/etc/ssh/sshd_config" : [
+        {
+            "title": "Ensure that SSH LogLevel is set to INFO",
+            "audit": "grep '^LogLevel INFO' /etc/ssh/sshd_config &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/LogLevel INFO/s/^#//' /etc/ssh/sshd_config"
+        },
+        {
+            "title": "Ensure that SSH IgnoreRhosts is enabled",
+            "audit": "grep '^IgnoreRhosts yes' /etc/ssh/sshd_config &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/IgnoreRhosts.*/s/^#//' /etc/ssh/sshd_config"
+        },
+        {
+            "title": "Ensure that SSH HostbasedAuthentication is disabled",
+            "audit": "grep '^HostbasedAuthentication no' /etc/ssh/sshd_config &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/HostbasedAuthentication.*no/s/^#//' /etc/ssh/sshd_config"
+        },
+        {
+            "title": "Ensure that SSH PermitRootLogin is disabled",
+            "audit": "grep '^PermitRootLogin no' /etc/ssh/sshd_config &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE 's/#PermitRootLogin\\s+prohibit-password/PermitRootLogin no/' /etc/ssh/sshd_config"
+        },
+        {
+            "title": "Ensure that SSH PermitEmptyPasswords is disabled",
+            "audit": "grep '^PermitEmptyPasswords no' /etc/ssh/sshd_config &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/PermitEmptyPasswords.*no/s/^#//' /etc/ssh/sshd_config"
+        },
+        {
+            "title": "Ensure that SSH PermitUserEnvironment is disabled",
+            "audit": "grep '^PermitUserEnvironment no' /etc/ssh/sshd_config &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/PermitUserEnvironment.*no/s/^#//' /etc/ssh/sshd_config"
+        },
+        {
+            "title": "Ensure that SSH X11Forwarding is disabled",
+            "audit": "grep '^#X11Forwarding yes' /etc/ssh/sshd_config &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE 's/X11Forwarding.*yes/#X11Forwarding yes/' /etc/ssh/sshd_config"
+        }
+    ],
+    "/etc/sysctl.conf" : [
+        {
+            "title": "Ensure that IPv4 forwarding is disabled",
+            "audit": "grep -E '^net\\.ipv4\\.ip_forward=0' /etc/sysctl.conf &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE 's/^#net\\.ipv4\\.ip_forward=1/net.ipv4.ip_forward=0/' /etc/sysctl.conf"
+        },
+        {
+            "title": "Ensure that IPv4 forwarding for kernel is disabled",
+            "audit": "sysctl net.ipv4.ip_forward | grep '^net\\.ipv4\\.ip_forward\\s=\\s0$ &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sysctl -w net.ipv4.ip_forward=0"
+        },
+        {
+            "title": "Ensure that packet redirect sending is disabled (all)",
+            "audit": "grep -E '^net\\.ipv4\\.conf\\.all\\.send_redirects\\s=\\s0$' /etc/sysctl.conf &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/net.ipv4.conf.all.send_redirects.*/s/^#//g' /etc/sysctl.conf"
+        },
+        {
+            "title": "Ensure that packet redirect sending is disabled (default)",
+            "audit": "grep -E '^net\\.ipv4\\.conf\\.default\\.send_redirects=0$' /etc/sysctl.conf &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "echo 'net.ipv4.conf.default.send_redirects=0' >> /etc/sysctl.conf"
+        },
+        {
+            "title": "Ensure that packet redirect sending for kernel is disabled (all)",
+            "audit": "sysctl net.ipv4.conf.all.send_redirects | grep -E '^net\\.ipv4\\.conf\\.all\\.send_redirects\\s=\\s0$' &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sysctl -w net.ipv4.conf.all.send_redirects=0"
+        },
+        {
+            "title": "Ensure that packet redirect sending for kernel is disabled (default)",
+            "audit": "sysctl net.ipv4.conf.default.send_redirects | grep -E '^net\\.ipv4\\.conf\\.default\\.send_redirects\\s=\\s0$' &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sysctl -w net.ipv4.conf.default.send_redirects=0"
+        },
+        {
+            "title": "Ensure that source routed packets are disabled (all)",
+            "audit": "grep -E '^net\\.ipv4\\.conf\\.all\\.accept_source_route\\s=\\s0$' /etc/sysctl.conf &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/net.ipv4.conf.all.accept_source_route.*/s/^#//g' /etc/sysctl.conf"
+        },
+        {
+            "title": "Ensure that source routed packets are disabled (default)",
+            "audit": "grep -E '^net\\.ipv4\\.conf\\.default\\.accept_source_route=0$' /etc/sysctl.conf &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "echo 'net.ipv4.conf.default.accept_source_route=0' >> /etc/sysctl.conf"
+        },
+        {
+            "title": "Ensure that source routed packets for kernel are disabled (all)",
+            "audit": "ssysctl net.ipv4.conf.all.accept_source_route | grep -E '^net\\.ipv4\\.conf\\.all\\.accept_source_route\\s=\\s0$' &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sysctl -w net.ipv4.conf.all.accept_source_route=0"
+        },
+        {
+            "title": "Ensure that source routed packets for kernel are disabled (default)",
+            "audit": "ssysctl net.ipv4.conf.default.accept_source_route | grep -E '^net\\.ipv4\\.conf\\.default\\.accept_source_route\\s=\\s0$' &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sysctl -w net.ipv4.conf.default.accept_source_route=0"
+        },
+        {
+            "title": "Ensure that ICMP redirects are disabled (all)",
+            "audit": "grep -E '^net\\.ipv4\\.conf\\.all\\.accept_redirects\\s=\\s0$' /etc/sysctl.conf &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/net.ipv4.conf.all.accept_redirects.*/s/^#//g' /etc/sysctl.conf"
+        },
+        {
+            "title": "Ensure that ICMP redirects are disabled (default)",
+            "audit": "grep -E '^net\\.ipv4\\.conf\\.default\\.accept_redirects=0$' /etc/sysctl.conf &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "echo 'net.ipv4.conf.default.accept_redirects=0' >> /etc/sysctl.conf"
+        },
+        {
+            "title": "Ensure that ICMP redirects for kernel are disabled (all)",
+            "audit": "ssysctl net.ipv4.conf.all.accept_redirects | grep -E '^net\\.ipv4\\.conf\\.all\\.accept_redirects\\s=\\s0$ &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sysctl -w net.ipv4.conf.all.accept_redirects=0"
+        },
+        {
+            "title": "Ensure that ICMP redirects for kernel are disabled (default)",
+            "audit": "ssysctl net.ipv4.conf.default.accept_redirects | grep -E '^net\\.ipv4\\.conf\\.default\\.accept_redirects\\s=\\s0$ &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sysctl -w net.ipv4.conf.default.accept_redirects=0"
+        },
+        {
+            "title": "Ensure that suspicious packets logging is enabled (all)",
+            "audit": "grep -E '^net\\.ipv4\\.conf\\.all\\.log_martians\\s=\\s1$' /etc/sysctl.conf &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/net.ipv4.conf.all.log_martians.*/s/^#//g' /etc/sysctl.conf"
+        },
+        {
+            "title": "Ensure that suspicious packets logging is enabled (default)",
+            "audit": "grep -E '^net\\.ipv4\\.conf\\.default\\.log_martians=1$' /etc/sysctl.conf",
+            "expected": "0",
+            "remediation": "echo 'net.ipv4.conf.default.log_martians=1' >> /etc/sysctl.conf"
+        },
+        {
+            "title": "Ensure that suspicious packets logging for kernel is enabled (all)",
+            "audit": "sysctl net.ipv4.conf.all.log_martians | grep -E '^net\\.ipv4\\.conf\\.all\\.log_martians\\s=\\s1$' &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sysctl -w net.ipv4.conf.all.log_martians=1"
+        },
+        {
+            "title": "Ensure that suspicious packets logging for kernel is enabled (default)",
+            "audit": "sysctl net.ipv4.conf.default.log_martians | grep -E '^net\\.ipv4\\.conf\\.default\\.log_martians\\s=\\s1$' &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sysctl -w net.ipv4.conf.default.log_martians=1"
+        },
+        {
+            "title": "Ensure that broadcast ICMP requests are ignored",
+            "audit": "grep E '^net\\.ipv4\\.icmp_echo_ignore_broadcasts=1$' /etc/sysctl.conf &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "echo 'net.ipv4.icmp_echo_ignore_broadcasts=1' >> /etc/sysctl.conf"
+        },
+        {
+            "title": "Ensure that broadcast ICMP requests for kernel are ignored",
+            "audit": "sysctl net.ipv4.icmp_echo_ignore_broadcasts | grep -E '^net\\.ipv4\\.icmp_echo_ignore_broadcasts\\s=\\s1$' &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sysctl -w net.ipv4.icmp_echo_ignore_broadcasts=1"
+        },
+        {
+            "title": "Ensure that bad error message protection is enabled",
+            "audit": "grep -E '^net\\.ipv4\\.icmp_ignore_bogus_error_responses=1$' /etc/sysctl.conf &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "echo 'net.ipv4.icmp_ignore_bogus_error_responses=1' >> /etc/sysctl.conf"
+        },
+        {
+            "title": "Ensure that bad error message protection for kernel is enabled",
+            "audit": "sysctl net.ipv4.icmp_ignore_bogus_error_responses | grep -E '^net\\.ipv4\\.icmp_ignore_bogus_error_responses\\s=\\s1$' &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sysctl -w net.ipv4.icmp_ignore_bogus_error_responses=1"
+        },
+        {
+            "title": "Ensure that source route validation (reverse path filter) is enabled (all)",
+            "audit": "grep -E '^net\\.ipv4\\.conf\\.all\\.rp_filter=1$' /etc/sysctl.conf &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/net.ipv4.conf.all.rp_filter.*/s/^#//g' /etc/sysctl.conf"
+        },
+        {
+            "title": "Ensure that source route validation (reverse path filter) is enabled (default)",
+            "audit": "grep -cP '^net\\.ipv4\\.conf\\.default\\.rp_filter=1$' /etc/sysctl.conf &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/net.ipv4.conf.default.rp_filter.*/s/^#//g' /etc/sysctl.conf"
+        },
+        {
+            "title": "Ensure that source route validation (reverse path filter) for kernel is enabled (all)",
+            "audit": "sysctl net.ipv4.conf.all.rp_filter | grep -E '^net\\.ipv4\\.conf\\.all\\.rp_filter\\s=\\s1$' &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sysctl -w net.ipv4.conf.all.rp_filter=1"
+        },
+        {
+            "title": "Ensure that source route validation (reverse path filter) for kernel is enabled (default)",
+            "audit": "sysctl net.ipv4.conf.default.rp_filter | grep -E '^net\\.ipv4\\.conf\\.default\\.rp_filter\\s=\\s1$' &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sysctl -w net.ipv4.conf.default.rp_filter=1"
+        },
+        {
+            "title": "Ensure that TCP SYN cookies are enabled",
+            "audit": "grep -E '^net\\.ipv4\\.tcp_syncookies=1$' /etc/sysctl.conf &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sed -iE '/net.ipv4.tcp_syncookies.*/s/^#//g' /etc/sysctl.conf"
+        },
+        {
+            "title": "Ensure that TCP SYN cookies for kernel are enabled",
+            "audit": "sysctl net.ipv4.tcp_syncookies | grep -E '^net\\.ipv4\\.tcp_syncookies\\s=\\s1$' &> /dev/null; echo $?",
+            "expected": "0",
+            "remediation": "sysctl -w net.ipv4.tcp_syncookies=1"
+        }
+    ],
+    "/etc/hosts.allow" : [
+        {
+            "title": "Ensure user-owner of /etc/hosts.allow is root",
+            "audit": "stat -c '%U' /etc/hosts.allow",
+            "expected": "root",
+            "remediation": "chown root:root /etc/hosts.allow"
+        },
+        {
+            "title": "Ensure group-owner of /etc/hosts.allow is root",
+            "audit": "stat -c '%G' /etc/hosts.allow",
+            "expected": "root",
+            "remediation": "chown root:root /etc/hosts.allow"
+        },
+        {
+            "title": "Ensure permission for /etc/hosts.allow is 644",
+            "audit": "stat -c '%a' /etc/hosts.allow",
+            "expected": "644",
+            "remediation": "chmod 644 /etc/hosts.allow"
+        }
+    ],
+    "/etc/hosts.deny" : [
+        {
+            "title": "Ensure user-owner of /etc/hosts.deny is root",
+            "audit": "stat -c '%U' /etc/hosts.deny",
+            "expected": "root",
+            "remediation": "chown root:root /etc/hosts.deny"
+        },
+        {
+            "title": "Ensure group-owner of /etc/hosts.deny is root",
+            "audit": "stat -c '%G' /etc/hosts.deny",
+            "expected": "root",
+            "remediation": "chown root:root /etc/hosts.deny"
+        },
+        {
+            "title": "Ensure permission for /etc/hosts.deny is 644",
+            "audit": "stat -c '%a' /etc/hosts.deny",
+            "expected": "644",
+            "remediation": "chmod 644 /etc/hosts.deny"
+        }
+    ]
+}

@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+<< 'EOF'
+Return dimensions of a CSV file, i.e., number of rows and columns
+
+USAGE:
+    ./size file.csv
+    cat file.csv | ./size
+
+INPUT:
+    - A CSV file provided as argument or piped via stdin
+
+OUTPUT:
+    - Dimensions of CSV data given as number_of_rows x number_of_columns
+
+EXAMPLES:
+    ./size file.csv
+    cat file.csv | ./size
+
+EOF
+
+#
+# locate script dependencies
+#
+
+src_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+checkcsv="${src_dir}/checkcsv"
+
+#
+# print usage
+#
+
+print_usage() {
+    echo -e "
+    Return dimensions of CSV data
+
+    USAGE:
+
+        ./size file.csv
+        cat file.csv | ./size \n"
+}
+
+#
+# output: number_of_rows x number_of_columns
+#
+
+getsize() {
+    f="${1}"
+    n_col="$(echo "${f}" | head -1 | tr ',' '\n' | wc -l)"
+    n_row="$(echo "${f}" | wc -l)"
+    echo "${n_row}"x"${n_col}"
+}
+
+#
+# main()
+#
+
+main() {
+    while getopts 'h' option; do
+        case $option in
+            h) print_usage; exit 0;;
+            *) echo 'Unknown option. Exiting ...'; exit 1;;
+        esac
+    done
+
+    argf="${1}"
+    if [ -n "${argf}" ]; then
+        f="$(cat "${argf}")"
+    else
+        f="$(</dev/stdin)"
+    fi
+
+    echo "${f}" | "${checkcsv}" || return 1
+
+    getsize "${f}"
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    main "$@"
+fi

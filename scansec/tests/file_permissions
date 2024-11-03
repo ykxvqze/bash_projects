@@ -1,0 +1,305 @@
+File permissions
+
+###
+
+title="Ensure default umask for users is 077"
+test=$(grep '^UMASK' /etc/login.defs | grep -oE '[0-9]+')
+expected='077'
+remediation="sed -iE 's/(^UMASK\s+)[0-9]+/\1077/' /etc/login.defs"
+
+###
+
+title='Ensure default umask for root is 077'
+test=$(grep '^# umask' /root/.bashrc | grep -oE '[0-9]+')
+expected='077'
+remediation="sed -iE '/^# umask\s+[0-9]+/a\umask 077' /root/.bashrc"
+
+###
+
+title='Ensure user-owner of /etc/issue.net is root'
+test=$(stat -c '%U' /etc/issue.net)
+expected='root'
+remediation='chown root:root /etc/issue.net'
+
+###
+
+
+title='Ensure group-owner of /etc/issue.net is root'
+test=$(stat -c '%G' /etc/issue.net)
+expected='root'
+remediation='chown root:root /etc/issue.net'
+
+###
+
+title='Ensure permission for /etc/issue.net is 644'
+test=$(stat -c '%a' /etc/issue.net)
+expected='644'
+remediation='chmod 644 /etc/issue.net'
+
+###
+
+title='Ensure user-owner of /etc/motd is root'
+test=$(stat -c '%U' /etc/motd)
+expected='root'
+remediation='chown root:root /etc/motd'
+
+###
+
+title='Ensure group-owner of /etc/motd is root'
+test=$(stat -c '%G' /etc/motd)
+expected='root'
+remediation='chown root:root /etc/motd'
+
+###
+
+title='Ensure permission for /etc/motd is 644'
+test=$(stat -c '%a' /etc/motd)
+expected='644'
+remediation='chmod 644 /etc/motd'
+
+###
+
+title='Ensure default group for the root account is GID 0'
+test=$(grep '^root:' /etc/passwd | cut -f4 -d:)
+expected='0'
+remediation='usermod -g 0 root'
+
+###
+
+title='Ensure user-owner of /etc/passwd is root'
+test=$(stat -c '%U' /etc/passwd)
+expected='root'
+remediation='chown root:root /etc/passwd'
+
+###
+
+title='Ensure group-owner of /etc/passwd is root'
+test=$(stat -c '%G' /etc/passwd)
+expected='root'
+remediation='chown root:root /etc/passwd'
+
+###
+
+title='Ensure permission for /etc/passwd is 644'
+test=$(stat -c '%a' /etc/passwd)
+expected='644'
+remediation='chmod 644 /etc/passwd'
+
+###
+
+title='Ensure user-owner of /etc/shadow is root'
+test=$(stat -c '%U' /etc/shadow)
+expected='root'
+remediation='chown root:shadow /etc/shadow'
+
+###
+
+title='Ensure group-owner of /etc/shadow is shadow'
+test=$(stat -c '%G' /etc/shadow)
+expected='shadow'
+remediation='chown root:shadow /etc/shadow'
+
+###
+
+title='Ensure permission for /etc/shadow is 640'
+test=$(stat -c '%a' /etc/shadow)
+expected='640'
+remediation='chmod 640 /etc/shadow'
+
+###
+
+title='Ensure user-owner of /etc/group is root'
+test=$(stat -c '%U' /etc/group)
+expected='root'
+remediation='chown root:root /etc/group'
+
+###
+
+title='Ensure group-owner of /etc/group is root'
+test=$(stat -c '%G' /etc/group)
+expected='root'
+remediation='chown root:root /etc/group'
+
+###
+
+title='Ensure permission for /etc/group is 644'
+test=$(stat -c '%a' /etc/group)
+expected='644'
+remediation='chmod 644 /etc/group'
+
+###
+
+title='Ensure user-owner of /etc/gshadow is root'
+test=$(stat -c '%U' /etc/gshadow)
+expected='root'
+remediation='chown root:shadow /etc/gshadow'
+
+###
+
+title='Ensure group-owner of /etc/gshadow is shadow'
+test=$(stat -c '%G' /etc/gshadow)
+expected='shadow'
+remediation='chown root:shadow /etc/gshadow'
+
+###
+
+title='Ensure permission for /etc/gshadow is 640'
+test=$(stat -c '%a' /etc/gshadow)
+expected='640'
+remediation='chmod 640 /etc/gshadow'
+
+###
+
+title='Ensure user-owner of /etc/passwd- is root'
+test=$(stat -c '%U' /etc/passwd-)
+expected='root'
+remediation='chown root:root /etc/passwd-'
+
+###
+
+title='Ensure group-owner of /etc/passwd- is root'
+test=$(stat -c '%G' /etc/passwd-)
+expected='root'
+remediation='chown root:root /etc/passwd-'
+
+###
+
+title='Ensure permission for /etc/passwd- is 600'
+test=$(stat -c '%a' /etc/passwd-)
+expected='600'
+remediation='chmod 600 /etc/passwd-'
+
+###
+
+title='Ensure user-owner of /etc/shadow- is root'
+test=$(stat -c '%U' /etc/shadow-)
+expected='root'
+remediation='chown root:root /etc/shadow-'
+
+###
+
+title='Ensure group-owner of /etc/shadow- is root'
+test=$(stat -c '%G' /etc/shadow-)
+expected='root'
+remediation='chown root:root /etc/shadow-'
+
+###
+
+title='Ensure permission for /etc/shadow- is 600'
+test=$(stat -c '%a' /etc/shadow-)
+expected='600'
+remediation='chmod 600 /etc/shadow-'
+
+###
+
+title='Ensure user-owner of /etc/group- is root'
+test=$(stat -c '%U' /etc/group-)
+expected='root'
+remediation='chown root:root /etc/group-'
+
+###
+
+title='Ensure group-owner of /etc/group- is root'
+test=$(stat -c '%G' /etc/group-)
+expected='root'
+remediation='chown root:root /etc/group-'
+
+###
+
+title='Ensure permission for /etc/group- is 600'
+test=$(stat -c '%a' /etc/group-)
+expected='600'
+remediation='chmod 600 /etc/group-'
+
+###
+
+title='Ensure user-owner of /etc/gshadow- is root'
+test=$(stat -c '%U' /etc/gshadow-)
+expected='root'
+remediation='chown root:shadow /etc/gshadow-'
+
+###
+
+title='Ensure group-owner of /etc/gshadow- is shadow'
+test=$(stat -c '%G' /etc/gshadow-)
+expected='shadow'
+remediation='chown root:shadow /etc/gshadow-'
+
+###
+
+title='Ensure permission for /etc/gshadow- is 600'
+test=$(stat -c '%a' /etc/gshadow-)
+expected='600'
+remediation='chmod 600 /etc/gshadow-'
+
+###
+
+title='Ensure user-owner of etc/security/opasswd is root'
+test=$(stat -c '%U' /etc/security/opasswd)
+expected='root'
+remediation='chown root:root /etc/security/opasswd'
+
+###
+
+title='Ensure group-owner of /etc/security/opasswd is root'
+test=$(stat -c '%G' /etc/security/opasswd)
+expected='root'
+remediation='chown root:root /etc/security/opasswd'
+
+###
+
+title='Ensure permission for /etc/security/opasswd is 600'
+test=$(stat -c '%a' /etc/security/opasswd)
+expected='600'
+remediation='chmod 600 /etc/security/opasswd'
+
+###
+
+title='Ensure sudo is installed'
+test=$(dpkg -l | grep -Ec 'ii.*sudo')
+expected='1'
+remediation='apt-get install sudo'
+
+###
+
+title='Ensure user-owner of /etc/hosts.allow is root'
+test=$(stat -c '%U' /etc/hosts.allow)
+expected='root'
+remediation='chown root:root /etc/hosts.allow'
+
+###
+
+title='Ensure group-owner of /etc/hosts.allow is root'
+test=$(stat -c '%G' /etc/hosts.allow)
+expected='root'
+remediation='chown root:root /etc/hosts.allow'
+
+###
+
+title='Ensure permission for /etc/hosts.allow is 644'
+test=$(stat -c '%a' /etc/hosts.allow)
+expected='644'
+remediation='chmod 644 /etc/hosts.allow'
+
+###
+
+title='Ensure user-owner of /etc/hosts.deny is root'
+test=$(stat -c '%U' /etc/hosts.deny)
+expected='root'
+remediation='chown root:root /etc/hosts.deny'
+
+###
+
+title='Ensure group-owner of /etc/hosts.deny is root'
+test=$(stat -c '%G' /etc/hosts.deny)
+expected='root'
+remediation='chown root:root /etc/hosts.deny'
+
+###
+
+title='Ensure permission for /etc/hosts.deny is 644'
+test=$(stat -c '%a' /etc/hosts.deny)
+expected='644'
+remediation='chmod 644 /etc/hosts.deny'
+
+###

@@ -1,0 +1,179 @@
+Services
+
+###
+
+title='Ensure time synchronization is in use'
+test=$(systemctl is-enabled systemd-timesyncd)
+expected='enabled'
+remediation='systemctl enable systemd-timesyncd'
+
+###
+
+title='Ensure Avahi Server is not installed'
+test=$(dpkg-query -W -f='$Status' 'avahi-daemon' 2>/dev/null | grep -c 'ok installed')
+expected='0'
+remediation='sudo systemctl stop avahi-daaemon.service && systemctl stop avahi-daemon.socket && apt purge avahi-daemon'
+
+###
+
+title='Ensure CUPS is not installed'
+test=$(dpkg-query -W -f='$Status' 'cups' 2>/dev/null | grep -c 'ok installed')
+expected='0'
+remediation='apt purge cups'
+
+###
+
+title='Ensure DHCP Server is not installed'
+test=$(dpkg-query -W -f='$Status' 'isc-dhcp-server' 2>/dev/null | grep -c 'ok installed')
+expected='0'
+remediation='sudo apt purge isc-dhcp-server'
+
+###
+
+title='Ensure LDAP Server is not installed'
+test=$(dpkg-query -W -f='$Status' 'slapd' 2>/dev/null | grep -c 'ok installed')
+expected='0'
+remediation='sudo apt purge slapd'
+
+###
+
+title='Ensure NFS is not installed'
+test=$(dpkg-query -W -f='$Status' 'nfs-kernel-server' 2>/dev/null | grep -c 'ok installed')
+expected='0'
+remediation='sudo apt purge nfs-kernel-server'
+
+###
+
+title='Ensure DNS Server is not installed'
+test=$(dpkg-query -W -f='$Status' 'bind9' 2>/dev/null | grep -c 'ok installed')
+expected='0'
+remediation='sudo apt purge bind9'
+
+###
+
+title='Ensure FTP Server is not installed'
+test=$(dpkg-query -W -f='$Status' 'vsftpd' 2>/dev/null | grep -c 'ok installed')
+expected='0'
+remediation='sudo apt purge vsftpd'
+
+###
+
+title='Ensure HTTP server is not installed'
+test=$(dpkg-query -W -f='$Status' 'apache2' 2>/dev/null | grep -c 'ok installed')
+expected='0'
+remediation='sudo apt purge apache2'
+
+###
+
+title='Ensure IMAP server is not installed'
+test=$(dpkg-query -W -f='$Status' 'dovecot-impad' 2>/dev/null | grep -c 'ok installed')
+expected='0'
+remediation='sudo apt purge dovecot-imapd'
+
+###
+
+title='Ensure POP3 server is not installed'
+test=$(dpkg-query -W -f='$Status' 'dovecot-pop3d' 2>/dev/null | grep -c 'ok installed')
+expected='0'
+remediation='sudo apt purge dovecot-pop3d'
+
+###
+
+title='Ensure Samba is not installed'
+test=$(dpkg-query -W -f='$Status' 'samba' 2>/dev/null | grep -c 'ok installed')
+expected='0'
+remediation='sudo apt purge samba'
+
+###
+
+title='Ensure HTTP Proxy Server is not installed'
+test=$(dpkg-query -W -f='$Status' 'squid' 2>/dev/null | grep -c 'ok installed')
+expected='0'
+remediation='sudo apt purge squid'
+
+###
+
+title='Ensure SNMP Server is not installed'
+test=$(dpkg-query -W -f='$Status' 'snmpd' 2>/dev/null | grep -c 'ok installed')
+expected='0'
+remediation='sudo apt purge snmpd'
+
+###
+
+title='Ensure mail transfer agent is configured for local-only mode'
+test=$(ss -lntu | grep -E ':25\s' | grep -E -v '\s(127.0.0.1|::1):25\s')
+expected=''
+remediation=''
+
+###
+
+title='Ensure rsync service is not installed'
+test=$(dpkg-query -W -f='$Status' 'rsync' 2>/dev/null | grep -c 'ok installed')
+expected='0'
+remediation='sudo apt purge rsync'
+
+###
+
+title='Ensure NIS server and client are not installed'
+test=$(dpkg-query -W -f='$Status' 'nis' 2>/dev/null | grep -c 'ok installed')
+expected='0'
+remediation='sudo apt purge nis'
+
+###
+
+title='Ensure rsh client is not installed'
+test=$(dpkg-query -W -f='$Status' 'rsh-client' 2>/dev/null | grep -c 'ok installed')
+expected='0'
+remediation='sudo apt purge rsh-client'
+
+###
+
+title='Ensure talk client is not installed'
+test=$(dpkg-query -W -f='$Status' 'talk' 2>/dev/null | grep -c 'ok installed')
+expected='0'
+remediation='sudo apt purge talk'
+
+###
+
+title='Ensure telnet client is not installed'
+test=$(dpkg-query -W -f='$Status' 'telnet' 2>/dev/null | grep -c 'ok installed')
+expected='0'
+remediation='sudo apt purge telnet'
+
+###
+
+title='Ensure LDAP client is not installed'
+test=$(dpkg-query -W -f='$Status' 'ldap-utils' 2>/dev/null | grep -c 'ok installed')
+expected='0'
+remediation='sudo apt purge ldap-utils'
+
+###
+
+title='Ensure RPC is not installed'
+test=$(dpkg-query -W -f='$Status' 'rpcbind' 2>/dev/null | grep -c 'ok installed')
+expected='0'
+remediation='sudo apt purge rpcbind'
+
+###
+
+title='Ensure rsyslog is installed'
+test=$(dpkg-query -W -f='$Status' 'rsyslog' 2>/dev/null | grep -c 'ok installed')
+expected='1'
+remediation='apt install rsyslog'
+
+###
+
+title='Ensure rsyslog Service is enabled'
+test=$(systemctl is-enabled rsyslog)
+expected='enabled'
+remediation='systemctl --now enable rsyslog'
+
+###
+
+title='Ensure TCP wrappers are installed'
+test=$(dpkg-query -W -f='$Status' 'tcpd' 2>/dev/null | grep -c 'ok installed')
+expected='1'
+remediation='apt -y install tcpd'
+
+###
+

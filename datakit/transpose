@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+<< 'EOF'
+Transpose CSV data
+
+USAGE:
+    ./transpose file.csv
+    cat file.csv | ./transpose
+
+INPUT:
+    - CSV file or input piped via stdin
+
+OUTPUT:
+    - Transposed data
+
+EXAMPLES:
+    echo col{1..10} | tr ' ' ',' >> file.csv
+    echo {1..10}    | tr ' ' ',' >> file.csv
+    echo {11..20}   | tr ' ' ',' >> file.csv
+    echo {21..30}   | tr ' ' ',' >> file.csv
+
+    ./transpose file.csv
+    cat file.csv | ./transpose
+
+EOF
+
+#
+# source utility functions
+#
+
+src_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+checkcsv="${src_dir}/checkcsv"
+
+#
+# print usage
+#
+
+print_usage(){
+    echo -e "
+    Transpose CSV data
+
+    USAGE:
+    
+        ./transpose file.csv
+        cat file.csv | ./transpose \n"
+}
+
+#
+# transpose csv content
+#
+
+tp() {
+    # f: string containing file content or stdin content
+    local f="${1}"
+
+    n_row="$(echo "${f}" | wc -l)"
+    if [ "$n_row" -eq 1 ]; then
+        echo "${f}" | tr ',' '\n'
+    else   
+        n_col=$(echo "$f" | head -1 | tr ',' '\n' | wc -l)
+        for i in $(seq 1 "${n_col}"); do
+            echo "${f}" | cut -d ',' -f "$i" | tr '\n' ',' | rev | cut -c 2- | rev 
+        done
+    fi
+}
+
+#
+# main()
+#
+
+main() {
+    while getopts 'h' option; do
+        case $option in
+            h) print_usage; exit 0;;
+            *) echo 'Unknown option. Exiting ...'; exit 1;;
+        esac
+    done
+
+    argf="${1}"
+    if [ -n "${argf}" ]; then
+        f="$(cat "${argf}")"
+    else
+        f="$(</dev/stdin)"
+    fi
+
+    echo "${f}" | "${checkcsv}" || return 1
+
+    tp "${f}"
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    main "$@"
+fi

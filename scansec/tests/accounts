@@ -1,0 +1,102 @@
+Account, password settings, PAM
+
+###
+
+title='Ensure maximum number of days a password may be used is 90 days (default: 99999)'
+test=$(grep '^PASS_MAX_DAYS' /etc/login.defs | grep -oE '[0-9]+')
+expected='90'
+remediation="sed -iE 's/(^PASS_MAX_DAYS\s+)[0-9]+/\190/' /etc/login.defs"
+
+###
+
+title='Ensure minimum number of days allowed between password change is 5 (default: 0)'
+test=$(grep '^PASS_MIN_DAYS' /etc/login.defs | grep -oE '[0-9]+')
+expected='5'
+remediation="sed -iE 's/(^PASS_MIN_DAYS\s+)[0-9]+/\15/' /etc/login.defs"
+
+###
+
+title='Ensure number of days warning given before a password expires is 7 (default: 7)'
+test=$(grep '^PASS_WARN_AGE' /etc/login.defs | grep -oE '[0-9]+')
+expected='7'
+remediation="sed -iE 's/(^PASS_WARN_AGE\s+)[0-9]+/\17/' /etc/login.defs"
+
+###
+
+title='Ensure inactive user accounts get locked after 30 days'
+test=$(useradd -D | grep '^INACTIVE' | sed 's/.*=//')
+expected='30'
+remediation='useradd -D -f 30'
+
+###
+
+title='Ensure libpam-cracklib is installed'
+test=$(dpkg-query -W -f='$Status' 'libpam-cracklib' 2>/dev/null | grep -c 'ok installed')
+expected='1'
+remediation='apt -y install libpam-cracklib'
+
+###
+
+title='Ensure minimum password length is 14 characters'
+test=$(grep -E '.*minlen=14.*' /etc/pam.d/common-password &> /dev/null; echo $?)
+expected='0'
+remediation="sed -iE 's/minlen=:digit:\+/minlen=14/' /etc/pam.d/common-password"
+
+###
+
+title='Ensure username (straight or reversed) contained password is rejected'
+test=$(grep -E '.*reject_username.*' /etc/pam.d/common-password &> /dev/null; echo $?)
+expected='0'
+remediation="sed -i 's/\bdifok=3\b/& reject_username/' /etc/pam.d/common-password"
+
+###
+
+title='Ensure password complexity class is 4 (digits, uppercase, lowecase, other symbols)'
+test=$(grep -E '.*minclass=4.*' /etc/pam.d/common-password &> /dev/null; echo $?)
+expected='0'
+remediation="sed -i 's/\bpam_cracklib.so\b/& minclass=4/' /etc/pam.d/common-password"
+
+###
+
+title='Ensure password contains at least 1 character of each class'
+test=$(grep -E '.*dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1.*' /etc/pam.d/common-password &> /dev/null; echo $?)
+expected='0'
+remediation="sed -i 's/\breject_username\b/& dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1/' /etc/pam.d/common-password"
+
+###
+
+title='Ensure passwords containing more than 2 identical consecutive characters are rejected'
+test=$(grep -E '.*maxrepeat=2.*' /etc/pam.d/common-password &> /dev/null; echo $?)
+expected='0'
+remediation="sed -i 's/\bminclass=4\b/& maxrepeat=2/' /etc/pam.d/common-password"
+
+###
+
+title='Ensure saving last 24 passwords to check against is enabled'
+test=$(grep -E '.*remember=24.*' /etc/pam.d/common-password &> /dev/null; echo $?)
+expected='0'
+remediation="sed -i 's/\bpam_unix.so\b/& remember=24/' /etc/pam.d/common-password"
+
+###
+
+title='Ensure lockout time after 5 unsuccessful login attempts is set to 20 minutes'
+test=$(grep -E '.*auth required pam_tally2\.so onerr=fail audit silent deny=5 unlock_time=1200.*' /etc/pam.d/login &> /dev/null; echo $?)
+expected='0'
+remediation="sed -iE '/session\s+optional\s+pam_keyinit.so\s+force\s+revoke/a\auth required pam_tally2\.so onerr=fail test silent deny=5 unlock_time=1200' /etc/pam.d/login"
+
+###
+
+title='Ensure delay time between login prompts is set to 10 seconds (default: 3 seconds)'
+test=$(grep -E '.*delay=.*' /etc/pam.d/login | grep -oE '0-9+')
+expected='10000000'
+remediation="sed -iE 's/(delay=)0-9+/\110000000/' /etc/pam.d/login"
+
+###
+
+title='Ensure that non-local logins to priviliged accounts are disallowed'
+test=$(grep -E '^-:wheel:ALL EXCEPT LOCAL.*' /etc/security/access.conf &> /dev/null; echo $?)
+expected='0'
+remediation="sed -iE '/^#-:wheel:ALL EXCEPT LOCAL.*/s/#//' /etc/security/access.conf"
+
+###
+

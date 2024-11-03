@@ -1,0 +1,9 @@
+https://f-droid.org/repo/rkr.simplekeyboard.inputmethod_84.apk
+https://f-droid.org/repo/com.simplemobiletools.filemanager.pro_123.apk
+https://f-droid.org/repo/com.simplemobiletools.notes.pro_96.apk
+https://f-droid.org/repo/com.simplemobiletools.musicplayer_101.apk
+https://f-droid.org/repo/com.simplemobiletools.dialer_39.apk
+https://f-droid.org/repo/com.simplemobiletools.flashlight_55.apk
+https://f-droid.org/repo/com.simplemobiletools.contacts.pro_95.apk
+https://f-droid.org/repo/com.simplemobiletools.gallery.pro_372.apk
+https://f-droid.org/repo/de.baumann.browser_135.apk

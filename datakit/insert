@@ -1,0 +1,139 @@
+#!/usr/bin/env bash
+<< 'EOF'
+Insert a row or column to CSV data
+
+USAGE:
+    ./insert <-c column_data | -r row_data> <file>
+
+INPUT:
+    - CSV data in a file, or via stdin
+
+OUTPUT:
+    - The original data with an additional row or column added
+
+EXAMPLES:
+    echo col{1..10} | tr ' ' ',' >> file.csv
+    echo {1..10}    | tr ' ' ',' >> file.csv
+    echo {11..20}   | tr ' ' ',' >> file.csv
+    echo {21..30}   | tr ' ' ',' >> file.csv
+
+    ./insert -c col11,11,21,31 file.csv    # add a column of data
+
+EOF
+
+#
+# locate script dependencies
+#
+
+src_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+transpose="${src_dir}/transpose"
+checkcsv="${src_dir}/checkcsv"
+
+#
+# print usage
+#
+
+print_usage(){
+    echo -e "
+    Insert a row or a column data to a CSV file
+
+    USAGE:
+
+        ./insert -r 31,32,33,34,35,36,37,38,39,40 file.csv
+        ./insert -c col11,11,21,31 file.csv
+        cat file.csv | ./insert -c col11,11,21,31 \n"
+}
+
+#
+# insert a row
+#
+
+ins_row() {
+    # data_csv: csv list
+    # f       : string containing file content or stdin content
+    local data_csv="${1}"
+    local f="${2}"
+
+    # check number of items
+    n_col=$(echo "${f}" | head -1 | tr ',' '\n' | wc -l)
+    n_data=$(echo "${data_csv}" | tr ',' '\n' | wc -l)
+
+    if [ "${n_data}" -ne "${n_col}" ]; then
+        echo 'Invalid number of elements.'
+        return 1
+    fi
+
+    {
+    echo "${f}"
+    echo "${data_csv}"
+    }
+}
+
+#
+# insert a column
+#
+
+ins_col() {
+    # data_csv: csv list
+    # f       : string containing file content or stdin content
+    local data_csv="${1}"
+    local f="${2}"
+
+    # check number of items
+    n_row=$(echo "${f}" | "${transpose}" | head -1 | tr ',' '\n' | wc -l)
+    n_data=$(echo "${data_csv}" | tr ',' '\n' | wc -l)
+
+    if [ "${n_data}" -ne "${n_row}" ]; then
+        echo 'Invalid number of elements.'
+        return 1
+    fi
+
+    {
+    echo "${f}" | "${transpose}"
+    echo "${data_csv}"
+    } | "${transpose}"
+}
+
+#
+# main()
+#
+
+main() {
+    args=()
+    while [ "$#" -gt 0 ]; do
+        case "${1}" in
+            -h ) print_usage; exit 0;;
+            -c ) col_data="${2}"; shift; shift ;;
+            -r ) row_data="${2}"; shift; shift ;;
+            -* ) echo "Unknown option ${1}. Exiting ..."; exit 1;;
+             * ) args+=("${1}"); shift;;
+        esac
+    done
+
+    if [ -z "${col_data}" -a -z "${row_data}" ]; then
+        echo 'No data provided!'
+        return 1
+    fi
+
+    argf="${args[0]}"
+    if [ -n "${argf}" ]; then
+        f="$(cat "${argf}")"
+    else
+        f="$(</dev/stdin)"
+    fi
+
+    echo "${f}" | "${checkcsv}" || return 1
+
+    if [ -z "$col_data" -a -n "$row_data" ]; then
+        ins_row "$row_data" "$f"
+    elif [ -z "$row_data" -a -n "$col_data" ]; then
+        ins_col "$col_data" "$f"
+    else
+        echo 'Provide either row or column data, not both.'
+        return 1
+    fi
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    main "$@"
+fi
