@@ -26,7 +26,9 @@ specified in the configuration file (e.g. deploy.conf). Each line in the
 file corresponds to a single deployment.
 '
 
-dir_temp="$(mktemp -d /tmp/deploy.XXXXXX)"
+set -eo pipefail
+
+dir_temp="$(mktemp -d /tmp/deploy.$$.XXXXXX)"
 file_archive="$dir_temp/file.tgz"
 
 print_usage() {
@@ -41,6 +43,7 @@ cleanup() {
     if [ -f "${file_archive}" ]; then
         rm "${file_archive}"
     fi
+
     if [ -d "${dir_temp}" ]; then
         rm -rf "${dir_temp}"
     fi
