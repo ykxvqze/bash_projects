@@ -223,14 +223,15 @@ main() {
     done
 
     local ip_cidr="${1}"
-    valid_cidr "${ip_cidr}" || exit 1
+    valid_cidr "${ip_cidr}" || { echo 'Invalid CIDR address. Exiting...'; exit 1; }
+    
     {
-    echo "Network address        : $(cidr2network ${ip_cidr})"
+    echo "Network address        : $(cidr2network   ${ip_cidr})"
     echo "Broadcast address      : $(cidr2broadcast ${ip_cidr})"
-    echo "Subnet mask            : $(cidr2netmask ${ip_cidr})"
-    echo "First usable address   : $(cidr2ipfirst ${ip_cidr})"
-    echo "Last usable address    : $(cidr2iplast ${ip_cidr})"
-    echo "Number of usable hosts : $(cidr2numhosts ${ip_cidr})"
+    echo "Subnet mask            : $(cidr2netmask   ${ip_cidr})"
+    echo "First usable address   : $(cidr2ipfirst   ${ip_cidr})"
+    echo "Last usable address    : $(cidr2iplast    ${ip_cidr})"
+    echo "Number of usable hosts : $(cidr2numhosts  ${ip_cidr})"
     } | column -t -s ':'
 }
 
