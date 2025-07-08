@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-: '
+
+<< 'EOF'
 Set up s-nail for sending/receiving mail over SMTP/IMAP via CLI.
 
 USAGE: ./snail.sh [-h] | [-s] | [-l] | [-a <account>] | [-r <account(s)>]
@@ -34,11 +35,11 @@ s-nail -A gmail -L :u   # list unread messages (-A option for specifying account
 s-nail -A gmail -L u    # list all inbox messages for user
 
 # send an email via SMTP
-cat << EOF > reply
+cat << EOD > reply
 Hello,
 I am sending an email.
 Regards,
-EOF
+EOD
 
 cat reply | s-nail -A outlook
                    -s "subject_line"
@@ -62,7 +63,7 @@ s-nail -A outlook        # run this in shell to get into interactive mode
 
 Note: mail will be in plaintext (ASCII); attachments and inline images
 included in the mail appear as base64-encoded. You can copy the encoded
-text to a separate file (e.g. file1) and decode it like this:
+text to a separate file (e.g. file1) and decode it:
 
 base64 -d file1
 
@@ -72,26 +73,27 @@ after decoding:
 
 base64 -d file1 > file1_decoded
 evince file1_decoded
-
-'
+EOF
 
 path_to_mailbox="$HOME"/mailbox
 
-__sn__print_usage()           { :; }
-__sn__check_system_deb()      { :; }
-__sn__check_snail_installed() { :; }
-__sn__install_snail()         { :; }
-__sn__check_mailrc_exists()   { :; }
-__sn__initialize_mailrc()     { :; }
-__sn__check_account_exists()  { :; }
-__sn__append_account()        { :; }
-__sn__remove_account()        { :; }
-__sn__add_account()           { :; }
-__sn__list_accounts()         { :; }
-__sn__status()                { :; }
+__print_usage           () { :; }
+__check_system_deb      () { :; }
+__check_snail_installed () { :; }
+__install_snail         () { :; }
+__check_mailrc_exists   () { :; }
+__initialize_mailrc     () { :; }
+__check_account_exists  () { :; }
+__append_account        () { :; }
+__remove_account        () { :; }
+__add_account           () { :; }
+__list_accounts         () { :; }
+__status                () { :; }
+__main                  () { :; }
 
-__sn__print_usage() {
-    echo -e "snail.sh: s-nail for sending/receiving mail over SMTP/IMAP via CLI.
+__print_usage() {
+    echo -e "s-nail for sending/receiving mail over SMTP/IMAP via CLI.
+
     Usage: ./${0##*/}
     [ -h ]               Print usage and exit
     [ -l ]               List all accounts registered in ~/.mailrc
@@ -100,19 +102,19 @@ __sn__print_usage() {
     [ -r <account(s)> ]  Remove specified account(s)\n"
 }
 
-__sn__check_system_deb() {
+__check_system_deb() {
     dpkg --version > /dev/null 2>&1
 
     if [ "$?" -ne 0 ]; then
-        echo 'Non-Debian based system. Exiting...'
+        echo 'Non-Debian based system.'
         return 1
     else
         return 0
     fi
 }
 
-__sn__check_snail_installed() {
-    __sn__check_system_deb
+__check_snail_installed() {
+    __check_system_deb
 
     if [ "$?" -eq 0 ]; then
         dpkg -l | grep 's-nail' | grep '^ii' &> /dev/null
@@ -122,11 +124,11 @@ __sn__check_snail_installed() {
     fi
 }
 
-__sn__install_snail() {
+__install_snail() {
     sudo apt-get install s-nail
 }
 
-__sn__check_mailrc_exists() {
+__check_mailrc_exists() {
 
     if [ -f ~/.mailrc ]; then
         return 0
@@ -136,7 +138,7 @@ __sn__check_mailrc_exists() {
     fi
 }
 
-__sn__initialize_mailrc() {
+__initialize_mailrc() {
     mkdir "$path_to_mailbox"
     touch ~/.mailrc
     chmod 700 ~/.mailrc
@@ -147,12 +149,12 @@ set folder="$path_to_mailbox"
 EOF
 }
 
-__sn__check_account_exists() {
+__check_account_exists() {
     local acc="${1}"
     grep "account ${acc}\s" ~/.mailrc > /dev/null 2>&1
 }
 
-__sn__append_account() {
+__append_account() {
     echo 'This will store account information you supply in config file ~/.mailrc used by s-nail.'
     read -p 'Enter mail address (e.g. john.doe@gmail.com or john.doe@outlook.com): ' email_address
     read -p 'Enter mail password: ' -s email_password
@@ -177,18 +179,18 @@ account $1 {
 EOF
 }
 
-__sn__remove_account() {
+__remove_account() {
     local acc="${1}"
-    __sn__check_system_deb || exit 1
-    __sn__check_snail_installed || __sn__install_snail
-    __sn__check_mailrc_exists || __sn__initialize_mailrc
-    __sn__check_account_exists "${acc}"
+    __check_system_deb || exit 1
+    __check_snail_installed || __install_snail
+    __check_mailrc_exists || __initialize_mailrc
+    __check_account_exists "${acc}"
 
-   if [ "$?" -ne 0 ]; then
+    if [ "$?" -ne 0 ]; then
         echo "Account ${acc} does not exist."
     else
         line_numbers=$(grep -n -A 10 "^account ${acc}\s" ~/.mailrc |
-                       tr ':-' '  '                              |
+                       tr ':-' '  '                                |
                        cut -d ' ' -f 1)
 
         start=$(echo "${line_numbers}" | head -1)
@@ -198,27 +200,27 @@ __sn__remove_account() {
     fi
 }
 
-__sn__add_account() {
+__add_account() {
     local acc="${1}"
-   __sn__check_system_deb || exit 1
-    __sn__check_snail_installed || __sn__install_snail
-    __sn__check_mailrc_exists || __sn__initialize_mailrc
-    __sn__check_account_exists "${1}"
+    __check_system_deb      || exit 1
+    __check_snail_installed || __install_snail
+    __check_mailrc_exists   || __initialize_mailrc
+    __check_account_exists "${1}"
 
     if [ "$?" -eq 0 ]; then
         read -p 'Account already exists. Do you want to overwrite (y/n)? ' x
         case "$x" in
             n | N) echo 'Exiting...'; exit 0 ;;
-            y | Y) remove_account "${acc}"; __sn__append_account "${acc}"; exit 0 ;;
+            y | Y) remove_account "${acc}"; __append_account "${acc}"; exit 0 ;;
                 *) echo 'Invalid response. Exiting...'; exit 1 ;;
         esac
     else
-        __sn__append_account "${acc}"
+        __append_account "${acc}"
     fi
 }
 
-__sn__list_accounts() {
-
+__list_accounts() {
+    __check_mailrc_exists || exit 1
     if [ "$(grep 'account' ~/.mailrc | wc -l)" -ne 0 ]; then
         echo 'The accounts listed in ~/.mailrc are the following: '
         grep 'account' ~/.mailrc | cut -d ' ' -f 2
@@ -227,28 +229,30 @@ __sn__list_accounts() {
     fi
 }
 
-__sn__status() {
-    __sn__check_snail_installed && echo 's-nail is already installed.' || echo 's-nail is not installed.'
-    __sn__check_mailrc_exists
+__status() {
+    __check_snail_installed && echo 's-nail is already installed.' || echo 's-nail is not installed.'
+    __check_mailrc_exists || exit 1
     echo -n 'The number of accounts listed in ~/.mailrc is: '
     grep 'account' ~/.mailrc | wc -l
 }
 
-main() {
+__main() {
     case "${1}" in
-        -a) [ "${2}" ] && __sn__add_account "${2}" || { echo "${1} requires an argument"; exit 1; } ;;
+        -a) [ "${2}" ] && __add_account "${2}" || { echo "${1} requires an argument"; exit 1; } ;;
         -r) if [ -n "${2}" ]; then
                 account_names="${@: 2:$#}"
                 for i in ${account_names}; do
-                    __sn__remove_account "${i}"
+                    __remove_account "${i}"
                 done
             fi ;;
-        -s) __sn__status                ; exit 0 ;;
-        -l) __sn__list_accounts         ; exit 0 ;;
-        -h) __sn__print_usage           ; exit 0 ;;
+        -s) __status                    ; exit 0 ;;
+        -l) __list_accounts             ; exit 0 ;;
+        -h) __print_usage               ; exit 0 ;;
         -*) echo "Unknown option: ${1}" ; exit 1 ;;
-         *) __sn__print_usage           ; exit 1 ;;
+         *) __print_usage               ; exit 1 ;;
     esac
 }
 
-main "$@"
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    __main "$@"
+fi
