@@ -29,7 +29,7 @@ __debugmode      () { :; }
 __main           () { :; }
 
 __print_usage() {
-    echo -e "sysutil.sh: sysops utility functions.
+    echo -e "Sysops utility functions.
     Usage:
 
     . ./sysutil.sh             # Source the script first to use the utility functions
