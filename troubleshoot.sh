@@ -640,7 +640,7 @@ __check_pidstat() {
 }
 
 main() {
-	__load_color
+    __load_color
     __check_sysinfo
     __check_free
     __check_uptime
