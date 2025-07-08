@@ -10,7 +10,7 @@ OPTIONS:
         [ -s ]               Show status on whether s-nail is installed and number of accounts registered
         [ -l ]               List all accounts registered in ~/.mailrc
         [ -a <account> ]     Add the specified account
-        [ -r <account(s)> ]  Remove specified account(s)\n"
+        [ -r <account(s)> ]  Remove specified account(s)
 
 OUTPUT:
          s-nail will be installed if not already present. Options to add

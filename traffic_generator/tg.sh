@@ -37,21 +37,23 @@ __parse_options() {
 }
 
 __check_config_file() {
-    if [ ! -f ./config.json ]; then
+    src_dir="$(realpath "$(dirname "${BASH_SOURCE[0]}")" )"
+    config_file="$src_dir"/config.json
+    if [ ! -f "${config_file}" ]; then
         echo "Could not find 'config.json'. Exiting ..."
         exit 1
     fi
 }
 
 __load_root_urls() {
-    export root_urls=$(jq '.root_urls' config.json |
-                       grep -o '"[^"]*"'           |
+    export root_urls=$(jq '.root_urls' "${config_file}" |
+                       grep -o '"[^"]*"'                |
                        grep -o '[^"]*')
 }
 
 __load_user_agents() {
-    export user_agents=$(jq '.user_agents' config.json |
-                         grep -o '"[^"]*"'             |
+    export user_agents=$(jq '.user_agents' "${config_file}" |
+                         grep -o '"[^"]*"'                  |
                          grep -o '[^"]*')
 }
 
