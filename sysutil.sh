@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 << 'EOF'
-
 Sysops utility functions.
 
 USAGE: . ./sysutil.sh [ -h ]
