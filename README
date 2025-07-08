@@ -18,4 +18,4 @@ Bash Projects
 * CLI plotting: cliplot.sh
 * Data toolkit: datakit/
 * CF computations: finbot.sh
-* Traffic generator: tg.sh, config.json
+* Traffic generator: traffic_generator/
