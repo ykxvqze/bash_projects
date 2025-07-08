@@ -40,8 +40,7 @@ __print_usage() {
     __geodata                  # List country, city, and geo-coordinates based on IP address
     __getmac <iface>           # Get MAC address of network interface <iface>
     __config_files             # Check for existence of important configuration files
-    __log_rotate <file>        # Split file if > 100mB into smaller ones (<= 100mB), gzip
-                               # them and store as <file>.<i>.gz
+    __log_rotate <file>        # Split file if > 100mB into smaller ones (<= 100mB), gzip them and store as <file>.<i>.gz
     __mysql_backup [ -r ]      # Backup all mysql databases into ~/backup/mysql/ and optionally
                                # use switch -r for sending the backup to a remote server over rsync;
                                # (backups older than 1 week are automatically deleted afterwards).
