@@ -20,6 +20,8 @@ EOF
 # functions
 #
 
+__print_usage   () { :; }
+__parse_options () { :; }
 __load_color    () { :; }
 __check_sysinfo () { :; }
 __check_free    () { :; }
@@ -30,6 +32,32 @@ __check_mpstat  () { :; }
 __check_iostat  () { :; }
 __check_sar     () { :; }
 __check_pidstat () { :; }
+__main          () { :; }
+
+#
+# usage
+#
+
+__print_usage() {
+    echo -e "
+    Script to help troubleshoot CPU, Memory, and I/O usage issues.
+
+    USAGE:
+          ./${0##*/} \n"
+}
+
+#
+# parse options
+#
+
+__parse_options() {
+    while getopts 'h' option; do
+        case "$option" in
+            h) __print_usage; exit 0;;
+            *) echo "Invalid option. Exiting..."; exit 1;;
+        esac
+    done
+}
 
 #
 # colors
@@ -640,6 +668,7 @@ __check_pidstat() {
 }
 
 __main() {
+	__parse_options "$@"
     __load_color
     __check_sysinfo
     __check_free
@@ -653,5 +682,5 @@ __main() {
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    __main
+    __main "$@"
 fi
