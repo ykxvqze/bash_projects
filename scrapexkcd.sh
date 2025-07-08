@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-: '
+
+<< 'EOF'
 Scrape images iteratively from the xkcd site. Continue from last fetch upon script re-run.
 
 USAGE:  ./scrapexkcd.sh [ -h ]
@@ -38,59 +39,119 @@ This way, if the script is re-run some other time, it will start
 scraping based on the last index.html file it already scraped in the
 previous execution. Hence, it will fetch only new images, adding them to
 ./xkcd/
-'
+EOF
 
-trap 'echo error on line: $LINENO' ERR
+__set_trap              () { :; }
+__print_usage           () { :; }
+__parse_options         () { :; }
+__check_xkcd_directory  () { :; }
+__check_log_counter     () { :; }
+__read_log_counter      () { :; }
+__remove_index_page     () { :; }
+__fetch_index_page      () { :; }
+__check_download_status () { :; }
+__get_image_url         () { :; }
+__fetch_image           () { :; }
+__update_log_counter    () { :; }
+__main                  () { :; }
 
-print_usage() {
-    echo -e "scrapexkcd.sh: fetch cartoon images from the xkcd site iteratively.
+__set_trap() {
+    trap 'echo error on line: $LINENO' ERR
+}
+
+__print_usage() {
+    echo -e "Fetch images from the xkcd site iteratively.
+    
     Usage:
+    
     ./${0##*/}             Execute script and fetch images into ./xkcd directory
     ./${0##*/} [ -h ]      Print usage and exit\n"
 }
 
-while getopts 'h' option; do
-    case $option in
-        h) print_usage;  exit 0 ;;
-        *) echo -e 'Incorrect usage! See below:\n';
-           print_usage;  exit 1 ;;
-    esac
-done
+__parse_options() {
+    while getopts 'h' option; do
+        case "$option" in
+            h) __print_usage;  exit 0 ;;
+            *) echo -e 'Incorrect usage! See below:\n';
+               __print_usage;  exit 1 ;;
+        esac
+    done
+}
 
-if [ -d ./xkcd ]; then
-    echo 'Directory ./xkcd already exists.'
-else
-    echo 'Creating directory ./xkcd'
-    mkdir ./xkcd
-fi
+__check_xkcd_directory() {
+    if [ -d ./xkcd ]; then
+        echo 'Directory ./xkcd already exists.'
+    else
+        echo 'Creating directory ./xkcd'
+        mkdir ./xkcd
+    fi
+}
 
-if [ -f ./xkcd/log_counter ]; then
-    echo 'Last logged site counter exists.'
-else
-    echo 'Last logged site counter does not exist.'
-    echo 'Will start newly from: i=1...'
-    echo 1 > ./xkcd/log_counter
-fi
+__check_log_counter() {
+    if [ -f ./xkcd/log_counter ]; then
+        echo 'Last logged site counter exists.'
+    else
+        echo 'Last logged site counter does not exist.'
+        echo 'Will start newly from: i=1...'
+        echo 1 > ./xkcd/log_counter
+    fi
+}
 
-i=$(cat ./xkcd/log_counter)
-while : ; do
+__read_log_counter() {
+    counter=$(cat ./xkcd/log_counter)
+    echo "webpage counter: $counter"
+}
+
+__remove_index_page() {
     if [ -f ./xkcd/index.html ]; then
         rm ./xkcd/index.html
     fi
+}
 
-    echo "webpage counter: $i"
-    wget -q -P './xkcd' "https://xkcd.com/$i/index.html"
+__fetch_index_page() {
+    wget -q -P './xkcd' "https://xkcd.com/${counter}/index.html"
+}
 
+__check_download_status() {
     if [ "$?" -ne 0 ]; then
-        echo 'Reached final page. Exiting...'
-        break
+        echo 'Error downloading or reached final page. Exiting...'
+        exit 1
     fi
+}
 
+__get_image_url() {
     url_of_image=$(grep 'Image URL (for hotlinking/embedding):' ./xkcd/index.html |
                    grep -o '"https://imgs.xkcd.com/comics/[^"]*"'                 |
                    sed 's/"//g')
+}
+
+__fetch_image() {
     echo "Fetching $url_of_image ..."
     wget -q -P './xkcd' "$url_of_image"
-    let i++
-    echo "$i" > ./xkcd/log_counter
-done
+}
+
+__update_log_counter() {
+    ((counter++))
+    echo "${counter}" > ./xkcd/log_counter
+}
+
+__main() {
+    __set_trap
+    __parse_options "$@"
+    __check_xkcd_directory
+    __check_log_counter
+    __read_log_counter
+
+    while : ; do
+        __remove_index_page
+        __fetch_index_page
+        __check_download_status
+        __get_image_url
+        __fetch_image
+        __update_log_counter
+    done
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    __main "$@"
+fi
