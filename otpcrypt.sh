@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-: '
+
+<< 'EOF'
 Utility functions for encrypting/decrypting via a one-time pad (OTP).
 
 USAGE: ./otpcrypt.sh [ -h ]
@@ -44,20 +45,36 @@ OTP/Key                  1011001111010001100111011011100101001011011010111000110
 Ciphertext (binary)      111110101111000111111100110101000110101100101001111000111110110100101110
 Decrypted msg (binary)   010010010010000001100001011011010010000001000010011011110110001000101110
 Decrypted msg (ASCII)    I am Bob.
-
-'
+EOF
 
 set -Eeo pipefail
 
-print_usage() {
-    echo
+__print_usage     () { :; }
+__ascii_to_binary () { :; }
+__binary_to_ascii () { :; }
+__xor             () { :; }
+__generate_otp    () { :; }
+__parse_options   () { :; }
+__main            () { :; }
+
+__print_usage() {
     echo -e "otpcrypt.sh: utility functions for one-time pad encryption/decryption.\n
     Usage:\n
     ./${0##*/}             Run demo
     ./${0##*/} [ -h ]      Print usage and exit\n"
 }
 
-ascii_to_binary() {
+__parse_options() {
+    while getopts 'h' option; do
+        case "$option" in
+            h) __print_usage; exit 0         ;;
+            *) echo -e 'Incorrect usage!\n'; 
+               __print_usage; exit 1         ;;
+        esac
+    done
+}
+
+__ascii_to_binary() {
     echo -n "$@"      |
     xxd -b            |
     cut -d ' ' -f 2-7 |
@@ -65,7 +82,7 @@ ascii_to_binary() {
     tr -d ' '
 }
 
-binary_to_ascii() {
+__binary_to_ascii() {
     string=$(echo "${1}" | sed 's/.\{8\}/&\ /g')
     for i in $string; do
         echo "obase=16; ibase=2; $i" |
@@ -75,7 +92,7 @@ binary_to_ascii() {
     done;
 }
 
-xor() {
+__xor() {
     string1=$(echo "${1}" | tr -d ' ')
     string2=$(echo "${2}" | tr -d ' ')
 
@@ -89,7 +106,7 @@ xor() {
     fi
 }
 
-generate_otp() {
+__generate_otp() {
     local string="${1}"
     local length="${#string}"
     for i in `shuf -i 1-"${length}"`; do
@@ -97,41 +114,34 @@ generate_otp() {
     done
 }
 
-main() {
-    while getopts 'h' option; do
-        case "$option" in
-            h) print_usage; exit 0         ;;
-            *) echo -e 'Incorrect usage!\n'; 
-               print_usage; exit 1         ;;
-        esac
-    done
-
-    # demo
-    plaintext_ascii='I am Bob.'
-    plaintext_binary="$(ascii_to_binary "${plaintext_ascii}")"
-    key="$(generate_otp "${plaintext_binary}")"
-    ciphertext_binary="$(xor "${plaintext_binary}" "${key}")"
-    ciphertext_ascii="$(binary_to_ascii "${ciphertext_binary}")"
-    decrypted_binary="$(xor "${ciphertext_binary}" "${key}")"
-    decrypted_ascii="$(binary_to_ascii "${decrypted_binary}")"
-
+__set_colors() {
     GREEN='\e[32m'
     BLUE='\e[34m'
     DEFAULT='\e[0m'
+}
+
+__main() {
+    __parse_options "$@"
+    __set_colors
+
+    plaintext_ascii='I am Bob.'
+    plaintext_binary="$(__ascii_to_binary "${plaintext_ascii}")"
+    key="$(__generate_otp "${plaintext_binary}")"
+    ciphertext_binary="$(__xor "${plaintext_binary}" "${key}")"
+    ciphertext_ascii="$(__binary_to_ascii "${ciphertext_binary}")"
+    decrypted_binary="$(__xor "${ciphertext_binary}" "${key}")"
+    decrypted_ascii="$(__binary_to_ascii "${decrypted_binary}")"
 
     {
-
     printf "${BLUE}Plaintext (ASCII)     : ${GREEN}%s${DEFAULT}\n" "${plaintext_ascii}  "
     printf "${BLUE}Plaintext (binary)    : ${GREEN}%s${DEFAULT}\n" "${plaintext_binary} "
     printf "${BLUE}OTP/Key               : ${GREEN}%s${DEFAULT}\n" "${key}              "
     printf "${BLUE}Ciphertext (binary)   : ${GREEN}%s${DEFAULT}\n" "${ciphertext_binary}"
     printf "${BLUE}Decrypted msg (binary): ${GREEN}%s${DEFAULT}\n" "${decrypted_binary} "
     printf "${BLUE}Decrypted msg (ASCII) : ${GREEN}%s${DEFAULT}\n" "${decrypted_ascii}  "
-
     } | column -t -s ':'
-
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    main "${@}"
+    __main "${@}"
 fi
