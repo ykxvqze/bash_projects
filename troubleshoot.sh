@@ -639,7 +639,7 @@ __check_pidstat() {
     fi
 }
 
-main() {
+__main() {
     __load_color
     __check_sysinfo
     __check_free
@@ -653,5 +653,5 @@ main() {
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    main
+    __main
 fi
