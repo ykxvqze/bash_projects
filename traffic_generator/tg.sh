@@ -132,7 +132,6 @@ __run_crawler() {
             if [ -z "${urls}" ]; then
                 break
             fi
-
         done
     done
 }
