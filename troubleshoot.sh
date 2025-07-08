@@ -117,7 +117,7 @@ __check_free() {
     swap_usage_percent=$(( 100 * used_swap / total_swap ))
 
     # flag
-	issues=0
+    issues=0
 
     # check memory usage
     if [ "${memory_usage_percent}" -ge "${memory_threshold}" ]; then
@@ -168,7 +168,7 @@ __check_uptime() {
     load_average=$(uptime | tr ',' ' ' | awk '{print $((NF-2))}')
 
     # flag
-	issues=0
+    issues=0
 
     if (( $(echo "${load_average} >= ${num_cores}" | bc -l) )); then
         echo "[ ${RED}Warning${DEFAULT} ] Load average (${load_average}) is greater than or equal to the number of physical CPUs (${num_cores})."
@@ -215,7 +215,7 @@ __check_top() {
     cpu_iowait="$(echo "${cpu_metrics}" | awk '{print $10}')"
 
     # flag
-	issues=0
+    issues=0
 
     # check CPU usage thresholds
     if (( $(echo "${cpu_user} >= ${cpu_user_threshold}" | bc -l) )); then
