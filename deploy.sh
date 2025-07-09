@@ -22,24 +22,28 @@ specified in the configuration file.
 NOTE:
 
 The host, the local directory of the project, and the remote directory are
-specified in the configuration file (e.g. deploy.conf). Each line in the
-file corresponds to a single deployment.
+specified in the configuration file (deploy.conf). Each line in the file
+corresponds to a single deployment.
 '
 
 set -eo pipefail
 
-dir_temp="$(mktemp -d /tmp/deploy.$$.XXXXXX)"
-file_archive="$dir_temp/file.tgz"
+__create_temporary_files() {
+    dir_temp="$(mktemp -d /tmp/deploy.$$.XXXXXX)"
+    file_archive="$dir_temp/file.tgz"
+}
 
-print_usage() {
+__print_usage() {
     echo -e "deploy.sh: a deployment script
+
     Usage: ./${0##*/}
+
     [ -p <dir>  ]    Specify project directory (defaults to current working directory if omitted)
     [ -c <file> ]    Specify configuration file (defaults to 'deploy.conf' in the project directory)
     [ -h ]           Print usage and exit\n"
 }
 
-cleanup() {
+__cleanup() {
     if [ -f "${file_archive}" ]; then
         rm "${file_archive}"
     fi
@@ -49,18 +53,22 @@ cleanup() {
     fi
 }
 
-trap "cleanup" EXIT SIGINT SIGTERM
+__set_trap() {
+    trap "cleanup" EXIT SIGINT SIGTERM
+}
 
-main() {
+__parse_options() {
     while getopts "p:c:h" option; do
       case "$option" in
-        p) dir_project="$OPTARG";;
-        c) file_config="$OPTARG";;
-        h) print_usage; exit 0  ;;
-        *) print_usage; exit 1  ;;
+        p) dir_project="$OPTARG"  ;;
+        c) file_config="$OPTARG"  ;;
+        h) __print_usage; exit 0  ;;
+        *) __print_usage; exit 1  ;;
       esac
     done
+}
 
+__get_absolute_filepaths() {
     if [ -n "${dir_project}" ]; then
         dir_project=$(realpath "${dir_project}")
     else
@@ -70,11 +78,15 @@ main() {
     if [ -z "${file_config}" ]; then
         file_config="${dir_project}/deploy.conf"
     fi
+}
 
+__read_config_file() {
     config=$(<${file_config})
     config="$(echo "${config}" | sed '/^$/d' | grep -v '^#')"
-    n_target="$(echo "${config}" | wc -l)"
+}
 
+__deploy_targets() {
+    n_target="$(echo "${config}" | wc -l)"
     for i in $(seq ${n_target}); do
         target=( $(sed -n "${i} p" <<< "${config}") )
         host="${target[1]}"
@@ -119,4 +131,15 @@ main() {
     done
 }
 
-main "${@}"
+__main() {
+    __set_trap
+    __create_temporary_files
+    __get_absolute_filepaths
+    __parse_options "$@"
+    __read_config_file
+    __deploy_targets
+}
+
+if [ "${BASH_SOURCE[0]}" == "${0}" ]; then
+    __main "$@"
+fi
