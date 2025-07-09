@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-: '
+
+<< 'EOF'
 Create line breaks at a limit of 72 characters without breaking any word
 
 USAGE:  ./cutline.sh [ -r | --rm ] <filename(s)>
@@ -57,17 +58,27 @@ nisi ut aliquid ex ea commodi consequatur. Quis aute iure
 reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
 pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in
 culpa qui officia deserunt mollit anim id est laborum.
-'
+EOF
 
-print_usage() {
-    echo -e "cutline.sh: cut lines at 72 characters without breaking words.
+__print_usage       () { :; }
+__cut_lines         () { :; }
+__check_nargs       () { :; }
+__parse_arguments   () { :; }
+__check_files_exist () { :; }
+__process_files     () { :; }
+__main              () { :; }
+
+__print_usage() {
+    echo -e "Cut lines at 72 characters without breaking words.
+
     Usage:
+
         ./${0##*/} <filename(s)>                    Keep original file(s) intact
         ./${0##*/} [ -r | --remove ] <filename(s)>  Remove original file(s)
         ./${0##*/} [ -h | --help ]                  Print usage and exit\n"
 }
 
-cut_lines() {
+__cut_lines() {
     local file="${1}"
     local n_lines="$(cat "$file" | wc -l)"
     local i=1
@@ -81,39 +92,52 @@ cut_lines() {
     done
 }
 
-main() {
+__check_nargs() {
     if [ "$#" -eq 0 ]; then
-        print_usage
+        __print_usage
         exit 1
     fi
+}
 
+__parse_arguments() {
     # parse and collect filenames in an array
     args=()
     while [ "$#" -gt 0 ]; do
         case "${1}" in
-            -h | --help   ) print_usage                 ; exit 0 ;;
+            -h | --help   ) __print_usage               ; exit 0 ;;
             -r | --remove ) keep='off'                  ; shift  ;;
             -*            ) echo "Unknown option: ${1}" ; exit 1 ;;
              *            ) args+=("${1}")              ; shift  ;;
         esac
     done
+}
 
+__check_files_exist() {
     for f in "${args[@]}"; do
         [ -f "$f" ] || { echo "file $f does not exist. Exiting ..."; exit 1; }
     done
+}
 
+__process_files() {
     if [ "$keep" != 'off' ]; then
         for f in "${args[@]}"; do
             cp "$f" "$(dirname "$f")/__$(basename "$f")"
-            cut_lines "$(dirname "$f")/__$(basename "$f")"
+            __cut_lines "$(dirname "$f")/__$(basename "$f")"
         done
     else
         for f in "${args[@]}"; do
-            cut_lines "$f"
+            __cut_lines "$f"
         done
     fi
 }
 
+__main() {
+    __check_nargs "$@"
+    __parse_arguments "$@"
+    __check_files_exist
+    __process_files
+}
+
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    main "$@"
+    __main "$@"
 fi
