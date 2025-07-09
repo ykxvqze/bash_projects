@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-: '
+
+<< 'EOF'
 Scan LAN to discover IP and MAC addresses of connected devices on the network.
 
 USAGE:  sudo ./netscan.sh [ -i <interface> ]
@@ -52,10 +53,10 @@ sudo ./netscan.sh
 
 Output:
 
-running nmap scan: round 1 of 2...
-running arp scan: round 1 of 2...
-running nmap scan: round 2 of 2...
-running arp scan: round 2 of 2...
+[*] Running nmap scan: round 1 of 2...
+[*] Running arp scan: round 1 of 2...
+[*] Running nmap scan: round 2 of 2...
+[*] Running arp scan: round 2 of 2...
 
 Network Interface:   wlp3s0
 IP Address Range:    192.168.1.3/24
@@ -68,49 +69,74 @@ IP_address      MAC_address
 192.168.1.6     XX:XX:XX:XX:XX:XX
 192.168.1.7     XX:XX:XX:XX:XX:XX
 192.168.1.9     XX:XX:XX:XX:XX:XX
+EOF
 
-'
+__print_usage                () { :; }
+__get_default_iface          () { :; }
+__get_all_ifaces             () { :; }
+__get_mac                    () { :; }
+__get_ips                    () { :; }
+__run_nmap                   () { :; }
+__run_arpscan                () { :; }
+__parse_options              () { :; }
+__check_euid                 () { :; }
+__check_debian               () { :; }
+__check_nmap_installed       () { :; }
+__check_arpscan_installed    () { :; }
+__create_temporary_files     () { :; }
+__check_concurrent_execution () { :; }
+__set_traps                  () { :; }
+__check_interface            () { :; }
+__get_interface_mac_ip       () { :; }
+__run_nmap_arpscan           () { :; }
+__get_nmap_exclusive_ips     () { :; }
+__append_additional_ips      () { :; }
+__set_colors                 () { :; }
+__print_result               () { :; }
+__main                       () { :; }
 
-print_usage() {
+__print_usage() {
     echo -e "netscan: detect devices connected to your network.
+
     Usage: sudo ./${0##*/}
+
     [ -i <interface> ]  Specify network interface (otherwise default assumed)
     [ -h ]              Print usage and exit\n"
 }
 
-get_default_iface(){
+__get_default_iface(){
     ip route show default | head -1 | cut -d ' ' -f 5
 }
 
-get_all_ifaces(){
+__get_all_ifaces(){
     ip link           |
     grep -E '^[0-9]:' |
     cut -d ':' -f 2   |
     grep -Ev 'lo$'
 }
 
-get_mac(){
+__get_mac(){
     local interface="${1}"
     ip link show "${interface}" |
     grep 'ether'                |
     awk '{print $2}'
 }
 
-get_ips(){
+__get_ips(){
     local interface="${1}"
     ip -o -4 address show "${interface}" |
     tr -s ' '                            |
     cut -d ' ' -f 4
 }
 
-run_nmap(){
+__run_nmap(){
     local interface="${1}"
     local ip_cidr="${2}"
     nmap -e "${interface}" -sn "${ip_cidr}" |
     grep -Eo "([0-9]{1,3}\.){3}[0-9]{1,3}$"
 }
 
-run_arpscan(){
+__run_arpscan(){
     local interface="${1}"
     local ip_cidr="${2}"
     arp-scan -I "${interface}" "${ip_cidr}" 2> /dev/null |
@@ -118,38 +144,40 @@ run_arpscan(){
     cut -f 1,2
 }
 
-main(){
-    # parse input
+__parse_options() {
     while getopts 'i:h' option; do
         case $option in
-            h) print_usage;  exit 0 ;;
+            h) __print_usage;  exit 0 ;;
             i) iface="$OPTARG"      ;;
-            *) print_usage;  exit 1 ;;
+            *) __print_usage;  exit 1 ;;
         esac
     done
+}
 
-    # check privilege
+__check_euid() {
     if [ "$EUID" != 0 ]; then
         echo "Use sudo to run the script: sudo ./${0##*/}"
         echo "Exiting..."
         exit 1
     fi
+}
 
-    # check if Debian-based
+__check_debian() {
     dpkg --version &> /dev/null
     if [ "$?" -ne 0 ]; then
-        echo "Not a Debian-based distribution"
+        echo "Not a Debian-based distribution."
         echo "Exiting..."
         exit 1
     fi
+}
 
-    # install nmap or exit
+__check_nmap_installed() {
     if [ -z "$(which nmap)" ]; then
         echo "nmap not found. Script will exit unless you allow installing nmap."
-        read -p "Install nmap? (y/n): " -n 1 x
-        if [ "${x,,}" == 'y' ]; then
+        read -p "Install nmap? (y/n): " -n 1 reply
+        if [ "${reply,,}" == 'y' ]; then
             apt-get install nmap
-        elif [ "${x,,}" == 'n' ]; then
+        elif [ "${reply,,}" == 'n' ]; then
             echo 'Exiting...'
             exit 0
         else
@@ -157,14 +185,15 @@ main(){
             exit 1
         fi
     fi
+}
 
-    # install arp-scan or exit
+__check_arpscan_installed() {
     if [ -z "$(which arp-scan)" ]; then
         echo "arp-scan not found. Script will exit unless you allow installing arp-scan."
-        read -p "Install arp-scan? (y/n): " -n 1 x
-        if [ "${x,,}" == 'y' ]; then
+        read -p "Install arp-scan? (y/n): " -n 1 reply
+        if [ "${reply,,}" == 'y' ]; then
             apt-get install arp-scan
-        elif [ "${x,,}" == 'n' ]; then
+        elif [ "${reply,,}" == 'n' ]; then
             echo 'Exiting...'
             exit 0
         else
@@ -172,45 +201,59 @@ main(){
             exit 1
         fi
     fi
+}
 
-    # temporary files
+__create_temporary_files() {
     file_nmap=$(mktemp /tmp/file_nmap.XXXXXX)
     file_arp=$(mktemp /tmp/file_arp.XXXXXX)
     PID_FILE="/tmp/${0##*/}.pid"
+}
 
-    # avoid concurrent executions
+__check_concurrent_execution() {
     if [ -f "${PID_FILE}" ]; then
         echo "A concurrent execution is already running: PID $(cat ${PID_FILE})"
         echo "If not, delete ${PID_FILE}"
         exit 1
     fi
     echo $$ > "${PID_FILE}"
+}
 
+__set_traps() {
     trap 'rm ${PID_FILE} ${file_nmap} ${file_arp}' SIGINT SIGTERM EXIT
     trap 'echo error on line: $LINENO' ERR
+}
 
-    iface_default=$(get_default_iface)
-    ifaces_list=$(get_all_ifaces)
+__check_interface() {
+    iface_default=$(__get_default_iface)
+    ifaces_list=$(__get_all_ifaces)
     if [ -z "${iface}" -o -z "$(grep "${iface}" <<< "${ifaces_list}")" ]; then
         echo "Supplied network interface does not exist. Reverting to default ${iface_default}"
         iface="${iface_default}"
     fi
+}
 
-    MAC=$(get_mac "${iface}")
-    IPs=$(get_ips "${iface}")
+__get_interface_mac_ip() {
+    MAC=$(__get_mac "${iface}")
+    IPs=$(__get_ips "${iface}")
+}
 
+__run_nmap_arpscan() {
     n_repeat=2
     for i in $(seq 1 "${n_repeat}"); do
-        echo "running nmap scan: round ${i} of ${n_repeat}..."
-        run_nmap "${iface}" "${IPs}" >> "${file_nmap}"
+        echo "[*] Running nmap scan: round ${i} of ${n_repeat}..."
+        __run_nmap "${iface}" "${IPs}" >> "${file_nmap}"
 
-        echo "running arp scan: round ${i} of ${n_repeat}..."
-        run_arpscan "${iface}" "${IPs}" >> "${file_arp}"
+        echo "[*] Running arp scan: round ${i} of ${n_repeat}..."
+        __run_arpscan "${iface}" "${IPs}" >> "${file_arp}"
     done
+}
 
+__get_nmap_exclusive_ips() {
     # IP addresses detected by nmap but not by arp-scan
     IP_plus=$(comm -13 <(cut -f 1 "${file_arp}" | sort -u) <(cat "${file_nmap}" | sort -u))
+}
 
+__append_additional_ips() {
     # construct results table
     for i in ${IP_plus}; do
         table_plus=$(arp | grep -E "$i\s" | tr -s ' ' | cut -d ' ' -f 1,3 | tr ' ' '\t')
@@ -223,19 +266,42 @@ main(){
 
     # add localhost entry to table and add a (*) sign
     echo -e "${IPs%/*}\t${MAC} (*)" >> "${file_arp}"
+}
 
-    # display
+__set_colors() {
     DEFAULT='\e[0m'
     RED='\e[31m'
     GREEN='\e[32m'
+}
 
+__print_result() {
+    __set_colors
     echo ''
     echo -e "Network Interface:\t $iface"
     echo -e "IP Address Range:\t $IPs"
-    echo -e "${RED}----------------------------------------${DEFAULT}"
+    echo -e "${RED}-----------------------------------------${DEFAULT}"
     echo 'Devices on LAN:'
     echo -e "${GREEN}IP_address\tMAC_address ${DEFAULT}"
     cat "${file_arp}" | sort -u -k 1
 }
 
-main "$@"
+__main() {
+    __parse_options "$@"
+    __check_euid
+    __check_debian
+    __check_nmap_installed
+    __check_arpscan_installed
+    __create_temporary_files
+    __check_concurrent_execution
+    __set_traps
+    __check_interface
+    __get_interface_mac_ip
+    __run_nmap_arpscan
+    __get_nmap_exclusive_ips
+    __append_additional_ips
+    __print_result
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    __main "${@}"
+fi
