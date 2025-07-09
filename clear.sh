@@ -21,6 +21,12 @@ and other files within target directories. Patterns sought include:
 ~/.cache/thumbnails is also cleared.
 EOF
 
+__set_trap      () { :; }
+__print_usage   () { :; }
+__parse_options () { :; }
+__clear_cache   () { :; }
+__main          () { :; }
+
 __set_trap() {
     trap 'echo error on line: $LINENO' ERR
 }
