@@ -143,7 +143,7 @@ __parse_arguments() {
     args=()
     while [ "$#" -gt 0 ]; do
         case "${1}" in
-            -h ) print_usage; exit 0;;
+            -h ) __print_usage; exit 0;;
             -c ) col_number="${2}"; shift; shift ;;
             -r ) row_number="${2}"; shift; shift ;;
             -* ) echo "Unknown option ${1}. Exiting ..."; exit 1;;
