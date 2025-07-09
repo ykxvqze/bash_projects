@@ -3,7 +3,7 @@
 << 'EOF'
 Clear Firefox data, bookmarks, cookies, cache, and other files
 
-USAGE:  ./clr.sh [ -h ]
+USAGE:  ./clear.sh [ -h ]
 
 OPTIONS:
         [ -h ]         Print usage and exit
