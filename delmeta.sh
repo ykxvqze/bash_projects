@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-: '
+
+<< 'EOF'
 Delete .docx (Word) file metadata
 
 USAGE:  ./delmeta.sh <file1.docx> <file2.docx> ... <fileN.docx>
@@ -35,18 +36,30 @@ libreoffice-based version, then "Close" the files. Open the new file and
 the original .docx file. "Save As" leaves the original file intact. Now you
 can run ./delmeta.sh on the new file. The resulting formatted file will
 be readable in both libreoffice and Word and will be stripped of metadata.
-'
+EOF
 
-trap 'echo error on line: $LINENO' ERR
+__set_trap      () { :; }
+__print_usage   () { :; }
+__get_abspath   () { :; }
+__check_nargs   () { :; }
+__parse_options () { :; }
+__process_files () { :; }
+__main          () { :; }
 
-print_usage() {
-    echo -e "delmeta.sh: delete author and timestamp metadata from .docx (Word) files.
+set_trap() {
+    trap 'echo error on line: $LINENO' ERR
+}
+
+__print_usage() {
+    echo -e "Delete author and timestamp metadata from .docx (Word) files.
+
     Usage:
+
     ./${0##*/} <filename(s).docx>  At least one filename must be supplied
     ./${0##*/} [ -h ]              Print usage and exit\n"
 }
 
-get_abspath(){
+__get_abspath(){
     local file="$1"
     dname=$(dirname "$file")
     bname=$(basename "$file")
@@ -55,24 +68,27 @@ get_abspath(){
     echo "$abspath"
 }
 
-main() {
-
+__check_nargs() {
     if [ "$#" -eq 0 ]; then
-        print_usage
+        __print_usage
         exit 1
     fi
+}
 
+__parse_options() {
     while getopts 'h' option; do
         case "$option" in
-            h) print_usage;  exit 0 ;;
+            h) __print_usage;  exit 0 ;;
             *) echo -e 'Incorrect usage! See below:\n';
-               print_usage;  exit 1 ;;
+               __print_usage;  exit 1 ;;
         esac
     done
+}
 
+__process_files() {
     while (( "$#" )); do
         file="$1"
-        abs_path=$(get_abspath "$file")
+        abs_path=$(__get_abspath "$file")
         dpath=$(dirname $abs_path)
         bname=$(basename $abs_path)
 
@@ -118,4 +134,13 @@ main() {
     done
 }
 
-main "$@"
+__main() {
+    __set_trap
+    __check_nargs "$@"
+    __parse_options "$@"
+    __process_files "$@"
+}
+
+if [ "${BASH_SOURCE[0]}" == "${0}" ]; then
+    __main "$@"
+fi
