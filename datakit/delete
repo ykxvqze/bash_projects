@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 << 'EOF'
 Delete an element from a CSV list
 
@@ -12,30 +13,29 @@ OUTPUT:
 EXAMPLES:
     ./delete -i 2 1,2,3,4,5           # result: 1,3,4,5
     echo 1,2,3,4,5 | ./delete -i 2    # result: 1,3,4,5
-
 EOF
 
-#
-# print usage
-#
+__print_usage     () { :; }
+__del             () { :; }
+__parse_arguments () { :; }
+__check_arguments () { :; }
+__check_index     () { :; }
+__apply_delete    () { :; }
+__main            () { :; }
 
-print_usage() {
-    echo -e "
-    Delete an element from a CSV list
+__print_usage() {
+    echo -e "Delete an element from a CSV list.
 
     USAGE:
-
-        ./delete -i 2 1,2,3,4,5
-        echo 1,2,3,4,5 | ./delete -i 2 \n"
+          ./delete -i 2 1,2,3,4,5
+          echo 1,2,3,4,5 | ./delete -i 2 \n"
 }
 
-#
-# delete an element
-#
-
-del() {
+__del() {
+<< 'EOF'
     # index: integer
     # list : csv list
+EOF
     index="${1}"
     list="${2}"
 
@@ -53,29 +53,27 @@ del() {
     IFS="${OFS}"
 }
 
-#
-# main()
-#
-
-main() {
+__parse_arguments() {
     args=()
     while [ "$#" -gt 0 ]; do
         case "${1}" in
-            -h ) print_usage; exit 0;;
+            -h ) __print_usage; exit 0;;
             -i ) index="${2}"; shift; shift ;;
             -* ) echo "Unknown option ${1}. Exiting ..."; exit 1;;
              * ) args+=("${1}"); shift;;
         esac
     done
+}
 
+__check_arguments() {
     if [ -z "$index" ]; then
         echo 'Index not provided!'
-        return 1 
+        exit 1 
     fi
 
     if [[ ! "${index}" =~ ^[1-9][0-9]*$ ]]; then
         echo 'Index should be an integer.'
-        return
+        exit 1
     fi
 
     argf="${args[0]}"
@@ -84,17 +82,27 @@ main() {
     else
         f="$(</dev/stdin)"
     fi
+}
 
+__check_index() {
     n_list="$(echo "${f}" | tr ',' '\n' | wc -l)"
     if [ "${index}" -lt 1 -o "${index}" -gt "${n_list}" ]; then
         echo 'Index out of range!'
-        return 1
+        exit 1
     fi
+}
 
-    del "${index}" "${f}"
+__apply_delete() {
+    __del "${index}" "${f}"
+}
+
+__main() {
+    __parse_arguments "$@"
+    __check_arguments
+    __check_index
+    __apply_delete
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    main "$@"
+    __main "$@"
 fi
-
