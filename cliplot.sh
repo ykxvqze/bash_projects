@@ -63,6 +63,7 @@ __normalize_input () { :; }
 __draw_line       () { :; }
 __parse_options   () { :; }
 __parse_arguments () { :; }
+__check_args      () { :; }
 __print_stats     () { :; }
 __main            () { :; }
 
