@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
+
 << 'EOF'
 Write to a row or a column of CSV data
 
 USAGE:
-    ./write <-c column | -r row> <data> <file>
+    ./write <-c column | -r row> <data>  <file>
 
 INPUT:
     - CSV data to write
@@ -23,42 +24,43 @@ EXAMPLES:
 
 EOF
 
-#
-# source utility functions
-#
+__source_utility_functions () { :; }
+__print_usage              () { :; }
+__write_row                () { :; }
+__write_col                () { :; }
+__parse_arguments          () { :; }
+__check_arguments          () { :; }
+__check_csv_format         () { :; }
+__apply_write              () { :; }
+__main                     () { :; }
 
-src_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "${src_dir}/utils.sh"
+__source_utility_functions() {
+    src_dir="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
+    source "${src_dir}/utils.sh"
 
-transpose="${src_dir}/transpose"
-slice="${src_dir}/slice"
-drop="${src_dir}/drop"
-insert="${src_dir}/insert"
-checkcsv="${src_dir}/checkcsv"
+    transpose="${src_dir}/transpose"
+    slice="${src_dir}/slice"
+    drop="${src_dir}/drop"
+    insert="${src_dir}/insert"
+    checkcsv="${src_dir}/checkcsv"
+}
 
-#
-# print usage
-#
-
-print_usage(){
-    echo -e "
-    Overwrite a row or a column in a CSV file
+__print_usage() {
+    echo -e "Overwrite a row or a column in a CSV file.
 
     USAGE:
 
-        ./write -r 2 31,32,33,34,35,36,37,38,39,40 file.csv
-        ./write -c 2 a,b,c,d file.csv
-        cat file.csv | ./write -c 2 a,b,c,d \n"
+        ./${0##*/} -r 2 31,32,33,34,35,36,37,38,39,40 file.csv
+        ./${0##*/} -c 2 a,b,c,d file.csv
+        cat file.csv | ./${0##*/} -c 2 a,b,c,d \n"
 }
 
-#
-# overwrite a row
-#
-
-write_row() {
-    # row_number: integer or name
-    # row_data  : cv list
-    # f         : string containing file content or stdin content
+__write_row() {
+<< 'EOF'
+    row_number: integer or name
+    row_data  : cv list
+    f         : string containing file content or stdin content
+EOF
     local row_number="${1}"
     local row_data="${2}"
     local f="${3}"
@@ -95,14 +97,12 @@ write_row() {
     fi
 }
 
-#
-# overwrite a column
-#
-
-write_col() {
-    # col_number: integer or name
-    # col_data  : cv list
-    # f         : string containing file content or stdin content
+__write_col() {
+<< 'EOF'
+    col_number: integer or name
+    col_data  : cv list
+    f         : string containing file content or stdin content
+EOF
     local col_number="${1}"
     local col_data="${2}"
     local f="${3}"
@@ -139,38 +139,36 @@ write_col() {
     fi
 }
 
-#
-# main()
-#
-
-main() {
+__parse_arguments() {
     args=()
     while [ "$#" -gt 0 ]; do
         case "${1}" in
             -h ) print_usage; exit 0;;
             -c ) col_number="${2}"; shift; shift ;;
             -r ) row_number="${2}"; shift; shift ;;
-            # -d ) data="${2}"      ; shift; shift ;;
             -* ) echo "Unknown option ${1}. Exiting ..."; exit 1;;
              * ) args+=("${1}"); shift;;
         esac
     done
 
+}
+
+__check_arguments() {
     if [ -z "${col_number}" -a -z "${row_number}" ]; then
         echo 'No row or column provided!'
-        return 1
+        exit 1
     fi
 
     if [ -n "${col_number}" -a -n "${row_number}" ]; then
         echo 'Provide either row or column data, not both.'
-        return 1
+        exit 1
     fi
 
     data="${args[0]}"
 
     if [ -z "${data}" ]; then
         echo 'No data provided!'
-        return 1
+        exit 1
     fi
 
     argf="${args[1]}"
@@ -179,16 +177,28 @@ main() {
     else
         f="$(</dev/stdin)"
     fi
+}
 
-    echo "${f}" | "${checkcsv}" || return 1
+__check_csv_format() {
+    echo "${f}" | "${checkcsv}" || exit 1
+}
 
+__apply_write() {
     if [ -z "${col_number}" -a -n "${row_number}" ]; then
-        write_row "${row_number}" "${data}" "${f}"
+        __write_row "${row_number}" "${data}" "${f}"
     elif [ -z "${row_number}" -a -n "${col_number}" ]; then
-        write_col "${col_number}" "${data}" "${f}"
+        __write_col "${col_number}" "${data}" "${f}"
     fi
 }
 
+__main() {
+    __source_utility_functions
+    __parse_arguments "$@"
+    __check_arguments
+    __check_csv_format
+    __apply_write
+}
+
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    main "$@"
+    __main "$@"
 fi
