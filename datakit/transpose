@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 << 'EOF'
 Transpose CSV data
 
@@ -20,35 +21,30 @@ EXAMPLES:
 
     ./transpose file.csv
     cat file.csv | ./transpose
-
 EOF
 
-#
-# source utility functions
-#
+__source_utility_functions () { :; }
+__print_usage              () { :; }
+__tp                       () { :; }
+__parse_options            () { :; }
+__parse_arguments          () { :; }
+__check_csv_format         () { :; }
+__main                     () { :; }
 
-src_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-checkcsv="${src_dir}/checkcsv"
-
-#
-# print usage
-#
-
-print_usage(){
-    echo -e "
-    Transpose CSV data
-
-    USAGE:
-    
-        ./transpose file.csv
-        cat file.csv | ./transpose \n"
+__source_utility_functions() {
+    src_dir="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
+    checkcsv="${src_dir}/checkcsv"
 }
 
-#
-# transpose csv content
-#
+__print_usage(){
+    echo -e "Transpose CSV data.
 
-tp() {
+    USAGE:
+          ./transpose file.csv
+          cat file.csv | ./transpose \n"
+}
+
+__tp() {
     # f: string containing file content or stdin content
     local f="${1}"
 
@@ -63,30 +59,36 @@ tp() {
     fi
 }
 
-#
-# main()
-#
-
-main() {
+__parse_options() {
     while getopts 'h' option; do
-        case $option in
-            h) print_usage; exit 0;;
-            *) echo 'Unknown option. Exiting ...'; exit 1;;
+        case "$option" in
+            h) __print_usage; exit 0;;
+            *) echo 'Invalid option. Exiting ...'; exit 1;;
         esac
     done
+}
 
+__parse_arguments() {
     argf="${1}"
     if [ -n "${argf}" ]; then
         f="$(cat "${argf}")"
     else
         f="$(</dev/stdin)"
     fi
+}
 
+__check_csv_format() {
     echo "${f}" | "${checkcsv}" || return 1
+}
 
-    tp "${f}"
+__main() {
+    __source_utility_functions
+    __parse_options "$@"
+    __parse_arguments "$@"
+    __check_csv_format
+    __tp "${f}"
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    main "$@"
+    __main "$@"
 fi
