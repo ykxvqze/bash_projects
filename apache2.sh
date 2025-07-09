@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-: '
+
+<< 'EOF'
 Demo - install apache2 web server and set up a password-protected virtual host.
 
 USAGE: sudo ./apache2.sh [ -h ]
@@ -35,46 +36,59 @@ and password are required to access the site:
 
 Note: Port 8080 (instead of 80) is used as non-default port.
 The script must run with privilege (see usage).
-'
+EOF
 
 virtual_host='websiteA'
 user='user_guest'
 
-print_usage() {
-	echo -e "apache2.sh: demo - installs apache2 and sets up a password-protected website
+__print_usage             () { :; }
+__parse_options           () { :; }
+__check_euid              () { :; }
+__check_apache2_installed () { :; }
+__create_virtualhost      () { :; }
+__main                    () { :; }
+
+__print_usage() {
+	echo -e "Demo - installs apache2 and sets up a password-protected website
+
 	Usage:
-	sudo ./${0##*/}             Execute demo
-	sudo ./${0##*/} [ -h ]      Print usage and exit\n"
+
+		sudo ./${0##*/}             Execute demo
+		sudo ./${0##*/} [ -h ]      Print usage and exit\n"
 }
 
-is_apache_installed(){
-	systemctl status apache2 &> /dev/null
-	return "$?"
-}
-
-main() {
-	# parse
+__parse_options() {
 	while getopts 'h' option; do
 		case "$option" in
-			h) print_usage; exit 0         ;;
+			h) __print_usage; exit 0         ;;
 			*) echo -e 'Incorrect usage!\n';
-			   print_usage; exit 1         ;;
+			   __print_usage; exit 1         ;;
 		esac
 	done
+}
 
+__check_euid() {
 	if [ "$EUID" != 0 ]; then
-	    echo -e 'script requires sudo privilege.\n'
-	    print_usage
+	    echo -e "\nScript requires sudo privilege: sudo ./${0##*/}\n"
 	    exit 1
 	fi
+}
 
-	is_apache_installed
+__check_apache2_installed(){
+	systemctl status apache2 &> /dev/null
 	if [ "$?" -ne 0 ]; then
-	    apt-get install apache2
+		echo "apache2 is not installed. Installing..."
+		apt-get install apache2
 	fi
 
-	is_apache_installed || { echo 'apache2 failed to install. Exiting...'; exit 1; } 
+	systemctl status apache2 &> /dev/null
+	if [ "$?" -ne 0 ]; then
+		echo "Installating failed. Exiting..."
+		exit 1
+	fi
+}
 
+__create_virtualhost() {
 	mkdir /var/www/html/"${virtual_host}"
 	touch /etc/apache2/sites-available/"${virtual_host}".conf
 
@@ -122,4 +136,14 @@ main() {
 	systemctl reload apache2
 }
 
-main "$@"
+__main() {
+	__parse_options "$@"
+	__check_euid
+	__check_apache2_installed
+	__create_virtualhost
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+	__main "$@"
+fi
+
