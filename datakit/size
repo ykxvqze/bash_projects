@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 << 'EOF'
 Return dimensions of a CSV file, i.e., number of rows and columns
 
@@ -13,67 +14,73 @@ OUTPUT:
     - Dimensions of CSV data given as number_of_rows x number_of_columns
 
 EXAMPLES:
+    echo col{1..10} | tr ' ' ',' >> file.csv
+    echo {1..10}    | tr ' ' ',' >> file.csv
+    echo {11..20}   | tr ' ' ',' >> file.csv
+    echo {21..30}   | tr ' ' ',' >> file.csv
+
     ./size file.csv
     cat file.csv | ./size
-
 EOF
 
-#
-# locate script dependencies
-#
+__source_utility_functions () { :; }
+__print_usage              () { :; }
+__get_size                 () { :; }
+__parse_options            () { :; }
+__parse_arguments          () { :; }
+__check_csv_format         () { :; }
+__main                     () { :; }
 
-src_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-checkcsv="${src_dir}/checkcsv"
-
-#
-# print usage
-#
-
-print_usage() {
-    echo -e "
-    Return dimensions of CSV data
-
-    USAGE:
-
-        ./size file.csv
-        cat file.csv | ./size \n"
+__source_utility_functions() {
+    src_dir="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
+    checkcsv="${src_dir}/checkcsv"
 }
 
-#
-# output: number_of_rows x number_of_columns
-#
+__print_usage() {
+    echo -e "Return dimensions of CSV data.
 
-getsize() {
+    USAGE:
+          ./size file.csv
+          cat file.csv | ./size \n"
+}
+
+__get_size() {
     f="${1}"
     n_col="$(echo "${f}" | head -1 | tr ',' '\n' | wc -l)"
     n_row="$(echo "${f}" | wc -l)"
     echo "${n_row}"x"${n_col}"
 }
 
-#
-# main()
-#
-
-main() {
+__parse_options() {
     while getopts 'h' option; do
-        case $option in
-            h) print_usage; exit 0;;
-            *) echo 'Unknown option. Exiting ...'; exit 1;;
+        case "$option" in
+            h) __print_usage; exit 0;;
+            *) echo 'Invalid option. Exiting ...'; exit 1;;
         esac
     done
+}
 
+__parse_arguments() {
     argf="${1}"
     if [ -n "${argf}" ]; then
         f="$(cat "${argf}")"
     else
         f="$(</dev/stdin)"
     fi
+}
 
+__check_csv_format() {
     echo "${f}" | "${checkcsv}" || return 1
+}
 
-    getsize "${f}"
+__main() {
+    __source_utility_functions
+    __parse_options "$@"
+    __parse_arguments "$@"
+    __check_csv_format
+    __get_size "${f}"
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    main "$@"
+    __main "$@"
 fi
