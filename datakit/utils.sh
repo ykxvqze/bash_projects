@@ -5,31 +5,6 @@ Utility functions for the data toolkit
 EOF
 
 #
-# usage
-#
-
-__print_usage() {
-    echo -e "Utility functions to be sourced.
-
-    USAGE:
-          . ./${0##*/} \n"
-}
-
-#
-# parse options
-#
-
-__parse_options() {
-    while getopts 'h' option; do
-        case "$option" in
-            h) __print_usage; exit 0;;
-            *) echo "Invalid option. Exiting..."; exit 1;;
-        esac
-    done
-}
-
-
-#
 # strings to numbers, e.g. 4,col1-col5 --> 4,1-5
 #
 
@@ -98,10 +73,9 @@ __enumerate() {
 }
 
 __main() {
-    __parse_options "$@"
-    __print_usage
+    echo "Source this script: source ./utils.sh"
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    __main "$@"
+    __main
 fi

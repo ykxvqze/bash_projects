@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 << 'EOF'
 Slice a CSV data frame
 
@@ -24,15 +25,22 @@ EXAMPLES:
     ./slice -c 4,col2-col3 file.csv    # select fourth column, then columns col2 till col3.
     ./slice -c 1,3 -r 2- file.csv      # select first and third columns, second till last row
     ./slice -c 1 -r 2 file.csv         # select an element (first column, second row)
-
 EOF
 
-print_usage(){
-    echo -e "
-    Slice a CSV file
+__print_usage              () { :; }
+__source_utility_functions () { :; }
+__select_col               () { :; }
+__select_row               () { :; }
+__parse_arguments          () { :; }
+__check_arguments          () { :; }
+__check_csv_format         () { :; }
+__apply_select             () { :; }
+__main                     () { :; }
+
+__print_usage() {
+    echo -e "Slice a CSV file.
 
     USAGE:
-
         ./slice -c 2 file.csv              # select second column
         ./slice -c 1,3 file.csv            # select first and third columns
         ./slice -c 1-3 file.csv            # select first till third column
@@ -41,23 +49,19 @@ print_usage(){
         ./slice -c 4,col2-col3 file.csv    # select fourth column, then columns col2 till col3 \n"
 }
 
-#
-# source utility functions
-#
+__source_utility_functions() {
+    src_dir="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
+    source "${src_dir}/utils.sh"
 
-src_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "${src_dir}/utils.sh"
+    transpose="${src_dir}/transpose"
+    checkcsv="${src_dir}/checkcsv"
+}
 
-transpose="${src_dir}/transpose"
-checkcsv="${src_dir}/checkcsv"
-
-#
-# select columns
-#
-
-select_col() {
+__select_col() {
+<< 'EOF'
     # col_list: csv string
     # f       : string containing file content or stdin content
+EOF
     local col_list="${1}"
     local f="${2}"
 
@@ -81,35 +85,35 @@ select_col() {
     done | "${transpose}"
 }
 
-#
-# select rows
-#
-
-select_row() {
+__select_row() {
+<< 'EOF'
     # row_list: csv string
     # f       : string containing file content or stdin content
+EOF
     local row_list="${1}"
     local f="${2}"
 
     f_temp="$(echo "${f}" | "${transpose}")"
-    select_col "${row_list}" "${f_temp}" | "${transpose}"
+    __select_col "${row_list}" "${f_temp}" | "${transpose}"
 }
 
-main() {
+__parse_arguments() {
     args=()
     while [ "$#" -gt 0 ]; do
         case "${1}" in
-            -h ) print_usage; exit 0;;
+            -h ) __print_usage; exit 0;;
             -c ) col_list="${2}"; shift; shift ;;
             -r ) row_list="${2}"; shift; shift ;;
             -* ) echo "Unknown option ${1}. Exiting ..."; exit 1;;
              * ) args+=("${1}"); shift;;
         esac
     done
+}
 
+__check_arguments() {
     if [ -z "${col_list}" -a -z "${row_list}" ]; then
         echo 'No row(s) or column(s) provided!'
-        return 1
+        exit 1
     fi
 
     argf="${args[0]}"
@@ -118,26 +122,38 @@ main() {
     else
         f="$(</dev/stdin)"
     fi
+}
 
+__check_csv_format() {
     echo "${f}" | "${checkcsv}" || return 1
+}
 
+__apply_select() {
     # row select
     if [ -z "${col_list}" -a -n "${row_list}" ]; then
-        select_row "${row_list}" "${f}"
+        __select_row "${row_list}" "${f}"
     fi
 
     # column select
     if [ -z "${row_list}" -a -n "${col_list}" ]; then
-        select_col "${col_list}" "${f}"
+        __select_col "${col_list}" "${f}"
     fi
 
     # row and column select
     if [ -n "${col_list}" ] && [ -n "${row_list}" ]; then
-        f_temp="$(select_col "${col_list}" "${f}")"
-        select_row "${row_list}" "${f_temp}"
+        f_temp="$(__select_col "${col_list}" "${f}")"
+        __select_row "${row_list}" "${f_temp}"
     fi
 }
 
+__main() {
+    __source_utility_functions
+    __parse_arguments "$@"
+    __check_arguments
+    __check_csv_format
+    __apply_select
+}
+
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    main "$@"
+    __main "$@"
 fi
