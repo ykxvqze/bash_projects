@@ -66,7 +66,7 @@ EOF
     local f="${3}"
 
     row_indices="$(echo "${f}" | "${transpose}" | head -1)"
-    row_number="$(str2num "${row_number}" "${row_indices}")"
+    row_number="$(__str2num "${row_number}" "${row_indices}")"
     n_row="$(echo "${f}" | "${transpose}" | head -1 | tr ',' '\n' | wc -l)"
 
     # check row number is valid
@@ -108,7 +108,7 @@ EOF
     local f="${3}"
 
     header="$(echo "${f}" | head -1)"
-    col_number="$(str2num "${col_number}" "${header}")"
+    col_number="$(__str2num "${col_number}" "${header}")"
     n_col="$(echo "${header}" | tr ',' '\n' | wc -l)"
 
     # check col number is valid

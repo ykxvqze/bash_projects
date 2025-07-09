@@ -1,14 +1,39 @@
 #!/usr/bin/env bash
+
 << 'EOF'
 Utility functions for the data toolkit
-
 EOF
+
+#
+# usage
+#
+
+__print_usage() {
+    echo -e "Utility functions to be sourced.
+
+    USAGE:
+          . ./${0##*/} \n"
+}
+
+#
+# parse options
+#
+
+__parse_options() {
+    while getopts 'h' option; do
+        case "$option" in
+            h) __print_usage; exit 0;;
+            *) echo "Invalid option. Exiting..."; exit 1;;
+        esac
+    done
+}
+
 
 #
 # strings to numbers, e.g. 4,col1-col5 --> 4,1-5
 #
 
-str2num() {
+__str2num() {
     local input_string="${1}"
     local header="${2}"
 
@@ -44,7 +69,7 @@ str2num() {
 # enumerate input, e.g. 2-5,4,1 --> 2,3,4,5,4,1,...
 #
 
-enumerate() {
+__enumerate() {
     local input_string="${1}"
     local n_col="${2}"
     OFS="${IFS}"
@@ -71,3 +96,12 @@ enumerate() {
     done | tr '\n' ',' | rev | cut -c 2- | rev
     IFS="${OFS}"
 }
+
+__main() {
+    __parse_options "$@"
+    __print_usage
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    __main "$@"
+fi
