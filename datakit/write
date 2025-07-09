@@ -150,7 +150,6 @@ __parse_arguments() {
              * ) args+=("${1}"); shift;;
         esac
     done
-
 }
 
 __check_arguments() {
