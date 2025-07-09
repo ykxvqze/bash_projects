@@ -19,7 +19,6 @@ __print_usage() {
  
              USAGE:
                    ./${0##*/} <hostname_or_ip_address> <port_number(s)>
-
                    ./${0##*/} google.com 80,443,8080 \n"
 }
 
