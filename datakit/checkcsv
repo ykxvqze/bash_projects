@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 << 'EOF'
 Validate CSV data
 
@@ -20,28 +21,24 @@ EXAMPLES:
 
     ./checkcsv file.csv
     cat file.csv | ./checkcsv
-
 EOF
 
-#
-# usage
-#
+__print_usage     () { :; }
+__check_cols      () { :; }
+__parse_options   () { :; }
+__parse_arguments () { :; }
+__main            () { :; }
 
-print_usage(){
-    echo -e "
-    Check CSV data
+__print_usage(){
+    echo -e "Check CSV data format.
 
     USAGE:
-
-        ./checkcsv file.csv
-        cat file.csv | ./checkcsv \n"
+          ./checkcsv file.csv
+          cat file.csv | ./checkcsv \n"
 }
 
-#
-# check column count per line
-#
-
-check_cols() {
+__check_cols() {
+    # check column count per line
     local f="${1}"
 
     header="$(echo "${f}" | head -1)"
@@ -59,28 +56,30 @@ check_cols() {
     done <<< "${f}"
 }
 
-#
-# main()
-#
-
-main() {
+__parse_options() {
     while getopts 'h' option; do
-        case $option in
-            h) print_usage; exit 0;;
-            *) echo 'Unknown option. Exiting ...'; exit 1;;
+        case "$option" in
+            h) __print_usage; exit 0;;
+            *) echo 'Invalid option. Exiting ...'; exit 1;;
         esac
     done
+}
 
+__parse_arguments() {
     argf="${1}"
     if [ -n "${argf}" ]; then
         f="$(cat "${argf}")"
     else
         f="$(</dev/stdin)"
     fi
+}
 
-    check_cols "${f}"
+__main() {
+    __parse_options "$@"
+    __parse_arguments "$@"
+    __check_cols "${f}"
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    main "$@"
+    __main "$@"
 fi

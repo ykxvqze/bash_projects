@@ -70,7 +70,7 @@ __parse_arguments() {
 }
 
 __check_csv_format() {
-    echo "${f}" | "${checkcsv}" || return 1
+    echo "${f}" | "${checkcsv}" || exit 1
 }
 
 __main() {
