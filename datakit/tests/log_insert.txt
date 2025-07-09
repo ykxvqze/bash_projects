@@ -10,3 +10,15 @@
 [v] passed: file_one_column.csv
 [v] passed: file_one_element.csv: add row
 [v] passed: file_one_element.csv: add column
+2025-07-09 16:16:52
+[v] passed: file_standard.csv:insert a column
+[v] passed: file_standard.csv: via stdin
+[v] passed: file_standard.csv: insert a row
+[v] passed: file_standard.csv: insert long row
+[v] passed: file_standard.csv: insert short row
+[v] passed: file_standard.csv: insert long column
+[v] passed: file_standard.csv: insert short column
+[v] passed: file_standard.csv: insert row and column
+[v] passed: file_one_column.csv
+[v] passed: file_one_element.csv: add row
+[v] passed: file_one_element.csv: add column
