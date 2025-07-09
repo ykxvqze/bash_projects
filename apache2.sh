@@ -83,7 +83,7 @@ __check_apache2_installed(){
 
 	systemctl status apache2 &> /dev/null
 	if [ "$?" -ne 0 ]; then
-		echo "Installating failed. Exiting..."
+		echo "Installation failed. Exiting..."
 		exit 1
 	fi
 }
@@ -146,4 +146,3 @@ __main() {
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
 	__main "$@"
 fi
-
