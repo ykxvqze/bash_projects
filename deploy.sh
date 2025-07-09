@@ -144,9 +144,9 @@ __deploy_targets() {
 
 __main() {
     __set_trap
+    __parse_options "$@"
     __create_temporary_files
     __get_absolute_filepaths
-    __parse_options "$@"
     __read_config_file
     __deploy_targets
 }
