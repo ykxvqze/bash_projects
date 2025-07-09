@@ -12,7 +12,7 @@ Bash Projects
 * Apache2 setup: apache2.sh
 * Sysops utilities: sysutil.sh
 * Deployment: deploy.sh, deploy.conf
-* Android: android.sh, packages_to_remove.txt, package_urls.txt
+* Android: android/
 * Text folding: cutline.sh
 * Web scraping: scrapexkcd.sh
 * CLI plotting: cliplot.sh
