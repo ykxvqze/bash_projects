@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-: '
+
+<< 'EOF'
 A script to deploy a project to a remote server via SSH
 
 USAGE: ./.deploy.sh [ -p <dir> ] [ -c <file> ]
@@ -24,9 +25,19 @@ NOTE:
 The host, the local directory of the project, and the remote directory are
 specified in the configuration file (deploy.conf). Each line in the file
 corresponds to a single deployment.
-'
+EOF
 
 set -eo pipefail
+
+__create_temporary_files () { :; }
+__print_usage            () { :; }
+__cleanup                () { :; }
+__set_trap               () { :; }
+__parse_options          () { :; }
+__get_absolute_filepaths () { :; }
+__read_config_file       () { :; }
+__deploy_targets         () { :; }
+__main                   () { :; }
 
 __create_temporary_files() {
     dir_temp="$(mktemp -d /tmp/deploy.$$.XXXXXX)"
