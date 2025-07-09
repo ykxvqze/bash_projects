@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 << 'EOF'
 Drop rows/columns from CSV data
 
@@ -18,38 +19,38 @@ EXAMPLES:
     echo {21..30}   | tr ' ' ',' >> file.csv
 
     ./drop -r 1,3 -c 1-5 file.csv    # drop rows 1 and 3 and columns 1 till 5
-
 EOF
 
-#
-# source utility functions
-#
+__source_utility_functions () { :; }
+__print_usage              () { :; }
+__deselect_col             () { :; }
+__deselect_row             () { :; }
+__parse_arguments          () { :; }
+__check_arguments          () { :; }
+__check_csv_format         () { :; }
+__apply_drop               () { :; }
+__main                     () { :; }
 
-src_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "${src_dir}/utils.sh"
+__source_utility_functions() {
+    src_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    source "${src_dir}/utils.sh"
 
-transpose="${src_dir}/transpose"
-checkcsv="${src_dir}/checkcsv"
-
-#
-# print usage
-#
-
-print_usage(){
-    echo -e "
-    Drop rows and/or columns from a CSV file
-
-    USAGE:
-    ./drop -r 1,3 -c 1-5 file.csv"
+    transpose="${src_dir}/transpose"
+    checkcsv="${src_dir}/checkcsv"
 }
 
-#
-# de-select column(s)
-#
+__print_usage(){
+    echo -e "Drop rows and/or columns from a CSV file.
 
-deselect_col(){
+    USAGE:
+          ./drop -r 1,3 -c 1-5 file.csv"
+}
+
+__deselect_col(){
+<< 'EOF'
     # col_list: csv string
     # f       : string containing file content or stdin content
+EOF
     local col_list="${1}"
     local f="${2}"
 
@@ -71,39 +72,35 @@ deselect_col(){
     echo "${f}" | cut --complement -s -d ',' -f "${col_list}"
 }
 
-#
-# de-select row(s)
-#
-
-deselect_row() {
+__deselect_row() {
+<< 'EOF'
     # row_list: csv string
     # f       : string containing file content or stdin content
+EOF
     local row_list="$1"
     local f="$2"
 
     f_temp=$(echo "${f}" | "${transpose}")
-    deselect_col "${row_list}" "${f_temp}" | "${transpose}"
+    __deselect_col "${row_list}" "${f_temp}" | "${transpose}"
 }
 
-#
-# main()
-#
-
-main() {
+__parse_arguments() {
     args=()
     while [ "$#" -gt 0 ]; do
         case "${1}" in
-            -h ) print_usage; exit 0;;
+            -h ) __print_usage; exit 0;;
             -c ) col_list="${2}"; shift; shift ;;
             -r ) row_list="${2}"; shift; shift ;;
             -* ) echo "Unknown option ${1}. Exiting ..."; exit 1;;
              * ) args+=("${1}"); shift;;
         esac
     done
+}
 
+__check_arguments() {
     if [ -z "${col_list}" -a -z "${row_list}" ]; then
         echo 'No data provided!'
-        return 1
+        exit 1
     fi
 
     argf="${args[0]}"
@@ -112,24 +109,36 @@ main() {
     else
         f="$(</dev/stdin)"
     fi
+}
 
+__check_csv_format() {
     echo "${f}" | "${checkcsv}" || return 1
-    
+}
+
+__apply_drop() {
     # row deselect
     if [ -z "${col_list}" ] && [ -n "${row_list}" ]; then
-         deselect_row "${row_list}" "${f}"
+         __deselect_row "${row_list}" "${f}"
     fi
     # column deselect
     if [ -z "${row_list}" ] && [ -n "${col_list}" ]; then
-        deselect_col "${col_list}" "${f}"
+        __deselect_col "${col_list}" "${f}"
     fi
     # row and column deselect
     if [ -n "${col_list}" ] && [ -n "${row_list}" ]; then
-        f_temp="$(deselect_col "${col_list}" "${f}")"
-        deselect_row "${row_list}" "${f_temp}"
+        f_temp="$(__deselect_col "${col_list}" "${f}")"
+        __deselect_row "${row_list}" "${f_temp}"
     fi
 }
 
+__main() {
+    __source_utility_functions
+    __parse_arguments "$@"
+    __check_arguments "$@"
+    __check_csv_format
+    __apply_drop
+}
+
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    main "$@"
+    __main "$@"
 fi
