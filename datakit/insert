@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 << 'EOF'
 Insert a row or column to CSV data
 
@@ -18,39 +19,38 @@ EXAMPLES:
     echo {21..30}   | tr ' ' ',' >> file.csv
 
     ./insert -c col11,11,21,31 file.csv    # add a column of data
-
 EOF
 
-#
-# locate script dependencies
-#
+__source_utility_functions () { :; }
+__print_usage              () { :; }
+__insert_row               () { :; }
+__insert_column            () { :; }
+__parse_arguments          () { :; }
+__check_arguments          () { :; }
+__check_csv_format         () { :; }
+__apply_insert             () { :; }
+__main                     () { :; }
 
-src_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-transpose="${src_dir}/transpose"
-checkcsv="${src_dir}/checkcsv"
-
-#
-# print usage
-#
-
-print_usage(){
-    echo -e "
-    Insert a row or a column data to a CSV file
-
-    USAGE:
-
-        ./insert -r 31,32,33,34,35,36,37,38,39,40 file.csv
-        ./insert -c col11,11,21,31 file.csv
-        cat file.csv | ./insert -c col11,11,21,31 \n"
+__source_utility_functions() {
+    src_dir="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
+    transpose="${src_dir}/transpose"
+    checkcsv="${src_dir}/checkcsv"
 }
 
-#
-# insert a row
-#
+__print_usage(){
+    echo -e "Insert a row or a column data to a CSV file.
 
-ins_row() {
+    USAGE:
+          ./insert -r 31,32,33,34,35,36,37,38,39,40 file.csv
+          ./insert -c col11,11,21,31 file.csv
+          cat file.csv | ./insert -c col11,11,21,31 \n"
+}
+
+__insert_row() {
+<< 'EOF'
     # data_csv: csv list
     # f       : string containing file content or stdin content
+EOF
     local data_csv="${1}"
     local f="${2}"
 
@@ -69,13 +69,11 @@ ins_row() {
     }
 }
 
-#
-# insert a column
-#
-
-ins_col() {
+__insert_column() {
+<< 'EOF'
     # data_csv: csv list
     # f       : string containing file content or stdin content
+EOF
     local data_csv="${1}"
     local f="${2}"
 
@@ -85,7 +83,7 @@ ins_col() {
 
     if [ "${n_data}" -ne "${n_row}" ]; then
         echo 'Invalid number of elements.'
-        return 1
+        exit 1
     fi
 
     {
@@ -94,22 +92,20 @@ ins_col() {
     } | "${transpose}"
 }
 
-#
-# main()
-#
-
-main() {
+__parse_arguments() {
     args=()
     while [ "$#" -gt 0 ]; do
         case "${1}" in
-            -h ) print_usage; exit 0;;
+            -h ) __print_usage; exit 0;;
             -c ) col_data="${2}"; shift; shift ;;
             -r ) row_data="${2}"; shift; shift ;;
             -* ) echo "Unknown option ${1}. Exiting ..."; exit 1;;
              * ) args+=("${1}"); shift;;
         esac
     done
+}
 
+__check_arguments() {
     if [ -z "${col_data}" -a -z "${row_data}" ]; then
         echo 'No data provided!'
         return 1
@@ -121,19 +117,31 @@ main() {
     else
         f="$(</dev/stdin)"
     fi
+}
 
+__check_csv_format() {
     echo "${f}" | "${checkcsv}" || return 1
+}
 
+__apply_insert() {
     if [ -z "$col_data" -a -n "$row_data" ]; then
-        ins_row "$row_data" "$f"
+        __insert_row "$row_data" "$f"
     elif [ -z "$row_data" -a -n "$col_data" ]; then
-        ins_col "$col_data" "$f"
+        __insert_column "$col_data" "$f"
     else
         echo 'Provide either row or column data, not both.'
-        return 1
+        exit 1
     fi
 }
 
+__main() {
+    __source_utility_functions
+    __parse_arguments "$@"
+    __check_arguments
+    __check_csv_format
+    __apply_insert
+}
+
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    main "$@"
+    __main "$@"
 fi
