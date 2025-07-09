@@ -101,7 +101,6 @@ __uninstall_apps_to_remove() {
 __cleanup() {
     rm -rf /tmp/packages_to_add.txt
     rm -rf /tmp/app_downloads/
-
     echo 'Done cleaning.'
 }
 
