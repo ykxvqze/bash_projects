@@ -4,6 +4,7 @@ Bash Projects
 * Security auditing: scansec/
 * System performance check: troubleshoot.sh
 * Network scanner: netscan.sh
+* Port scanner: port_scanner.sh
 * IPv4 networking: iptx.sh
 * SSH: sshban.sh
 * S-nail setup: snail.sh
