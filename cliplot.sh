@@ -60,7 +60,7 @@ __print_usage     () { :; }
 __get_min         () { :; }
 __get_max         () { :; }
 __normalize_input () { :; }
-__draw_line       () { :; }
+__draw_lines      () { :; }
 __parse_options   () { :; }
 __parse_arguments () { :; }
 __check_args      () { :; }
@@ -108,7 +108,7 @@ __normalize_input() {
     echo ${input_normalized[@]}
 }
 
-__draw_line() {
+__draw_lines() {
     if [ "$height" -gt $(tput lines) ]; then
          echo 'Height exceeds screen size. Setting to max height...'
          height=$(tput lines)
@@ -184,7 +184,7 @@ __main() {
     __parse_options "$@"
     __parse_arguments "$@"
     __check_args $args
-    __draw_line $args
+    __draw_lines $args
     __print_stats
 }
 
