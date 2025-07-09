@@ -64,8 +64,8 @@ select_col() {
     n_col="$(echo "${f}" | head -1 | tr ',' '\n' | wc -l)"
     header="$(echo "${f}" | head -1)"
 
-    col_list="$(str2num "${col_list}" "${header}")"
-    col_list="$(enumerate "${col_list}" "${n_col}")"
+    col_list="$(__str2num "${col_list}" "${header}")"
+    col_list="$(__enumerate "${col_list}" "${n_col}")"
 
     # check that all numbers are in range
     for i in $(echo "${col_list}" | tr ',' ' '); do
