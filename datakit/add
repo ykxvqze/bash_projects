@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 << 'EOF'
 Add an element to a CSV list
 
@@ -12,31 +13,30 @@ OUTPUT:
 EXAMPLES:
     ./add -i 2 -d 99 1,2,3,4,5           # result: 1,99,2,3,4,5
     echo 1,2,3,4,5 | ./add -i 2 -d 99    # result: 1,99,2,3,4,5
-
 EOF
 
-#
-# print usage
-#
+__print_usage     () { :; }
+__add             () { :; }
+__parse_arguments () { :; }
+__check_arguments () { :; }
+__check_index     () { :; }
+__apply_add       () { :; }
+__main            () { :; }
 
-print_usage() {
-    echo -e "
-    Add an element to a csv list
+__print_usage() {
+    echo -e "Add an element to a csv list.
 
     USAGE:
-
-        ./add -i 2 -d 99 1,2,3,4,5
-        echo 1,2,3,4,5 | ./add -i 2 -d 99 \n"
+          ./add -i 2 -d 99 1,2,3,4,5
+          echo 1,2,3,4,5 | ./add -i 2 -d 99 \n"
 }
 
-#
-# add an element
-#
-
 __add() {
+<< 'EOF'
     # index: integer
     # data : single value
     # list : csv list
+EOF
     index="${1}"
     data="${2}"
     list="${3}"
@@ -55,35 +55,33 @@ __add() {
     IFS="${OFS}"
 }
 
-#
-# main()
-#
-
-main() {
+__parse_arguments() {
     args=()
     while [ "$#" -gt 0 ]; do
         case "${1}" in
-            -h ) print_usage; exit 0;;
+            -h ) __print_usage; exit 0;;
             -i ) index="${2}"; shift; shift ;;
             -d ) data="${2}"; shift; shift ;;
-            -* ) echo "Unknown option ${1}. Exiting ..."; exit 1;;
+            -* ) echo "Invalid option ${1}. Exiting ..."; exit 1;;
              * ) args+=("${1}"); shift;;
         esac
     done
+}
 
+__check_arguments() {
     if [ -z "${index}" -o -z "${data}" ]; then
         echo 'Incomplete input provided.'
-        return 1 
+        exit 1 
     fi
 
     if [[ ! "${index}" =~ ^[1-9][0-9]*$ ]]; then
         echo 'Index should be an integer.'
-        return
+        exit 1
     fi
 
     if [ "$(echo "${data}" | wc -l)" -ne 1 ]; then
         echo 'Data can only be one element.'
-        return 1
+        exit 1
     fi
 
     argf="${args[0]}"
@@ -92,16 +90,27 @@ main() {
     else
         f="$(</dev/stdin)"
     fi
+}
 
+__check_index() {
     n_list="$(echo "${f}" | tr ',' '\n' | wc -l)"
     if [ "${index}" -lt 1 -o "${index}" -gt "$((n_list+1))" ]; then
         echo 'Index outside range!'
-        return 1
+        exit 1
     fi
+}
 
+__apply_add() {
     __add "${index}" "${data}" "${f}"
 }
 
+__main() {
+    __parse_arguments "$@"
+    __check_arguments
+    __check_index
+    __apply_add
+}
+
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    main "$@"
+    __main "$@"
 fi
