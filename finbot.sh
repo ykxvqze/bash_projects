@@ -153,7 +153,7 @@ __is_cf_uniform() {
     __is_real "${arg1}"                 || { echo "uniform CF quantity is not real: ${arg1}"                     ; return 1; }
     __is_non_negative_integer "${arg2}" || { echo "uniform CF start time must be a non-negative integer: ${arg2}"; return 1; }
     __is_non_negative_integer "${arg3}" || { echo "uniform CF end time must be a non-negative integer: ${arg3}"  ; return 1; }
-    [ "${arg2}" -lt "${arg3}" ]              || { echo "uniform CF start time $arg2 should precede end time ${arg3}"  ; return 1; }
+    [ "${arg2}" -lt "${arg3}" ]         || { echo "uniform CF start time $arg2 should precede end time ${arg3}"  ; return 1; }
 }
 
 << EOF
@@ -169,14 +169,14 @@ __is_arithmetic_gradient() {
     local arg1="${BASH_REMATCH[1]}"
     local arg2="${BASH_REMATCH[2]}"
     local arg3="${BASH_REMATCH[3]}"
-    __is_real "${arg1}"                || { echo "arithmetic gradient initial CF is not real: ${arg1}"    ; return 1; }
-    __is_real "${arg2}"                || { echo "arithmetic gradient G is not real: ${arg2}"             ; return 1; }
+    __is_real "${arg1}"                     || { echo "arithmetic gradient initial CF is not real: ${arg1}"    ; return 1; }
+    __is_real "${arg2}"                     || { echo "arithmetic gradient G is not real: ${arg2}"             ; return 1; }
     [[ "${arg3}" =~ ^([^]-]+)\-([^[-]+)$ ]] || { echo "arithmetic gradient duration form is incorrect: ${arg2}"; return 1; }
     local arg3a="${BASH_REMATCH[1]}"
     local arg3b="${BASH_REMATCH[2]}"
     __is_non_negative_integer "${arg3a}" || { echo "arithmetic gradient start time must be a non-negative integer: ${arg3a}"; return 1; }
     __is_non_negative_integer "${arg3b}" || { echo "arithmetic gradient end time must be a non-negative integer: ${arg3b}"  ; return 1; }
-    [ "${arg3a}" -lt "${arg3b}" ]             || { echo "arithmetic gradient start time $arg3a should precede end time ${arg3b}" ; return 1; }
+    [ "${arg3a}" -lt "${arg3b}" ]        || { echo "arithmetic gradient start time $arg3a should precede end time ${arg3b}" ; return 1; }
 }
 
 << EOF
@@ -191,14 +191,14 @@ __is_geometric_gradient() {
     local arg1="${BASH_REMATCH[1]}"
     local arg2="${BASH_REMATCH[2]}"
     local arg3="${BASH_REMATCH[3]}"
-    __is_real "${arg1}"                || { echo "geometric gradient initial CF is not real: ${arg1}"    ; return 1; }
-    __is_real "${arg2}"                || { echo "geometric gradient g is not real: '${arg2}'"           ; return 1; }
+    __is_real "${arg1}"                     || { echo "geometric gradient initial CF is not real: ${arg1}"    ; return 1; }
+    __is_real "${arg2}"                     || { echo "geometric gradient g is not real: '${arg2}'"           ; return 1; }
     [[ "${arg3}" =~ ^([^]-]+)\-([^[-]+)$ ]] || { echo "geometric gradient duration form is incorrect: ${arg2}"; return 1; }
     local arg3a="${BASH_REMATCH[1]}"
     local arg3b="${BASH_REMATCH[2]}"
     __is_non_negative_integer "${arg3a}" || { echo "geometric gradient start time must be a non-negative integer: ${arg3a}" ; return 1; }
     __is_non_negative_integer "${arg3b}" || { echo "geometric gradient end time must be a non-negative integer: ${arg3b}"   ; return 1; }
-    [ "${arg3a}" -lt "${arg3b}" ]             || { echo "geometric gradient start time ${arg3a} should precede end time ${arg3b}"; return 1; }
+    [ "${arg3a}" -lt "${arg3b}" ]        || { echo "geometric gradient start time ${arg3a} should precede end time ${arg3b}"; return 1; }
 }
 
 << EOF
@@ -224,7 +224,7 @@ __validate_input() {
         local arg2b="${BASH_REMATCH[2]}"
         __is_non_negative_integer "${arg2a}"   || { echo "target start time must be a non-negative integer: ${arg2a}" ; return 1; }
         __is_non_negative_integer "${arg2b}"   || { echo "target end time must be a non-negative integer: ${arg2b}"   ; return 1; }
-        [ "${arg2a}" -lt "${arg2b}" ]               || { echo "target start time ${arg2a} should precede end time ${arg2b}"; return 1; }
+        [ "${arg2a}" -lt "${arg2b}" ]          || { echo "target start time ${arg2a} should precede end time ${arg2b}"; return 1; }
     fi
 
     local factors=$(echo "${arg1}" | tr ';' ' ')
