@@ -148,7 +148,7 @@ __parse_options() {
     while getopts 'i:h' option; do
         case $option in
             h) __print_usage;  exit 0 ;;
-            i) iface="$OPTARG"      ;;
+            i) iface="$OPTARG"        ;;
             *) __print_usage;  exit 1 ;;
         esac
     done
