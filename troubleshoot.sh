@@ -668,7 +668,7 @@ __check_pidstat() {
 }
 
 __main() {
-	__parse_options "$@"
+    __parse_options "$@"
     __load_color
     __check_sysinfo
     __check_free
