@@ -1,23 +1,23 @@
 IPv4 is a 32-bit binary number written in decimal-dotted notation for readability.
 
-ip2bin()
---------
+\_\_ip2bin()
+----------
 IP address: 128.42.5.4
 
 IP binary: 10000000 00101010 00000101 00000100
 
 Usage: ip2bin 128.42.5.4
 
-bin2ip()
---------
+\_\_bin2ip()
+----------
 IP binary: 10000000 00101010 00000101 00000100
 
 IP address: 128.42.5.4
 
 Usage: bin2ip '10000000 00101010 00000101 00000100'
 
-cidr2netmask()
---------------
+\_\_cidr2netmask()
+----------------
 The netmask tells which part of the IP address is the network address (and which is host address).
 
 Netmask: 255.255.248.0
@@ -30,8 +30,8 @@ Thus, in CIDR notation, 128.42.5.4/21 => 21 bits are network bits and the last 1
 
 Usage: cidr2netmask 128.42.5.4/21  # returns 255.255.248.0
 
-cidr2network()
---------------
+\_\_cidr2network()
+----------------
 To obtain the network address of 128.42.5.4/21, the first 21 bits are kept unchanged, while the rest are made into 0s.
 
 IP address: 128.42.5.4
@@ -48,8 +48,8 @@ i.e. network address: 128.42.0.0
 
 Usage: cidr2network 128.42.5.4/21  # returns 128.42.0.0
 
-cidr2broadcast()
-----------------
+\_\_cidr2broadcast()
+------------------
 The broadcast address converts all host bits to 1s, keeping the network part unchanged.
 
 To calculate the broadcast address, we force all host bits to be 1s:
