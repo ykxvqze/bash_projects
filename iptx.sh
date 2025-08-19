@@ -110,6 +110,7 @@ __valid_cidr() {
 __zero_pad() {
     local input="${1}"
     n="$(expr length "${input}")"
+    z=""
 
     if [ "${n}" -lt 8 ]; then
         d=$((8-n))
