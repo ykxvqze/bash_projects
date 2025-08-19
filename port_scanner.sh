@@ -2,7 +2,9 @@
 
 << 'EOF'
 Script that checks whether a list of TCP ports are open on a given host.
+
 For each port, it attempts to connect using nc with a short timeout (2 seconds).
+
 It prints whether each port is open or closed.
 
 Example Usage:
@@ -13,6 +15,16 @@ Port 80 - OPEN
 Port 443 - OPEN
 Port 8080 - CLOSED
 EOF
+
+__print_usage        () { :; }
+__parse_options      () { :; }
+__check_nargs        () { :; }
+__parse_arguments    () { :; }
+__validate_arguments () { :; }
+__check_nc_installed () { :; }
+__check_ports        () { :; }
+__print_result       () { :; }
+__main               () { :; }
 
 __print_usage() {
     echo -e "Port Scanner.
@@ -44,7 +56,7 @@ __parse_arguments() {
     ports="$2"
 }
 
-__check_arguments() {
+__validate_arguments() {
     if [[ "$target" =~ ^(.+)\.(.+)\.(.+)\.(.+)$ ]]; then
         if ! ( [ "${BASH_REMATCH[1]}" -ge 0 -a "${BASH_REMATCH[1]}" -le 255 ] && \
                [ "${BASH_REMATCH[2]}" -ge 0 -a "${BASH_REMATCH[2]}" -le 255 ] && \
@@ -99,12 +111,12 @@ __main() {
     __parse_options "$@"
     __check_nargs "$@"
     __parse_arguments "$@"
-    __check_arguments "$@"
+    __validate_arguments "$@"
     __check_nc_installed
     __check_ports
     __print_result
 }
 
-if [[ ${BASH_SOURCE[0]} == "$0" ]]; then
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     __main "$@"
 fi
