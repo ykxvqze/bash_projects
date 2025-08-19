@@ -111,7 +111,7 @@ __main() {
     __parse_options "$@"
     __check_nargs "$@"
     __parse_arguments "$@"
-    __validate_arguments "$@"
+    __validate_arguments
     __check_nc_installed
     __check_ports
     __print_result
