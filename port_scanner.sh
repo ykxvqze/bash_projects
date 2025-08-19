@@ -31,7 +31,8 @@ __print_usage() {
  
              USAGE:
                    ./${0##*/} <hostname_or_ip_address> <port_number(s)>
-                   ./${0##*/} google.com 80,443,8080 \n"
+                   ./${0##*/} google.com 80,443,8080
+                   ./${0##*/} localhost 21,22 \n"
 }
 
 __parse_options() {
@@ -57,19 +58,6 @@ __parse_arguments() {
 }
 
 __validate_arguments() {
-    if [[ "$target" =~ ^(.+)\.(.+)\.(.+)\.(.+)$ ]]; then
-        if ! ( [ "${BASH_REMATCH[1]}" -ge 0 -a "${BASH_REMATCH[1]}" -le 255 ] && \
-               [ "${BASH_REMATCH[2]}" -ge 0 -a "${BASH_REMATCH[2]}" -le 255 ] && \
-               [ "${BASH_REMATCH[3]}" -ge 0 -a "${BASH_REMATCH[3]}" -le 255 ] && \
-               [ "${BASH_REMATCH[4]}" -ge 0 -a "${BASH_REMATCH[4]}" -le 255 ] ) ; then
-            echo "IPv4 address format is invalid! Exiting..."
-            exit 1
-        fi
-    elif [[ ! "$target" =~ ^[a-zA-Z._]+$ ]]; then
-        echo "Invalid hostname. Exiting..."
-        exit 1
-    fi
-
     IFS=',' ports_list="$ports"
 
     ports_array=($ports_list)
