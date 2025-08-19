@@ -70,12 +70,15 @@ Usage: __cidr2broadcast 128.42.5.4/21  # returns 128.42.7.255
 
 Subnetting
 ----------
-Subnetting is the splitting of the host part of an IP address for internal use (to create multiple internal networks), while still acting like a single network to the outside world.
+Subnetting is the splitting of the host part of an IP address for internal use (to create multiple internal networks),
+while still acting like a single network to the outside world.
+
 Example: 203.113.0.0/24 can be subnetted into 203.113.0.0/25 and 203.113.0.128/25.
 
 Non-routable IP addresses
 -------------------------
-Non-routable addresses can be reused over and over internally (as leased by a router or DHCP server). These appear as private IP addresses.
+Non-routable addresses can be reused over and over internally (as leased by a router or DHCP server).
+These appear as private IP addresses.
 
 Non-routable IP addresses     | Details
 ------------------------------|:-------------------------------
@@ -107,4 +110,5 @@ IP header
 |--- ...  (IP header has room for more options, however such options are rarely used since many routers ignore them)
 ```
 
-* IPv6 has no checksum. The argument against checksums is that any application that really cares about data integrity has to have a checksum in the transport layer, so having another one in the IP layer is overkill.
+* IPv6 has no checksum. The argument against checksums is that any application that really cares about data integrity has to
+have a checksum in the transport layer, so having another one in the IP layer is overkill.
