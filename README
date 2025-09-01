@@ -17,6 +17,5 @@ Bash Scripts
 * Text folding             : cutline.sh
 * Web scraping             : scrapexkcd.sh
 * CLI plotting             : cliplot.sh
-* Data toolkit             : datakit/
 * CF computations          : finbot.sh
 * Traffic generator        : traffic_generator/
