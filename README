@@ -1,11 +1,11 @@
 Bash Scripts
 ============
 
-* Security auditing        : scansec/
 * System performance check : troubleshoot.sh
 * Network scanner          : netscan.sh
 * Port scanner             : port_scanner.sh
 * IPv4 networking          : iptx.sh
+* Security auditing        : scansec/
 * SSH                      : sshban.sh
 * S-nail setup             : snail.sh
 * OTP encryption           : otpcrypt.sh, cryptinfo.md
