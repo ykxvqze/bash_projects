@@ -158,7 +158,6 @@ __cidr2broadcast() {
 
 # example: 128.42.5.4/21 > 2046 (number of usable hosts)
 __cidr2numhosts() {
-
     if [[ "${host_length}" -eq 0 ]]; then
         numhosts="0"
     else
@@ -168,7 +167,6 @@ __cidr2numhosts() {
 
 # example: 128.42.5.4/21 > 128.42.0.1 (first usable IP address)
 __cidr2ipfirst() {
-
     if [ "${host_length}" -le 1 ]; then
         ipfirst="None"
     else
@@ -180,7 +178,6 @@ __cidr2ipfirst() {
 
 # example: 128.42.5.4/21 > 128.42.7.254 (last usable IP address)
 __cidr2iplast() {
-
     if [ "${host_length}" -le 1 ]; then
         iplast="None"
     else
@@ -202,7 +199,6 @@ __parse_arguments() {
 }
 
 __validate_arguments() {
-
     if [[ "${#args[@]}" -ne 1 ]]; then
         echo "Number of arguments should be 1. Exiting..."
         exit 1
