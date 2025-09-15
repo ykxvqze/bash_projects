@@ -65,11 +65,7 @@ __print_usage() {
     echo -e "iptx.sh: utility for CIDR to IPv4 transformations.
 
     Usage:
-           ./${0##*/} 128.42.5.4/21
-
-           . ./${0##*/}
-           __cidr2network 128.42.5.4/21
-           __cidr2broadcast 128.42.5.4/21 \n"
+           ./${0##*/} 128.42.5.4/21 \n"
 }
 
 __valid_ipv4() {
