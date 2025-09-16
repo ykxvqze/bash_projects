@@ -62,8 +62,12 @@ __log_message() {
 }
 
 __battery_status() {
-    percent_charge=$(acpi | cut -d ' ' -f 4)
-    __log_message "Battery currently at ${percent_charge}"
+    if [[ -z "$(which acpi)" ]]; then
+        echo "Install acpi first, e.g.: sudo apt-get install acpi"
+    else
+        percent_charge=$(acpi | cut -d ' ' -f 4)
+        __log_message "Battery currently at ${percent_charge}"
+    fi
 }
 
 __userinfo() {
