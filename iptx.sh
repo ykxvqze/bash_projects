@@ -13,16 +13,16 @@ EXAMPLES:
 
 DESCRIPTION:
 
-* __validate_ipv4()  : check if an IPv4 address is valid or not.
-* __validate_cidr()  : check if CIDR notation is valid or not.
-* __ip2binary        : convert an IPv4 address from dotted-decimal notation to binary.
-* __binary2ip()      : convert an IPv4 address from binary to dotted-decimal notation.
-* __cidr2netmask()   : extract the netmask from an IPv4 address given in CIDR notation.
-* __cidr2network()   : extract the network address from a CIDR IPv4 address.
-* __cidr2broadcast() : extract the broadcast address from a CIDR IPv4 address.
-* __cidr2numhosts()  : extract the number of hosts that can be assigned IP addresses.
-* __cidr2ipfirst()   : extract the first usable IP address from CIDR notation.
-* __cidr2iplast()    : extract the last usable IP address from CIDR notation.
+* __validate_ipv4()         : check if an IPv4 address is valid or not.
+* __validate_cidr()         : check if CIDR notation is valid or not.
+* __ip2binary               : convert an IPv4 address from dotted-decimal notation to binary.
+* __binary2ip()             : convert an IPv4 address from binary to dotted-decimal notation.
+* __get_netmask_address()   : extract the netmask from an IPv4 address given in CIDR notation.
+* __get_network_address()   : extract the network address from a CIDR IPv4 address.
+* __get_broadcast_address() : extract the broadcast address from a CIDR IPv4 address.
+* __get_num_hosts()         : extract the number of hosts that can be assigned IP addresses.
+* __get_ip_first()          : extract the first usable IP address from CIDR notation.
+* __get_ip_last()           : extract the last usable IP address from CIDR notation.
 
 EXAMPLES:
 
@@ -51,12 +51,12 @@ __get_network_part        () { :; }  # get network part (binary)
 __validate_ipv4           () { :; }  # Is IPv4 address valid?
 __validate_netmask_length () { :; }  # IS netmask length valid?
 __validate_cidr           () { :; }  # Is CIDR address valid?
-__cidr2netmask            () { :; }  # CIDR to netmask address
-__cidr2network            () { :; }  # CIDR to network address
-__cidr2broadcast          () { :; }  # CIDR to broadcast address
-__cidr2numhosts           () { :; }  # CIDR to number of hosts
-__cidr2ipfirst            () { :; }  # CIDR to first usable IP address
-__cidr2iplast             () { :; }  # CIDR to last usable IP address
+__get_netmask_address     () { :; }  # get netmask address
+__get_network_address     () { :; }  # get network address
+__get_broadcast_address   () { :; }  # get broadcast address
+__get_num_hosts           () { :; }  # get number of hosts
+__get_ip_first            () { :; }  # get first usable IP address
+__get_ip_last             () { :; }  # get last usable IP address
 __parse_arguments         () { :; }  # parse arguments
 __validate_arguments      () { :; }  # check if arguments are valid
 __print_tx                () { :; }  # print transformations
@@ -140,29 +140,29 @@ __validate_cidr() {
 }
 
 # example: 128.42.5.4/21 > 255.255.248.0
-__cidr2netmask() {
+__get_netmask_address() {
     ones="$(head -c "${netmask_length}" /dev/zero | tr '\0' '1')"
     zeros="$(head -c "${host_length}" /dev/zero | tr '\0' '0')"
     sequence="$(sed -E 's/(.{8})(.{8})(.{8})(.{8})/\1;\2;\3;\4/' <<< "${ones}${zeros}")"
-    netmask="$(__binary2ip "${sequence}")"
+    netmask_address="$(__binary2ip "${sequence}")"
 }
 
 # example: 128.42.5.4/21 > 128.42.0.0
-__cidr2network() {
+__get_network_address() {
     zeros="$(head -c "${host_length}" /dev/zero | tr '\0' '0')"
     sequence="$(sed -E 's/(.{8})(.{8})(.{8})(.{8})/\1;\2;\3;\4/' <<< "${network_part}${zeros}")"
     network_address="$(__binary2ip "${sequence}")"
 }
 
 # example: 128.42.5.4/21 > 128.42.7.255
-__cidr2broadcast() {
+__get_broadcast_address() {
     ones="$(head -c "${host_length}" /dev/zero | tr '\0' '1')"
     sequence="$(sed -E 's/(.{8})(.{8})(.{8})(.{8})/\1;\2;\3;\4/' <<< "${network_part}${ones}")"
     broadcast_address="$(__binary2ip "${sequence}")"
 }
 
 # example: 128.42.5.4/21 > 2046 (number of usable hosts)
-__cidr2numhosts() {
+__get_num_hosts() {
     if [[ "${host_length}" -eq 0 ]]; then
         num_hosts="0"
     else
@@ -171,7 +171,7 @@ __cidr2numhosts() {
 }
 
 # example: 128.42.5.4/21 > 128.42.0.1 (first usable IP address)
-__cidr2ipfirst() {
+__get_ip_first() {
     if [ "${host_length}" -le 1 ]; then
         ip_first="None"
     else
@@ -182,7 +182,7 @@ __cidr2ipfirst() {
 }
 
 # example: 128.42.5.4/21 > 128.42.7.254 (last usable IP address)
-__cidr2iplast() {
+__get_ip_last() {
     if [ "${host_length}" -le 1 ]; then
         ip_last="None"
     else
@@ -216,7 +216,7 @@ __validate_arguments() {
 __print_tx() {
     echo "Network address        : ${network_address}"
     echo "Broadcast address      : ${broadcast_address}"
-    echo "Subnet mask            : ${netmask}"
+    echo "Subnet mask            : ${netmask_address}"
     echo "First usable address   : ${ip_first}"
     echo "Last usable address    : ${ip_last}"
     echo "Number of usable hosts : ${num_hosts}"
@@ -229,12 +229,12 @@ __main() {
     __get_netmask_length
     __get_host_length
     __get_network_part
-    __cidr2network
-    __cidr2broadcast
-    __cidr2netmask
-    __cidr2ipfirst
-    __cidr2iplast
-    __cidr2numhosts
+    __get_network_address
+    __get_broadcast_address
+    __get_netmask_address
+    __get_ip_first
+    __get_ip_last
+    __get_num_hosts
     __print_tx
 }
 
