@@ -121,7 +121,7 @@ __validate_ipv4() {
 }
 
 __validate_netmask_length() {
-    if [[ ! "${netmask_length}" =~ ^[0-9]|[1-2][0-9]|3[0-2]$ ]]; then
+    if [[ ! "${netmask_length}" =~ ^([0-9]|[1-2][0-9]|3[0-2])$ ]]; then
         echo "Invalid netmask length. Exiting..."
         exit 1
     fi
