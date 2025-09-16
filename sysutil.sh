@@ -10,7 +10,7 @@ OPTIONS:
 
 EXAMPLES:
          . ./sysutil.sh
-         userinfo            # call a utility function
+         __userinfo            # call a utility function
 EOF
 
 __print_usage    () { :; }
