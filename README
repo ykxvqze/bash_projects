@@ -7,7 +7,6 @@ Bash Scripts
 * IPv4 networking          : iptx.sh
 * Security auditing        : scansec/
 * SSH                      : sshban.sh
-* S-nail setup             : snail.sh
 * OTP encryption           : otpcrypt.sh, cryptinfo.md
 * Metadata                 : delmeta.sh
 * Apache2 setup            : apache2.sh
