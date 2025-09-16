@@ -14,7 +14,7 @@ Bash Scripts
 * Sysops utilities         : sysutil.sh
 * Deployment               : deploy.sh, deploy.conf
 * Android                  : android/
-* Text folding             : cutline.sh
+* Text folding             : wrapline.sh
 * Web scraping             : scrapexkcd.sh
 * CLI plotting             : cliplot.sh
 * CF computations          : finbot.sh
