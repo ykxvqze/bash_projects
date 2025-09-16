@@ -3,7 +3,7 @@
 << 'EOF'
 Create line breaks at a limit of 72 characters without breaking any word
 
-USAGE:  ./wrapline.sh [ -i | --inplace ] <filename(s)>
+USAGE:  ./wrapline.sh [ -i | --inplace ] <file1> <file2> ...
 
 ARGS:
         file(s): ASCII text file(s)
@@ -73,9 +73,9 @@ __print_usage() {
 
     Usage:
 
-        ./${0##*/} <filename(s)>                     Keep original file(s) intact
-        ./${0##*/} [ -i | --inplace ] <filename(s)>  Change file(s) in-place
-        ./${0##*/} [ -h | --help ]                   Print usage and exit \n"
+        ./${0##*/} <file1> <file2> ...                     Keep original file(s) intact
+        ./${0##*/} [ -i | --inplace ] <file1> <file2> ...  Change file(s) in-place
+        ./${0##*/} [ -h | --help ]                         Print usage and exit \n"
 }
 
 __cut_lines() {
