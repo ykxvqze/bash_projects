@@ -3,13 +3,13 @@
 << 'EOF'
 Create line breaks at a limit of 72 characters without breaking any word
 
-USAGE:  ./wrapline.sh [ -r | --remove ] <filename(s)>
+USAGE:  ./wrapline.sh [ -i | --inplace ] <filename(s)>
 
 ARGS:
         file(s): ASCII text file(s)
 
 OUTPUT:
-        file(s): If -r or --remove switch is specified anywhere, the
+        file(s): If -i or --inplace switch is specified anywhere, the
                  original file(s) will be overwritten. Otherwise, the
                  result(s) will be saved as new file(s) with a __ prefix
                  i.e. <__filename>, so the original files remain intact.
@@ -73,9 +73,9 @@ __print_usage() {
 
     Usage:
 
-        ./${0##*/} <filename(s)>                    Keep original file(s) intact
-        ./${0##*/} [ -r | --remove ] <filename(s)>  Remove original file(s)
-        ./${0##*/} [ -h | --help ]                  Print usage and exit \n"
+        ./${0##*/} <filename(s)>                     Keep original file(s) intact
+        ./${0##*/} [ -i | --inplace ] <filename(s)>  Change file(s) in-place
+        ./${0##*/} [ -h | --help ]                   Print usage and exit \n"
 }
 
 __cut_lines() {
@@ -103,10 +103,10 @@ __parse_arguments() {
     args=()
     while (("$#")); do
         case "${1}" in
-            -h | --help   ) __print_usage; exit 0;;
-            -r | --remove ) remove="true"; shift ;;
-            -*            ) echo "Invalid option. Exiting..." ; exit 1;;
-             *            ) args+=("${1}"); shift;;
+            -h | --help    ) __print_usage; exit 0;;
+            -i | --inplace ) inplace="true"; shift ;;
+            -*             ) echo "Invalid option. Exiting..." ; exit 1;;
+             *             ) args+=("${1}"); shift;;
         esac
     done
 }
@@ -121,7 +121,7 @@ __check_files_exist() {
 }
 
 __process_files() {
-    if [[ "$remove" == "true" ]]; then
+    if [[ "$inplace" == "true" ]]; then
         for f in "${args[@]}"; do
             __cut_lines "$f"
         done
