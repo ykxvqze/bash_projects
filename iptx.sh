@@ -44,7 +44,7 @@ __print_usage             () { :; }  # print usage
 __zero_pad                () { :; }  # zero pad
 __ip2binary               () { :; }  # IPv4 (decimal-dotted) to binary
 __binary2ip               () { :; }  # binary to IPv4 (decimal-dotted)
-__get_ip                  () { :; }  # get IP address from CIDR
+__get_ipv4                () { :; }  # get IPv4 address from CIDR
 __get_netmask_length      () { :; }  # get netmask length from CIDR
 __get_host_length         () { :; }  # get host length from CIDR
 __get_network_part        () { :; }  # get network part (binary)
