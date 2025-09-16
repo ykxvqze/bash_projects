@@ -49,7 +49,7 @@ __get_netmask_length      () { :; }  # get netmask length from CIDR
 __get_host_length         () { :; }  # get host length from CIDR
 __get_network_part        () { :; }  # get network part (binary)
 __validate_ipv4           () { :; }  # Is IPv4 address valid?
-__validate_netmask_length () { :; } # IS netmask length valid?
+__validate_netmask_length () { :; }  # IS netmask length valid?
 __validate_cidr           () { :; }  # Is CIDR address valid?
 __cidr2netmask            () { :; }  # CIDR to netmask address
 __cidr2network            () { :; }  # CIDR to network address
