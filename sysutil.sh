@@ -120,7 +120,7 @@ __sysinfo() {
     IP (Public)    : ${ip_public}
     IP (Private)   : ${ip_private}
     IP (Gateway)   : ${ip_gateway}
-    Ports open     : $(ports_open)
+    Ports open     : $(__ports_open)
     Memory
      - MemTotal    : $(free -m | grep '^Mem:'  | tr -s ' ' | cut -d ' ' -f 2) MB
      - MemFree     : $(free -m | grep '^Mem:'  | tr -s ' ' | cut -d ' ' -f 4) MB
