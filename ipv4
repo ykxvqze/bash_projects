@@ -1,23 +1,23 @@
 IPv4 is a 32-bit binary number written in decimal-dotted notation for readability.
 
-__ip2bin()
-----------
+__ip2binary()
+-------------
 IP address: 128.42.5.4
 
 IP address (binary): 10000000 00101010 00000101 00000100
 
-Usage: __ip2bin 128.42.5.4
+Usage: __ip2binary 128.42.5.4
 
-__bin2ip()
-----------
+__binary2ip()
+-------------
 IP address (binary): 10000000 00101010 00000101 00000100
 
 IP address: 128.42.5.4
 
-Usage: __bin2ip '10000000;00101010;00000101;00000100'
+Usage: __binary2ip '10000000;00101010;00000101;00000100'
 
-__cidr2netmask()
-----------------
+__get_netmask_address()
+-----------------------
 The netmask shows which part of the IP address is the network address (and which is the host address).
 
 Netmask: 255.255.248.0
@@ -28,10 +28,8 @@ There are 21 ones: this is the netmask length.
 
 Thus, in CIDR notation, 128.42.5.4/21 => 21 bits are network bits and the last 11 are host bits.
 
-Usage: __cidr2netmask 128.42.5.4/21  # returns 255.255.248.0
-
-__cidr2network()
-----------------
+__get_network_address()
+-----------------------
 To obtain the network address of 128.42.5.4/21, the first 21 bits are kept unchanged, while the rest are made into 0s.
 
 IP address: 128.42.5.4
@@ -46,10 +44,8 @@ Logical AND: 10000000 00101010 00000000 00000000
 
 i.e. network address: 128.42.0.0
 
-Usage: __cidr2network 128.42.5.4/21  # returns 128.42.0.0
-
-__cidr2broadcast()
-------------------
+__get_broadcast_address()
+-------------------------
 The broadcast address converts all host bits to 1s, keeping the network part unchanged.
 
 To calculate the broadcast address, we force all host bits to be 1s:
@@ -65,8 +61,6 @@ Force host bits to 1s (keep network part unchanged): 10000000 00101010 00000111 
 i.e. broadcast address: 128.42.7.255
 
 A broadcast address transmits to all devices connected to the network.
-
-Usage: __cidr2broadcast 128.42.5.4/21  # returns 128.42.7.255
 
 Subnetting
 ----------
