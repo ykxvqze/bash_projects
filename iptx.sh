@@ -41,9 +41,6 @@ Number of usable hosts : 2046
 EOF
 
 __print_usage             () { :; }  # print usage
-__validate_ipv4           () { :; }  # Is IPv4 address valid?
-__validate_netmask_length () { :; } # IS netmask length valid?
-__validate_cidr           () { :; }  # Is CIDR address valid?
 __zero_pad                () { :; }  # zero pad
 __ip2binary               () { :; }  # IPv4 (decimal-dotted) to binary
 __binary2ip               () { :; }  # binary to IPv4 (decimal-dotted)
@@ -51,6 +48,9 @@ __get_ip                  () { :; }  # get IP address from CIDR
 __get_netmask_length      () { :; }  # get netmask length from CIDR
 __get_host_length         () { :; }  # get host length from CIDR
 __get_network_part        () { :; }  # get network part (binary)
+__validate_ipv4           () { :; }  # Is IPv4 address valid?
+__validate_netmask_length () { :; } # IS netmask length valid?
+__validate_cidr           () { :; }  # Is CIDR address valid?
 __cidr2netmask            () { :; }  # CIDR to netmask address
 __cidr2network            () { :; }  # CIDR to network address
 __cidr2broadcast          () { :; }  # CIDR to broadcast address
