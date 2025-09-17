@@ -11,8 +11,7 @@ OPTIONS:
                            If unspecified, the default interface is used.
 
 OUTPUT:
-        A listing of IP and MAC addresses of all network devices in
-        tabular format via stdout.
+        A listing of IP and MAC addresses of all devices on the network.
 
 DESCRIPTION:
 
@@ -35,6 +34,14 @@ The ARP table will show all devices the router has communicated with.
 Listings will be similar to the result you get from running this script,
 except that you do not need to control or check the gateway itself - you
 only need to be connected to the network as any other device.
+
+TESTED USING:
+
+Package  : arp-scan
+Version  : 1.9.7-2
+
+Package  : nmap
+Version  : 7.91
 
 DEMONSTRATION:
 
@@ -78,11 +85,11 @@ __set_interface              () { :; }
 __run_nmap_arpscan           () { :; }
 __merge_results              () { :; }
 __set_colors                 () { :; }
-__print_result               () { :; }
+__print_results              () { :; }
 __main                       () { :; }
 
 __print_usage() {
-    echo -e "netscan: detect devices connected to your network.
+    echo -e "netscan.sh - detect devices connected to the network.
 
     Usage: sudo ./${0##*/}
 
@@ -127,7 +134,7 @@ __check_concurrent_execution() {
 }
 
 __set_traps() {
-    trap 'rm ${file_pid} ${file_nmap} ${file_arp}' SIGINT SIGTERM EXIT
+    trap 'rm ${file_pid} ${file_nmap} ${file_arp} ${file_results}' SIGINT SIGTERM EXIT
     trap 'echo error on line: $LINENO' ERR
 }
 
@@ -179,7 +186,7 @@ __run_nmap_arpscan() {
     n_repeat=2
     for i in $(seq 1 "${n_repeat}"); do
         echo "[*] Running nmap scan: round ${i} of ${n_repeat}..."
-        output="$(__run_nmap | grep -E -A 2 "([0-9]{1,3}\.){3}[0-9]{1,3}$")" 
+        output="$(__run_nmap | grep -E -A 2 "([0-9]{1,3}\.){3}[0-9]{1,3}$")"
         ip_addresses="$(echo "$output" | grep -Eo "([0-9]{1,3}\.){3}[0-9]{1,3}$")"
         mac_addresses="$(echo "$output" | grep "MAC" | awk '{print $3}' | tr '[:upper:]' '[:lower:]')"
         paste <(echo "$ip_addresses") <(echo "$mac_addresses") | awk 'NF==2' >> "${file_nmap}"
@@ -202,7 +209,7 @@ __set_colors() {
     GREEN="$(tput setaf 2)"
 }
 
-__print_result() {
+__print_results() {
     __set_colors
     echo -e ''
     echo -e "Network Interface:\t ${iface}"
@@ -226,7 +233,7 @@ __main() {
     __get_ip_cidr
     __run_nmap_arpscan
     __merge_results
-    __print_result
+    __print_results
 }
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
