@@ -9,8 +9,6 @@ OPTIONS:
        [ -h ]              Print usage
        [ -i <interface> ]  An optional switch to specify a network interface.
                            If unspecified, the default interface is used.
-                           Note that the IP range to scan is automatically
-                           deduced from the netmask.
 
 OUTPUT:
         A listing of IP and MAC addresses of all network devices in
@@ -18,30 +16,21 @@ OUTPUT:
 
 DESCRIPTION:
 
-The script checks for nmap and arp-scan tools and prompts to install them
-if missing. It then extracts the name of the default network interface and
-its local IPv4 and MAC address. The script uses the default interface
-unless one is provided via the -i switch. The IP address range to scan
-is derived from the netmask. Then, nmap is executed over this range via
-ping-scan mode (i.e., no port scanning or OS detection). Additionally,
-arp-scan is executed following nmap. Both scans are repeated resulting in
-4 scans in total. The reason for repeating the scans is to avoid missing
-any devices. The aggregate results of the scans are sorted and made unique.
-An arp-scan returns both IP and MAC addresses, whereas nmap detects only
-IP addresses. IP addresses that may have been detected by nmap but not by
-arp-scan are appended to the final result. In such cases, the corresponding
-MAC addresses are fetched from the local ARP cache/table which would have
-logged relevant entries as the system pinged other devices during the nmap
-and arp-scan procedures. Finally, an entry for localhost IP and MAC address
+The script checks for nmap and arp-scan tools. It then identifies the
+default network interface and its IPv4 and MAC address. The script uses
+the default interface unless one is provided via the -i switch. The IP
+address range to scan is derived from the netmask. nmap runs over this
+range via ping-scan mode (i.e., no port scanning or OS detection).
+Additionally, arp-scan is executed following nmap. Both scans are repeated,
+resulting in 4 scans in total in order not to miss any device. The results
+are then merged together. Finally, an entry for localhost IP and MAC address
 is appended and the result is displayed in tabular format.
-Note: all devices on the LAN, including routers, will show in the table,
-except those whose iptables are configured not to respond to ICMPs.
 
 ADDITIONAL NOTES:
 
 If you control the gateway router on your LAN, you can check its ARP or
-DHCP table by accessing the router menu via browser. The entries for the
-DHCP leases given to various devices reveal their IP and MAC addresses.
+DHCP table by accessing the router via browser. The entries for the DHCP
+leases given to various devices reveal their IP and MAC addresses.
 The ARP table will show all devices the router has communicated with.
 Listings will be similar to the result you get from running this script,
 except that you do not need to control or check the gateway itself - you
@@ -87,8 +76,7 @@ __check_concurrent_execution () { :; }
 __set_traps                  () { :; }
 __set_interface              () { :; }
 __run_nmap_arpscan           () { :; }
-__get_ips_nmap_only          () { :; }
-__append_additional_ips      () { :; }
+__merge_results              () { :; }
 __set_colors                 () { :; }
 __print_result               () { :; }
 __main                       () { :; }
@@ -98,8 +86,8 @@ __print_usage() {
 
     Usage: sudo ./${0##*/}
 
-    [ -i <interface> ]  Specify network interface (otherwise default assumed)
-    [ -h ]              Print usage and exit\n"
+    [ -i <interface> ]  Specify network interface (otherwise default is assumed)
+    [ -h ]              Print usage and exit \n"
 }
 
 __check_euid() {
@@ -123,8 +111,9 @@ __check_arpscan_installed() {
 }
 
 __create_temporary_files() {
-    file_nmap=$(mktemp /tmp/file_nmap.$$.XXXXXX)
-    file_arp=$(mktemp /tmp/file_arp.$$.XXXXXX)
+    file_nmap="$(mktemp /tmp/file_nmap.$$.XXXXXX)"
+    file_arp="$(mktemp /tmp/file_arp.$$.XXXXXX)"
+    file_results="$(mktemp /tmp/file_results.$$.XXXXXX)"
     file_pid="/tmp/${0##*/}.pid"
 }
 
@@ -190,30 +179,21 @@ __run_nmap_arpscan() {
     n_repeat=2
     for i in $(seq 1 "${n_repeat}"); do
         echo "[*] Running nmap scan: round ${i} of ${n_repeat}..."
-        __run_nmap | grep -Eo "([0-9]{1,3}\.){3}[0-9]{1,3}$" >> "${file_nmap}"
+        output="$(__run_nmap | grep -E -A 2 "([0-9]{1,3}\.){3}[0-9]{1,3}$")" 
+        ip_addresses="$(echo "$output" | grep -Eo "([0-9]{1,3}\.){3}[0-9]{1,3}$")"
+        mac_addresses="$(echo "$output" | grep "MAC" | awk '{print $3}' | tr '[:upper:]' '[:lower:]')"
+        paste <(echo "$ip_addresses") <(echo "$mac_addresses") | awk 'NF==2' >> "${file_nmap}"
 
         echo "[*] Running arp scan: round ${i} of ${n_repeat}..."
         __run_arpscan 2> /dev/null | grep -E '^[0-9]{1,3}\.' | cut -f 1,2 >> "${file_arp}"
     done
 }
 
-__get_ips_nmap_only() {
-    # IP addresses detected by nmap but not by arp-scan
-    ips_additional=$(comm -13 <(cut -f 1 "${file_arp}" | sort -u) <(cat "${file_nmap}" | sort -u))
-}
+__merge_results() {
+    sort -u "${file_nmap}" "${file_arp}" > "${file_results}"
 
-__append_additional_ips() {
-    for i in ${ips_additional}; do
-        table=$(arp | grep -E "$i\s" | tr -s ' ' | cut -d ' ' -f 1,3 | tr ' ' '\t')
-        if [[ -n "${table}" ]]; then
-            echo -e "${table}"
-        else
-            echo -e "$i\tMAC_not_available"
-        fi
-    done  >> "${file_arp}"
-
-    # add localhost entry to table and add a (*) sign
-    echo -e "${ip_cidr%/*}\t${MAC} (*)" >> "${file_arp}"
+    # add localhost entry
+    echo -e "${ip_cidr%/*}\t${MAC} (*)" >> "${file_results}"
 }
 
 __set_colors() {
@@ -230,7 +210,7 @@ __print_result() {
     echo -e "${RED}-----------------------------------------${DEFAULT}"
     echo -e 'Devices on LAN:'
     echo -e "${GREEN}IP_address\tMAC_address ${DEFAULT}"
-    cat "${file_arp}" | sort -u -k 1
+    cat "${file_results}" | sort -u -k 1
 }
 
 __main() {
@@ -245,8 +225,7 @@ __main() {
     __get_MAC
     __get_ip_cidr
     __run_nmap_arpscan
-    __get_ips_nmap_only
-    __append_additional_ips
+    __merge_results
     __print_result
 }
 
