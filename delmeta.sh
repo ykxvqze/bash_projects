@@ -41,7 +41,7 @@ __parse_options () { :; }
 __process_files () { :; }
 __main          () { :; }
 
-set_trap() {
+__set_trap() {
     trap 'echo error on line: $LINENO' ERR
 }
 
