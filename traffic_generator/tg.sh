@@ -2,7 +2,7 @@
 
 << 'EOF'
 
-Random web traffic generator - kill process w/ Ctrl+C to end script
+Random web traffic generator - kill process w/ Ctrl+C to end the script
 
 EOF
 
@@ -14,14 +14,14 @@ __load_user_agents  () { :; }
 __set_max_depth     () { :; }
 __choose_item       () { :; }
 __fetch_url         () { :; }
-__get_urls          () { :; }
+__get_child_urls    () { :; }
 __set_trap          () { :; }
 __run_crawler       () { :; }
 __main              () { :; }
 
 __print_usage() {
     echo -e "
-    Random web traffic generator - kill process w/ Ctrl+C to end script
+    Random web traffic generator - kill process w/ Ctrl+C to end the script
 
     USAGE:
           ./${0##*/} \n"
@@ -39,7 +39,7 @@ __parse_options() {
 __check_config_file() {
     src_dir="$(realpath "$(dirname "${BASH_SOURCE[0]}")" )"
     config_file="$src_dir"/config.json
-    if [ ! -f "${config_file}" ]; then
+    if [[ ! -f "${config_file}" ]]; then
         echo "Could not find 'config.json'. Exiting ..."
         exit 1
     fi
@@ -62,24 +62,16 @@ __set_max_depth() {
 }
 
 __choose_item() {
-
-    local input="${1}"
-
-    n_items=$(echo "${input}" | wc -l)
-
+    local items="${1}"
+    n_items=$(echo "${items}" | wc -l)
     line_number=$(shuf -i 1-${n_items} -n 1)
-
-    item=$(echo "${input}" | sed -n "${line_number} p")
-
+    item=$(echo "${items}" | sed -n "${line_number} p")
     echo "${item}"
 }
 
 __fetch_url() {
-
     user_agent=$(__choose_item "${user_agents}")
-
     times=$(seq 0 9)
-
     time=$(__choose_item "${times}")
 
     sleep 1."$time"  # in [1.0-1.9]
@@ -94,7 +86,6 @@ __fetch_url() {
 }
 
 __get_child_urls() {
-
     blacklist='
     .svg | .jpg | .jpeg | .png  | .tif  | .tiff | .bmp | .gif |
     .iso | .zip | .rar  | .bz2  | .gz   | .tar  | .exe |
@@ -148,6 +139,6 @@ __main() {
     __run_crawler
 }
 
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     __main "$@"
 fi
