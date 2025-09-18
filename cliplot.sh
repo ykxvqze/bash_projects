@@ -68,9 +68,8 @@ __print_usage(){
     echo -e "Plot a numeric sequence in CLI.
 
     Usage:
-
             ./cliplot.sh 1 2 3 4 5        # plot the sequence
-            seq 1 5 | ./cliplot.sh        # equivalent\n"
+            seq 1 5 | ./cliplot.sh        # equivalent \n"
 }
 
 __get_min() {
