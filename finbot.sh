@@ -231,14 +231,14 @@ __validate_pattern() {
 
     if [[ ! "${pattern}" =~ ^([^@]+)@([^,]+),i=([^,]+)%$ ]]; then
         echo "incorrect input form: ${pattern}"
-        return 1
+        exit 1
     fi
 
     local arg1="${BASH_REMATCH[1]}"
     local arg2="${BASH_REMATCH[2]}"
     local arg3="${BASH_REMATCH[3]}"
 
-    __validate_real "${arg3}" || { echo "i must be real: ${arg3}"; return 1; }
+    __validate_real "${arg3}" || { echo "i must be real: ${arg3}"; exit 1; }
 
     local target_single_value=''
 
@@ -250,18 +250,18 @@ __validate_pattern() {
 
         if [[ ! "${arg2}" =~ ^\[([^]-]+)\-([^[-]+)\]$ ]]; then
             echo "target time or duration has an incorrect form: ${arg2}"
-            return 1
+            exit 1
         fi
 
         local arg2a="${BASH_REMATCH[1]}"
         local arg2b="${BASH_REMATCH[2]}"
 
-        __validate_non_negative_integer "${arg2a}" || { echo "target start time ${arg2a} should be a non-negative integer."; return 1; }
-        __validate_non_negative_integer "${arg2b}" || { echo "target end time ${arg2b} should be a non-negative integer."  ; return 1; }
+        __validate_non_negative_integer "${arg2a}" || { echo "target start time ${arg2a} should be a non-negative integer."; exit 1; }
+        __validate_non_negative_integer "${arg2b}" || { echo "target end time ${arg2b} should be a non-negative integer."  ; exit 1; }
 
         if [[ ! "${arg2a}" -lt "${arg2b}" ]]; then
             echo "target start time ${arg2a} should precede end time ${arg2b}."
-            return 1
+            exit 1
         fi
     fi
 
@@ -272,7 +272,7 @@ __validate_pattern() {
         __validate_cf_uniform "${i}"          &> /dev/null || \
         __validate_arithmetic_gradient "${i}" &> /dev/null || \
         __validate_geometric_gradient "${i}"  &> /dev/null || \
-        { echo "incorrect factor form: ${i}"; return 1; }
+        { echo "incorrect factor form: ${i}"; exit 1; }
     done
 }
 
