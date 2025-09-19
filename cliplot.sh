@@ -75,7 +75,7 @@ __print_usage(){
 __get_min() {
     local array=("$@")
     local min="${array[0]}"
-    for i in $(seq 1 "$(($# - 1))"); do
+    for ((i=1; i<= $# - 1; i++)); do
         if [ $(echo "$min > ${array[i]}" | bc) -eq 1 ]; then
             min="${array[i]}";
         fi
@@ -86,7 +86,7 @@ __get_min() {
 __get_max() {
     local array=("$@")
     local max="${array[0]}"
-    for i in $(seq 1 "$(($# - 1))"); do
+    for ((i=1; i<= $# - 1; i++)); do
         if [ $(echo "$max < ${array[i]}" | bc) -eq 1 ]; then
             max="${array[i]}";
         fi
@@ -96,9 +96,9 @@ __get_max() {
 
 __normalize() {
     local array=("$@")
-    local max=$(__get_max ${array[@]})
+    local max="$(__get_max "${array[@]}")"
     local array_normalized=()
-    for i in ${array[@]}; do
+    for i in "${array[@]}"; do
         array_normalized+=("$(echo "scale=2; $i / $max * $height" | bc -l)")
     done
     echo "${array_normalized[@]}"
@@ -112,14 +112,14 @@ __draw_plot() {
 
     local array=($args)
     local count="${#array[@]}"
-    local values=$(__normalize ${array[@]})
+    local values="$(__normalize "${array[@]}")"
     local y_label=' y  '
     local x_offset='    '
 
     echo ''
 
     # paint the plot from top level
-    for y in $(seq $((height - 1)) -1 0); do
+    for ((y=height-1; y>=0; y--)); do
         # y-axis
         if [[ "$y" -eq $((height/2)) ]]; then
             stdout_write="${y_label}|"
@@ -141,12 +141,12 @@ __draw_plot() {
 
     local stdout_xaxis="${x_offset} "
     local stdout_xlabel="${x_offset}  1"
-    
-    for i in $(seq 1 "$((2 * count))"); do
+
+    for ((i=1; i<= 2*count; i++)); do
         stdout_xaxis+="-"
     done
 
-    for i in $(seq 1 "$((2 * count - 3 ))"); do
+    for ((i=1; i<= 2*count - 3; i++)); do
         stdout_xlabel+=' '
     done
 
