@@ -3,7 +3,7 @@
 << 'EOF'
 A script to deploy a project to a remote server via SSH
 
-USAGE: ./.deploy.sh [ -p <dir> ] [ -c <file> ]
+USAGE: ./deploy.sh [ -p <dir> ] [ -c <file> ]
 
 OPTIONS:
        [ -h ]           Print usage and exit
@@ -29,66 +29,66 @@ EOF
 
 set -eo pipefail
 
-__create_temporary_files () { :; }
-__print_usage            () { :; }
-__cleanup                () { :; }
-__set_trap               () { :; }
-__parse_options          () { :; }
-__get_absolute_filepaths () { :; }
-__read_config_file       () { :; }
-__deploy_targets         () { :; }
-__main                   () { :; }
-
-__create_temporary_files() {
-    dir_temp="$(mktemp -d /tmp/deploy.$$.XXXXXX)"
-    file_archive="$dir_temp/file.tgz"
-}
+__print_usage       () { :; }
+__parse_options     () { :; }
+__get_abs_paths     () { :; }
+__create_temp_files () { :; }
+__cleanup           () { :; }
+__set_trap          () { :; }
+__read_config_file  () { :; }
+__deploy_targets    () { :; }
+__main              () { :; }
 
 __print_usage() {
-    echo -e "deploy.sh: a deployment script
+    echo -e "deploy.sh: Deployment script
 
-    Usage: ./${0##*/}
+    Usage: ./${0##*/} [ -p <dir> ] [ -c <file> ] [ -h ]
 
     [ -p <dir>  ]    Specify project directory (defaults to current working directory if omitted)
     [ -c <file> ]    Specify configuration file (defaults to 'deploy.conf' in the project directory)
-    [ -h ]           Print usage and exit\n"
-}
-
-__cleanup() {
-    if [ -f "${file_archive}" ]; then
-        rm "${file_archive}"
-    fi
-
-    if [ -d "${dir_temp}" ]; then
-        rm -rf "${dir_temp}"
-    fi
-}
-
-__set_trap() {
-    trap "cleanup" EXIT SIGINT SIGTERM
+    [ -h ]           Print usage and exit \n"
 }
 
 __parse_options() {
     while getopts "p:c:h" option; do
-      case "$option" in
-        p) dir_project="$OPTARG"  ;;
-        c) file_config="$OPTARG"  ;;
-        h) __print_usage; exit 0  ;;
-        *) __print_usage; exit 1  ;;
-      esac
+        case "$option" in
+            p) dir_project="$OPTARG" ;;
+            c) file_config="$OPTARG" ;;
+            h) __print_usage; exit 0 ;;
+            *) __print_usage; exit 1 ;;
+        esac
     done
 }
 
-__get_absolute_filepaths() {
-    if [ -n "${dir_project}" ]; then
+__get_abs_paths() {
+    if [[ -n "${dir_project}" ]]; then
         dir_project=$(realpath "${dir_project}")
     else
         dir_project="$(pwd)"
     fi
 
-    if [ -z "${file_config}" ]; then
+    if [[ -z "${file_config}" ]]; then
         file_config="${dir_project}/deploy.conf"
     fi
+}
+
+__create_temp_files() {
+    dir_temp="$(mktemp -d /tmp/deploy.$$.XXXXXX)"
+    file_archive="$dir_temp/file.tgz"
+}
+
+__cleanup() {
+    if [[ -f "${file_archive}" ]]; then
+        rm "${file_archive}"
+    fi
+
+    if [[ -d "${dir_temp}" ]]; then
+        rm -rf "${dir_temp}"
+    fi
+}
+
+__set_trap() {
+    trap "__cleanup" EXIT SIGINT SIGTERM
 }
 
 __read_config_file() {
@@ -98,30 +98,31 @@ __read_config_file() {
 
 __deploy_targets() {
     n_target="$(echo "${config}" | wc -l)"
-    for i in $(seq ${n_target}); do
-        target=( $(sed -n "${i} p" <<< "${config}") )
-        host="${target[1]}"
-        dir_local="${target[2]}"
-        dir_remote="${target[3]}"
 
-        printf '%s\n' "Project   : ${dir_project}"
-        printf '%s\n' "Host      : ${host}"
-        printf '%s\n' "Local Dir : ${dir_local}"
-        printf '%s\n' "Remote Dir: ${dir_remote}"
+    for ((i=1; i<=n_target; i++)); do
+        target="$(echo "${config}" | sed -n "${i} p")"
+        host="$(echo "$target" | awk '{print $2}')"
+        dir_local="$(echo "$target" | awk '{print $3}')"
+        dir_remote="$(echo "$target" | awk '{print $4}')"
 
-        if [ -z "${dir_local}" ]; then
+        printf '%s\n' "Project          : ${dir_project}"
+        printf '%s\n' "Host             : ${host}"
+        printf '%s\n' "Local Directory  : ${dir_local}"
+        printf '%s\n' "Remote Directory : ${dir_remote}"
+
+        if [[ -z "${dir_local}" ]]; then
             echo 'No directory to deploy'
-            exit
+            exit 1
         fi
 
-        if [ -z "${dir_remote}" ]; then
+        if [[ -z "${dir_remote}" ]]; then
             echo 'No remote directory specified'
-            exit
+            exit 1
         fi
 
-        if [ -z "${host}" ]; then
+        if [[ -z "${host}" ]]; then
             echo 'No host specified'
-            exit
+            exit 1
         fi
 
         # create tar archive
@@ -129,14 +130,14 @@ __deploy_targets() {
         tar -C "${dir_project}/${dir_local}" -czf "${file_archive}" .
 
         # copy tar file to remote system
-        echo -n "Transferring ... "
+        echo -n "Transferring... "
         scp -i ~/.ssh/id_rsa "${file_archive}" "$host:/tmp/file.tgz"
-        echo "transferred"
+        echo "Transferred."
 
         # unpack and delete tar file
-        echo -n "Unpacking ... "
+        echo -n "Unpacking... "
         ssh -i ~/.ssh/id_rsa "$host" "tar -C ${dir_remote} -xzf /tmp/file.tgz ; rm -f /tmp/file.tgz"
-        echo "unpacked"
+        echo "Unpacked."
 
         echo "Done"
     done
@@ -145,12 +146,12 @@ __deploy_targets() {
 __main() {
     __set_trap
     __parse_options "$@"
-    __create_temporary_files
-    __get_absolute_filepaths
+    __get_abs_paths
+    __create_temp_files
     __read_config_file
     __deploy_targets
 }
 
-if [ "${BASH_SOURCE[0]}" == "${0}" ]; then
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     __main "$@"
 fi
