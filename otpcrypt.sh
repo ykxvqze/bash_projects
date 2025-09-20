@@ -14,7 +14,7 @@ OUTPUT:
 DESCRIPTION:
 
 - ascii_to_binary() takes a plaintext input (e.g. "I am Bob.") and
-converts it into a continuous binary string not containing any space.
+converts it into a continuous binary string, not containing any space.
 
 - binary_to_ascii() takes a binary string input and converts it to
 plaintext by parsing and transforming every 8 bits into a character.
@@ -55,76 +55,72 @@ __binary_to_ascii () { :; }
 __xor             () { :; }
 __generate_otp    () { :; }
 __parse_options   () { :; }
+__set_colors      () { :; }
+__run_demo        () { :; }
 __main            () { :; }
 
 __print_usage() {
-    echo -e "otpcrypt.sh: utility functions for one-time pad encryption/decryption.\n
+    echo -e "otpcrypt.sh: utility functions for One-Time Pad encryption/decryption.\n
     Usage:\n
     ./${0##*/}             Run demo
-    ./${0##*/} [ -h ]      Print usage and exit\n"
+    ./${0##*/} [ -h ]      Print usage and exit \n"
 }
 
 __parse_options() {
     while getopts 'h' option; do
         case "$option" in
-            h) __print_usage; exit 0         ;;
-            *) echo -e 'Incorrect usage!\n'; 
-               __print_usage; exit 1         ;;
+            h) __print_usage; exit 0 ;;
+            *) echo -e 'Incorrect usage!\n';
+               __print_usage; exit 1 ;;
         esac
     done
 }
 
 __ascii_to_binary() {
-    echo -n "$@"      |
-    xxd -b            |
-    cut -d ' ' -f 2-7 |
-    tr '\n' ' '       |
-    tr -d ' '
+    echo -n "$@" | xxd -b | cut -d ' ' -f 2-7 | tr '\n' ' ' | tr -d ' '
 }
 
 __binary_to_ascii() {
-    string=$(echo "${1}" | sed 's/.\{8\}/&\ /g')
+    string="$(echo "$1" | sed 's/.\{8\}/&\ /g')"
     for i in $string; do
-        echo "obase=16; ibase=2; $i" |
-        bc                           |
-        tr '\n' ' '                  |
-        xxd -r -p
+        echo "obase=16; ibase=2; $i" | bc | tr '\n' ' ' | xxd -r -p
     done;
 }
 
 __xor() {
-    string1=$(echo "${1}" | tr -d ' ')
-    string2=$(echo "${2}" | tr -d ' ')
+    string1=$(echo "$1" | tr -d ' ')
+    string2=$(echo "$2" | tr -d ' ')
 
-    if [ "${#string1}" -ne "${#string2}" ]; then
+    if [[ "${#string1}" -ne "${#string2}" ]]; then
         echo 'Strings are not of equal length!'
         return 1
     else
-        for i in $(seq 1 ${#string1}); do
-            [ "${string1:$((i-1)):1}" == "${string2:$((i-1)):1}" ] && echo -n '0' || echo -n '1'
+        for i in $(seq 1 "${#string1}"); do
+            if [[ "${string1:((i-1)):1}" == "${string2:((i-1)):1}" ]]; then
+                echo -n "0"
+            else
+                echo -n "1"
+            fi
         done
     fi
 }
 
 __generate_otp() {
-    local string="${1}"
+    local string="$1"
     local length="${#string}"
-    for i in `shuf -i 1-"${length}"`; do
-        echo -n $((i % 2))
+    for i in $(shuf -i 1-"${length}"); do
+        echo -n "$((i % 2))"
     done
 }
 
 __set_colors() {
-    GREEN='\e[32m'
-    BLUE='\e[34m'
-    DEFAULT='\e[0m'
+    GREEN="$(tput setaf 2)"
+    BLUE="$(tput setaf 4)"
+    DEFAULT="$(tput sgr0)"
 }
 
-__main() {
-    __parse_options "$@"
-    __set_colors
-
-    plaintext_ascii='I am Bob.'
+__run_demo() {
+    plaintext_ascii="I am Bob."
     plaintext_binary="$(__ascii_to_binary "${plaintext_ascii}")"
     key="$(__generate_otp "${plaintext_binary}")"
     ciphertext_binary="$(__xor "${plaintext_binary}" "${key}")"
@@ -142,6 +138,12 @@ __main() {
     } | column -t -s ':'
 }
 
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+__main() {
+    __parse_options "$@"
+    __set_colors
+    __run_demo
+}
+
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     __main "${@}"
 fi
