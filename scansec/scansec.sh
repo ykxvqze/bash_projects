@@ -10,21 +10,20 @@ OPTIONS:
 
 OUTPUT:
          "OK" or "FAILED"/remediation results in stdout, in addition to
-         an audit report saved in the current work directory. The report
-         includes OS/kernel information and the audit results.
+         an audit report saved in the current working directory. The
+         report includes OS/kernel information and the audit results.
 
 DESCRIPTION:
 
-scansec.sh will check for several configuration settings relating to
-system files and the network. The main audit rules are separated into
-files and listed under the ./tests directory. More rules can be added to
-the files. The script will audit each entry appearing in the files by
-testing against an expected output listed there. If there is a match
-with the expected output, the test is marked as OK, otherwise it is
-marked as FAILED (and a remediation step is listed in such a case).
-In this design, the test files can be expanded independently to include
-more rules as these are not hard-coded into the main script itself,
-which only handles the display.
+scansec.sh checks for several configuration settings relating to system
+files and the network. The main audit rules are separated into files and
+listed under the ./tests directory. More rules can be added to the files.
+The script audits each entry appearing in the files by testing against an
+expected output. If there is a match with the expected output, the test
+is marked as OK, otherwise it is marked as FAILED (and a remediation step
+is listed). In this design, the test files can be expanded independently
+to include more rules. The rules are not hard-coded into the main script
+itself, which only handles the display.
 EOF
 
 __print_usage        () { :; }
@@ -56,7 +55,7 @@ __parse_options() {
 }
 
 __check_euid() {
-    if [ "$EUID" -ne 0 ]; then
+    if [[ "$EUID" -ne 0 ]]; then
         echo -e '\nPlease run this script as a privileged user:'
         echo
         echo -e 'sudo ./scansec.sh\n'
@@ -90,7 +89,7 @@ __print_systeminfo() {
 __include_test_files() {
     src_directory="$(dirname ${BASH_SOURCE[0]})"
     includedir="${src_directory}/tests"
-    testfiles=$(ls "$includedir")
+    testfiles="$(ls "$includedir")"
 }
 
 __run_audit() {
@@ -108,14 +107,14 @@ __run_audit() {
         line_numbers="$(grep -n '^###' "${includedir}/${testfile}" | cut -d ':' -f 1)"
         n="$(echo "${line_numbers}" | wc -l)"
 
-        for i in $(seq 1 $((n-1)) ); do
+        for ((i=1; i<=n-1; i++)); do
             start="$(sed -n "$i p" <<< "${line_numbers}")"
             end="$(sed -n "$((i+1)) p" <<< "${line_numbers}")"
             sed -n "${start},${end} p" "${includedir}/${testfile}" > "${filetmp}"
             source "${filetmp}"
 
             echo ''
-            if [ "${test}" != "${expected}" ]; then
+            if [[ "${test}" != "${expected}" ]]; then
                 ((n_fail+=1))
 
                 # stdout
@@ -168,6 +167,6 @@ __main() {
     __print_summary
 }
 
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     __main "$@"
 fi
