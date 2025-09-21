@@ -6,10 +6,10 @@ Uninstall and replace extraneous apps in Android with open-source ones.
 USAGE:  ./android.sh  [ -h ]
 
                 Phone must be connected by USB with Debug mode enabled
-                under `Developer` options. File "packages_to_remove.txt"
+                under Developer options. File "packages_to_remove.txt"
                 lists applications to remove (1-per-line). Packages to
                 install are listed in the file "package_urls.txt" as
-                URLs of open-source apps, e.g. from `f-droid.org`.
+                URLs of open-source apps, e.g., from f-droid.org.
 
 OPTIONS:
         [ -h ]  Print usage
@@ -19,12 +19,12 @@ OUTPUT:
 
 DESCRIPTION:
 
-A script for uninstalling apps on an Android device via adb shell.
+A script for uninstalling apps on an android device via adb shell.
 The script removes a list of preinstalled apps without breaking the
 system. Additionally, basic apps like Contacts, Dialer, Keyboard,
 File Manager, Gallery, Browser, Notes, etc. are replaced by open-source
-ones (`simplemobiletools` available on F-Droid). These can be modified
-in the file "package_urls.txt".
+ones (from simplemobiletools, available on F-Droid). These can be
+modified in the file "package_urls.txt".
 EOF
 
 __set_trap                 () { :; }
@@ -53,15 +53,15 @@ __print_usage() {
 __parse_options() {
     while getopts 'h' option; do
         case "$option" in
-            h) __print_usage;  exit 0 ;;
+            h) __print_usage; exit 0 ;;
             *) echo -e 'Incorrect usage!\n';
-               __print_usage;  exit 1 ;;
+               __print_usage; exit 1 ;;
         esac
     done
 }
 
 __check_adb_installed() {
-    if [ -z "$(which adb)" ]; then
+    if [[ -z "$(which adb)" ]]; then
         echo 'adb shell is not installed.'
         read -p 'Install adb shell (y/n)? ' -n 1 reply
         case "${reply,,}" in
@@ -74,7 +74,10 @@ __check_adb_installed() {
         esac
     fi
 
-    [ -z "$(which adb)" ] && { echo 'adb shell failed to install. Exiting...'; exit 1; }
+    if [[ -z "$(which adb)" ]]; then
+        echo 'adb shell failed to install. Exiting...'
+        exit 1
+    fi
 }
 
 __download_apps() {
@@ -114,6 +117,6 @@ __main() {
     __cleanup
 }
 
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     __main "$@"
 fi
