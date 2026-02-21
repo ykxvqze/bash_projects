@@ -30,6 +30,7 @@ __main           () { :; }
 
 __print_usage() {
     echo -e "Sysops utility functions.
+
     Usage:
 
     . ./sysutil.sh             # Source the script first to use the utility functions
@@ -58,23 +59,23 @@ __parse_options() {
 }
 
 __log_message() {
-    echo $(date +'%Y-%m-%d %T') "$@"
+    echo "$(date +'%F %T')" "$@"
 }
 
 __battery_status() {
     if [[ -z "$(which acpi)" ]]; then
-        echo "Install acpi first, e.g.: sudo apt-get install acpi"
+        echo "Install acpi first: sudo apt-get install acpi"
     else
-        percent_charge=$(acpi | cut -d ' ' -f 4)
+        percent_charge="$(acpi | cut -d ' ' -f 4 | cut -d ',' -f 1)"
         __log_message "Battery currently at ${percent_charge}"
     fi
 }
 
 __userinfo() {
-    self=$(whoami)
-    users_all=$(who | cut -d ' ' -f 1 | sort -u)
-    n_users=$(who | cut -d ' ' -f 1 | sort -u | wc -l)
-    n_sessions=$(w -h | wc -l)
+    self="$(whoami)"
+    users_all="$(who | cut -d ' ' -f 1 | sort -u)"
+    n_users="$(who | cut -d ' ' -f 1 | sort -u | wc -l)"
+    n_sessions="$(w -h | wc -l)"
 
     echo "Users currently logged in (self = *):"
     echo "$users_all" | sed "s/$self/& (*)/"
@@ -85,31 +86,17 @@ __userinfo() {
 
 # tcp ports open on host
 __ports_open() {
-    netstat -atn              |
-    grep '^tcp'               |
-    tr -s ' '                 |
-    cut -d ' ' -f 4           |
-    grep -oE '[^:][0-9]{1,}$' |
-    sort -un                  |
-    xargs
+    netstat -atn | grep '^tcp' | tr -s ' ' | cut -d ' ' -f 4 | grep -oE '[^:][0-9]{1,}$' | sort -un | xargs
 }
 
 __sysinfo() {
-    superuser=$(grep ':x:0:' /etc/passwd | cut -d ':' -f 1)
+    superuser="$(grep ':x:0:' /etc/passwd | cut -d ':' -f 1)"
 
-    ip_public=$(wget -q -O - 'ipinfo.io/ip')
+    ip_public="$(wget -q -O - 'ipinfo.io/ip')"
 
-    ip_private=$(ip -o -4 address    |
-                 tr -s ' '           |
-                 grep -v '127.0.0.1' |
-                 cut -d ' ' -f 4     |
-                 sed 's/\/.*//'      |
-                 head -1)
+    ip_private="$(ip -o -4 address | tr -s ' ' | grep -v '127.0.0.1' | cut -d ' ' -f 4 | sed 's/\/.*//' | head -1)"
 
-    ip_gateway=$(ip route            |
-                 grep '^default via' |
-                 head -1             |
-                 cut -d ' ' -f 3)
+    ip_gateway="$(ip route | grep '^default via' | head -1 | cut -d ' ' -f 3)"
 
     echo "
     Username       : $(whoami)
@@ -132,23 +119,15 @@ __sysinfo() {
 }
 
 __geodata() {
-    ip_public=$(wget -q -O - ipinfo.io/ip)
+    ip_public="$(wget -q -O - ipinfo.io/ip)"
 
-    ip_private=$(ip -o -4 address    |
-                 tr -s ' '           |
-                 grep -v '127.0.0.1' |
-                 cut -d ' ' -f 4     |
-                 sed 's/\/.*//'      |
-                 head -1)
+    ip_private="$(ip -o -4 address | tr -s ' ' | grep -v '127.0.0.1' | cut -d ' ' -f 4 | sed 's/\/.*//' | head -1)"
 
-    ip_gateway=$(ip route            |
-                 grep '^default via' |
-                 head -1             |
-                 cut -d ' ' -f 3)
+    ip_gateway="$(ip route | grep '^default via' | head -1 | cut -d ' ' -f 3)"
 
-    country=$(wget -q -O - ipinfo.io/country)
-    city=$(wget -q -O - ipinfo.io/city)
-    loc=$(wget -q -O - ipinfo.io/loc)
+    country="$(wget -q -O - ipinfo.io/country)"
+    city="$(wget -q -O - ipinfo.io/city)"
+    loc="$(wget -q -O - ipinfo.io/loc)"
 
     echo "
     IP (WAN)       : $ip_public
@@ -162,9 +141,8 @@ __geodata() {
 
 __getmac() {
     iface="${1}"
-    ip link show $iface |
-    grep 'ether'        |
-    awk '{print $2}'
+
+    ip link show $iface | grep 'ether' | awk '{print $2}'
 }
 
 __config_files() {
@@ -172,15 +150,17 @@ __config_files() {
            '/etc/ssh/ssh_config' '/etc/ssh/sshd_config' '/etc/resolv.conf' '/etc/syslog.conf'
            '/etc/samba/smb.conf' '/etc/ldap/ldap.conf' '/etc/fstab' '/etc/fuse.conf'
            '/etc/host.conf' '/etc/ld.so.conf' '/etc/logrotate.conf' '/etc/netconfig')
-    echo ''
-    echo 'The following configuration files exist:'
+    echo ""
+    echo "The following configuration files exist:"
+    echo ""
+
     cnt=0
     for i in "${files[@]}"; do
-        [ -f "$i" ] && echo "$i"
+        [[ -f "$i" ]] && echo "$i"
         ((cnt++))
     done
 
-    if [ "$cnt" -eq 0 ]; then
+    if [[ "$cnt" -eq 0 ]]; then
         echo 'No configuration files found.'
     fi
 }
@@ -213,7 +193,7 @@ __mysql_backup() {
     remote_dir='/mysql_backup/'
     rsync_port='22'  # use default SSH port 22
 
-    if [ ! -d "$path_to_backup" ]; then
+    if [[ ! -d "$path_to_backup" ]]; then
         mkdir -p "$path_to_backup"
     fi
 
@@ -222,12 +202,13 @@ __mysql_backup() {
     sudo mysql -V 2> /dev/null
 
     # ignore system dbs
-    dbs=$(sudo mysql -Bse 'show databases')
+    dbs="$(sudo mysql -Bse 'show databases')"
     dbs_ignore='information_schema mysql performance_schema'
 
     for i in $dbs_ignore; do
         dbs=$(echo $dbs | sed "s/\b${i}\b//g")
     done
+
     dbs=($dbs)
 
     # create backups
@@ -245,7 +226,7 @@ __mysql_backup() {
     echo "Backup complete: $(date)"
 
     # rsync backups to another server
-    if [ "$1" == '-r' ]; then
+    if [[ "$1" == "-r" ]]; then
         echo "------------------------------------"
         echo "Sending backups to remote server..."
         sudo rsync --del -vaze "ssh -p $rsync_port" $path_to_backup $remote_user@$remote_host:$remote_dir
