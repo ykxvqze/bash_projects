@@ -4,6 +4,7 @@
 * Port scanner             : port_scanner.sh
 * IPv4 networking          : iptx.sh
 * Security auditing        : scansec/
+* Password generator       : genpass.sh
 * SSH                      : sshban.sh
 * OTP encryption           : otpcrypt.sh, cryptinfo.md
 * Metadata                 : delmeta.sh
