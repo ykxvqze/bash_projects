@@ -5,6 +5,7 @@
 * IPv4 networking          : iptx.sh
 * Network connection check : network_diagnostics.sh
 * Swarm services check     : check_swarm.sh
+* Nginx modsec 403 error   : nginx_403.sh
 * Remote disk space check  : disk_space.sh
 * Security auditing        : scansec/
 * Password generator       : genpass.sh
