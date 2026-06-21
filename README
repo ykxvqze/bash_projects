@@ -3,6 +3,9 @@
 * Network scanner          : netscan.sh
 * Port scanner             : port_scanner.sh
 * IPv4 networking          : iptx.sh
+* Network connection check : network_diagnostics.sh
+* Swarm services check     : check_swarm.sh
+* Remote disk space check  : disk_space.sh
 * Security auditing        : scansec/
 * Password generator       : genpass.sh
 * SSH                      : sshban.sh
