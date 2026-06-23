@@ -8,6 +8,8 @@ Check host and Swarm services
   * Check Swarm services
     * List scaled down services
     * List services that are down (i.e., unstable/flipping)
+    * List services by memory usage
+    * List services by CPU usage
 EOF
 
 __print_usage() {
@@ -106,7 +108,7 @@ __list_scaled_down_services() {
 }
 
 __list_services_down() {
-    echo -e "Checking services that are down/flipping...\n"
+    echo -e "\nChecking services that are down/flipping...\n"
 
     > services_down
 
@@ -123,6 +125,7 @@ __list_services_down() {
     else
         echo -e "[ ${red}ERROR${default} ] List of services down/flipping:\n"
         sort -u services_down
+        echo ""
     fi
 }
 
@@ -132,6 +135,28 @@ __check_swarm_services() {
     __list_services_down
 }
 
+__get_docker_cpu_memory_stats() {
+    docker_cpu_memory_stats="$(docker stats --no-stream | sed '1d' | awk '{print $2,$3,$7}' | sed -E 's/%//g; s/^([^.]+)\.[^ ]+\ /\1 /')"
+}
+
+__list_services_by_memory_usage() {
+    services_by_memory="$(echo "$docker_cpu_memory_stats" | sort -nr -k 3 | awk '{print $1,$3}' | head -5)"
+    service_names="$(echo "$services_by_memory" | awk '{print $1}')"
+    node_names="$(for service_name in $service_names; do docker service ps "$service_name" | sed -n '2 p' | awk '{print $4}'; done)"
+    echo -e "Swarm services by Memory (%) - Top 5\n"
+    paste -d ' ' <(echo "$services_by_memory") <(echo "$node_names") | column -t
+    echo ""
+}
+
+__list_services_by_cpu_usage() {
+    services_by_cpu="$(echo "$docker_cpu_memory_stats" | sort -nr -k 2 | awk '{print $1,$2}' | head -5)"
+    service_names="$(echo "$services_by_cpu" | awk '{print $1}')"
+    node_names="$(for service_name in $service_names; do docker service ps "$service_name" | sed -n '2 p' | awk '{print $4}'; done)"
+    echo -e "Swarm services by CPU (%) - Top 5\n"
+    paste -d ' ' <(echo "$services_by_cpu") <(echo "$node_names") | column -t
+    echo ""
+}
+
 __main() {
     __parse_options "$@"
     __check_euid
@@ -139,6 +164,9 @@ __main() {
     __check_nfs_service
     __check_disk_space
     __check_swarm_services
+    __get_docker_cpu_memory_stats
+    __list_services_by_memory_usage
+    __list_services_by_cpu_usage
 }
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
